@@ -1,0 +1,4 @@
+0 1,7,13,19 * * * cd code/ytdump/favorites  && ../cronjob
+0 1,7,13,19 * * * cd code/ytdump/music      && ../cronjob
+0 1,7,13,19 * * * cd code/ytdump/music_long && ../cronjob
+0 1,7,13,19 * * * cd code/ytdump/electronic && ../cronjob

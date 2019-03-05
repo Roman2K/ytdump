@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+name=ytdump/`basename "$(pwd)"`
+
+{
+  echo "running cronjob '$name'"
+  date \
+    && bash -lc "
+      alerterr --name=$name --on_ok -- \
+        flock lock \
+          bash dl.sh
+    "
+} 2>&1 | tee cronjob.log
