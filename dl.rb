@@ -180,7 +180,7 @@ class ItemMatcher
 end
 
 class Log
-  def initialize(parent=nil)
+  def initialize
     @io, @mu = $stderr, Mutex.new
   end
 
