@@ -58,7 +58,7 @@ class Downloader
     @done = done.map { |p| Pathname p }
 
     @q = Queue.new
-    @threads = NTHREADS.times.map do |i|
+    @threads = NTHREADS.times.map do
       Thread.new do
         Thread.current.abort_on_exception = true
         while item = @q.shift

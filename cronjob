@@ -6,7 +6,7 @@ name=ytdump/`basename "$(pwd)"`
   echo "running cronjob '$name'"
   date \
     && bash -lc "
-      alerterr --name=$name --on_ok -- \
+      exec alerterr --name=$name --on_ok -- \
         flock lock \
           bash dl.sh
     "
