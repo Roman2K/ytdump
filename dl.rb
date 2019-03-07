@@ -46,10 +46,9 @@ end
 class Downloader
   NTHREADS = 4
 
-  def initialize(out:, meta:, done: [], ydl_opts: [])
-    @log = Log.new
+  def initialize(out:, meta:, done: [], ydl_opts: [], log: Log.new)
     @ydl = Exe.new "youtube-dl"
-    @ydl_opts = ydl_opts
+    @ydl_opts, @log = ydl_opts, log
 
     @out, @meta = [out, meta].map { |p|
       Pathname(p).tap do |dir|
@@ -68,15 +67,15 @@ class Downloader
       end
     end
 
-    @log.puts "out dir: %p" % fns([@out])
-    @log.puts "meta dir: %p" % fns([@meta])
-    @log.puts "done: %d" % @done.size
-    @log.puts "threads: %d" % @threads.size
-    @log.puts "ydl opts: %p" % [@ydl_opts]
+    @log.debug "out dir: %p" % fns([@out])
+    @log.debug "meta dir: %p" % fns([@meta])
+    @log.debug "done: %d" % @done.size
+    @log.debug "threads: %d" % @threads.size
+    @log.debug "ydl opts: %p" % [@ydl_opts]
   end
 
   def dl_playlist(url)
-    @log.puts "updating youtube-dl" do
+    @log.debug "updating youtube-dl" do
       Exe.new("pip").run "install", "--user", "--upgrade", "youtube-dl"
     end
 
@@ -91,7 +90,7 @@ class Downloader
       }.
       compact
 
-    @log.puts "got %d playlist items" % items.size
+    @log.info "got %d playlist items" % items.size
     items.each { |i| @q << i }
   end
 
@@ -102,10 +101,10 @@ class Downloader
 
   private def get_playlist(url)
     File.read("debug_ydl_out").tap do
-      @log.puts "read cached debug playlist"
+      @log.info "read cached debug playlist"
     end
   rescue Errno::ENOENT
-    @log.puts("getting playlist") { @ydl.run "-j", "--flat-playlist", url }
+    @log.info("getting playlist") { @ydl.run "-j", "--flat-playlist", url }
   end
 
   def dl(item)
@@ -121,18 +120,19 @@ class Downloader
     end
 
     if !other.empty?
-      log.puts "deleting leftover files: %p" % fns(other) do
+      log.info "deleting leftover files: %p" % fns(other) do
         FileUtils.rm other
       end
-    end
-    if skip
-      log.puts "skipping"
-      return
     end
 
     ls = matcher.glob(@out) | matcher.glob_arr(@done)
     if !ls.empty?
-      log.puts "already downloaded: %p" % fns(ls)
+      log.debug "already downloaded: %p" % fns(ls)
+      return
+    end
+
+    if skip
+      log.debug "skipping"
       return
     end
 
@@ -145,7 +145,7 @@ class Downloader
       if err.status == 1
         case err.stderr
         when /^ERROR: /
-          log.puts "unavailable, marking as skippable: #{err.stderr.strip}"
+          log.info "unavailable, marking as skippable: #{err.stderr.strip}"
           FileUtils.touch @meta.join(name+".skip")
           return
         end
@@ -153,9 +153,9 @@ class Downloader
       raise
     end
 
-    log.puts "successfully downloaded"
+    log.info "successfully downloaded"
     matcher.glob(@meta).each do |f|
-      log.puts "output file: %p" % fns([f])
+      log.info "output file: %p" % fns([f])
       FileUtils.mv f, @out
     end
   end
@@ -180,18 +180,46 @@ class ItemMatcher
 end
 
 class Log
-  def initialize
-    @io, @mu = $stderr, Mutex.new
+  LEVELS = %i( debug info warn error ).freeze
+  LEVELS_W = LEVELS.map(&:length).max
+
+  def initialize(prefix=nil, level: LEVELS.first, io: $stderr, mutex: Mutex.new)
+    @prefix, @io, @mu = prefix, io, mutex
+    self.level = level
   end
 
-  def puts(*args, &block)
+  def level=(name)
+    @level_idx = find_level name
+  end
+
+  def level
+    LEVELS.fetch @level_idx
+  end
+
+  private def find_level(name)
+    LEVELS.index(name) \
+      or raise ArgumentError, "unknown level: %p" % name
+  end
+
+  LEVELS.each do |level|
+    define_method level do |*args, &block|
+      log level, *args, &block
+    end
+  end
+
+  private def log(level, *args, &block)
+    puts *args, level: level, &block if find_level(level) >= @level_idx
+  end
+
+  private def puts(*args, &block)
     @mu.synchronize do
       do_puts *args, &block
     end
   end
 
-  private def do_puts(*args)
-    @io.print args.join("\n")
+  private def do_puts(*msgs, level: nil)
+    msgs.map! { |msg| "%*s %s" % [LEVELS_W, level.upcase, add_prefix(msg)] }
+    @io.print msgs.join("\n")
     res = if block_given?
       @io.print "... "
       t0 = Time.now
@@ -203,30 +231,26 @@ class Log
     res
   end
 
-  def sub(title)
-    Sub.new self, title
+  private def add_prefix(s)
+    [@prefix, s].compact.join ": "
   end
 
-  class Sub
-    def initialize(log, title)
-      @log, @title = log, title
-    end
-
-    def puts(msg, *args, &block)
-      @log.puts "#{@title}: #{msg}", *args, &block
-    end
+  def sub(prefix)
+    self.class.new add_prefix(prefix), level: level, io: @io, mutex: @mu
   end
 end
 
 if $0 == __FILE__
   audio = !!ARGV.delete("-x")
-  !ARGV.empty? or raise "usage: #{File.basename $0} [-x] PLAYLIST_URL ..."
+  debug = !!ARGV.delete("-v")
+  !ARGV.empty? or raise "usage: #{File.basename $0} [-v -x] PLAYLIST_URL ..."
   urls = ARGV.dup
 
   dler = Downloader.new \
     out: "out", meta: "meta",
     done: $stdin.tty? ? [] : $stdin.read.split("\n"),
-    ydl_opts: audio ? %w( -x ) : []
+    ydl_opts: audio ? %w( -x ) : [],
+    log: Log.new(level: debug ? :debug : :info)
   urls.each do |url|
     dler.dl_playlist url
   end
