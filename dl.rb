@@ -110,7 +110,8 @@ class Downloader
   def dl(item)
     log = @log.sub item.id
     matcher = ItemMatcher.new item.id
-    name = ("%05d - %s - %s" % [item.idx+1, item.title, item.id]).tr('/\\', '_')
+    name = ("%05d - %s - %s" % [item.idx+1, item.title, item.id]).
+      tr('/\\:!', '_')
 
     ls = matcher.glob @meta
     skip, other = ls.partition { |f| f.extname == ".skip" }
@@ -249,7 +250,7 @@ if $0 == __FILE__
   dler = Downloader.new \
     out: "out", meta: "meta",
     done: $stdin.tty? ? [] : $stdin.read.split("\n"),
-    ydl_opts: audio ? %w( -x ) : [],
+    ydl_opts: audio ? %w( -x --audio-format mp3 ) : [],
     log: Log.new(level: debug ? :debug : :info)
   urls.each do |url|
     dler.dl_playlist url
