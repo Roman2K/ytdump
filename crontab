@@ -1,4 +1,8 @@
-0 1,7,13,19 * * * cd code/ytdump/favorites  && ../cronjob
-0 1,7,13,19 * * * cd code/ytdump/music      && ../cronjob
-0 1,7,13,19 * * * cd code/ytdump/music_long && ../cronjob
-0 1,7,13,19 * * * cd code/ytdump/electronic && ../cronjob
+0 1,7,13,19 * * * cd code/ytdump/favorites      && ../cronjob
+0 1,7,13,19 * * * cd code/ytdump/music          && ../cronjob
+0 1,7,13,19 * * * cd code/ytdump/music_long     && ../cronjob
+0 1,7,13,19 * * * cd code/ytdump/electronic     && ../cronjob
+0 1,7,13,19 * * * cd code/ytdump/sc_eargasm     && ../cronjob
+0 1,7,13,19 * * * cd code/ytdump/sc_repost      && ../cronjob
+0 1,7,13,19 * * * cd code/ytdump/sc_likes       && ../cronjob
+0 1,7,13,19 * * * cd code/ytdump/sc_likes_long  && ../cronjob

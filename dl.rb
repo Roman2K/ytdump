@@ -33,14 +33,20 @@ end
 class Item
   def initialize(idx, attrs)
     @idx = idx
-    @id, @title = %w( id title ).map { |k| attrs.fetch k }
+    @id = attrs.fetch "id"
+    @title = attrs.fetch("title") do
+      URI(attrs.fetch("url")).path.split("/").fetch(-1)
+    end
+    @url =
+      case attrs.fetch("ie_key")
+      when "Youtube"
+        "https://youtu.be/#{@id}"
+      else
+        attrs.fetch "url"
+      end
   end
 
-  attr_reader :idx, :id, :title
-
-  def url
-    "https://youtu.be/#{@id}"
-  end
+  attr_reader :idx, :id, :url, :title
 end
 
 class Downloader
@@ -78,19 +84,22 @@ class Downloader
     @log.debug "updating youtube-dl" do
       Exe.new("pip").run "install", "--user", "--upgrade", "youtube-dl"
     end
+    dl_playlist_json "[#{get_playlist(url).split("\n") * ","}]"
+  end
 
-    items = get_playlist(url).
-      split("\n").
+  def dl_playlist_json(s)
+    items = JSON.parse(s).
       reverse.
-      map.with_index { |line, idx|
+      tap { |all| @log.info "found %d raw playlist items" % all.size }.
+      map.with_index { |attrs, idx|
         begin
-          Item.new idx, JSON.parse(line)
+          Item.new idx, attrs
         rescue KeyError
         end
       }.
       compact
 
-    @log.info "got %d playlist items" % items.size
+    @log.info "enqueueing %d playlist items" % items.size
     items.each { |i| @q << i }
   end
 
@@ -145,6 +154,8 @@ class Downloader
     rescue Exe::ExitError => err
       if err.status == 1
         case err.stderr
+        when /unknown reason/
+          raise
         when /^ERROR: /
           log.info "unavailable, marking as skippable: #{err.stderr.strip}"
           FileUtils.touch @meta.join(name+".skip")
@@ -253,7 +264,12 @@ if $0 == __FILE__
     ydl_opts: audio ? %w( -x --audio-format mp3 ) : [],
     log: Log.new(level: debug ? :debug : :info)
   urls.each do |url|
-    dler.dl_playlist url
+    case url
+    when /^\[/
+      dler.dl_playlist_json url
+    else
+      dler.dl_playlist url
+    end
   end
   dler.finish
 end
