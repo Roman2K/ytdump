@@ -6,10 +6,11 @@ likes() {
 }
 
 likes_of_duration() {
-  likes | jq -s '[.[]
-    | select(.duration '"$1"')
-    | {id, title, url: .uri, ie_key: "Soundcloud"}
-  ]'
+  likes \
+    | jq '.
+      | select(.duration '"$1"')
+      | {id, title, url: .uri, ie_key: "Soundcloud"}' \
+    | jq -s .
 }
 
 likes_short() {
