@@ -30,23 +30,32 @@ class Exe
   end
 end
 
-class Item
-  def initialize(idx, attrs)
-    @idx = idx
-    @id = attrs.fetch "id"
-    @title = attrs.fetch("title") do
+Item = Struct.new :idx, :id, :url, :title do
+  def self.from_json(idx, attrs)
+    id = attrs.fetch "id"
+    title = attrs.fetch("title") do
       URI(attrs.fetch("url")).path.split("/").fetch(-1)
     end
-    @url =
+    url =
       case attrs.fetch("ie_key")
       when "Youtube"
-        "https://youtu.be/#{@id}"
+        "https://youtu.be/#{id}"
       else
         attrs.fetch "url"
       end
-  end
 
-  attr_reader :idx, :id, :url, :title
+    self[idx, id, url, title]
+  end
+end
+
+module SixPlay
+  def self.get_playlist_items(url)
+    uri = URI url
+    uri.host.sub(/^www\./, "") == "6play.fr" && uri.path.split("/").size == 2 \
+      or return
+    "https://www.6play.fr/moundir-et-les-apprentis-aventuriers-p_5848"
+    []
+  end
 end
 
 class Downloader
@@ -84,7 +93,11 @@ class Downloader
     @log.debug "updating youtube-dl" do
       Exe.new("pip").run "install", "--user", "--upgrade", "youtube-dl"
     end
-    dl_playlist_json "[#{get_playlist(url).split("\n") * ","}]"
+    if items = SixPlay.get_playlist_items(url)
+      dl_playlist_items items
+    else
+      dl_playlist_json "[#{get_playlist(url).split("\n") * ","}]"
+    end
   end
 
   def dl_playlist_json(s)
@@ -93,12 +106,16 @@ class Downloader
       tap { |all| @log.info "found %d raw playlist items" % all.size }.
       map.with_index { |attrs, idx|
         begin
-          Item.new idx, attrs
+          Item.from_json idx, attrs
         rescue KeyError
         end
       }.
       compact
 
+    dl_playlist_items items
+  end
+
+  def dl_playlist_items(items)
     @log.info "enqueueing %d playlist items" % items.size
     items.each { |i| @q << i }
   end
