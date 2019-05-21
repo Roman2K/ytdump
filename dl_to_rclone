@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -o pipefail
+set -eo pipefail
 
 [ $# -ge 2 ] || {
   echo "usage: $(basename "$0") URL RCLONE_DEST" >&2
@@ -9,7 +9,8 @@ url=$1 ; shift
 dest=$1 ; shift
 root=$(dirname "$0")
 
-rclone -v lsf "$dest" | ruby "$root"/dl.rb "$@" "$url"
+done=`rclone -v lsf "$dest"`
+echo "$done" | ruby "$root"/dl.rb "$@" "$url"
 st0=$?
 
 rclone -v copy out "$dest" && rm -r out
