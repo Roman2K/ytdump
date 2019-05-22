@@ -2,6 +2,7 @@ require 'json'
 require 'open3'
 require 'fileutils'
 require 'pathname'
+require_relative 'sixplay'
 
 class Exe
   def initialize(name)
@@ -45,16 +46,6 @@ Item = Struct.new :idx, :id, :url, :title do
       end
 
     self[idx, id, url, title]
-  end
-end
-
-module SixPlay
-  def self.get_playlist_items(url)
-    uri = URI url
-    uri.host.sub(/^www\./, "") == "6play.fr" && uri.path.split("/").size == 2 \
-      or return
-    "https://www.6play.fr/moundir-et-les-apprentis-aventuriers-p_5848"
-    []
   end
 end
 
@@ -106,7 +97,7 @@ class Downloader
       tap { |all| @log.info "found %d raw playlist items" % all.size }.
       map.with_index { |attrs, idx|
         begin
-          Item.from_json idx, attrs
+          Item.from_json idx+1, attrs
         rescue KeyError
         end
       }.
@@ -117,7 +108,7 @@ class Downloader
 
   def dl_playlist_items(items)
     @log.info "enqueueing %d playlist items" % items.size
-    items.each { |i| @q << i }
+    items.sort_by(&:idx).each { |i| @q << i }
   end
 
   def finish
@@ -136,8 +127,7 @@ class Downloader
   def dl(item)
     log = @log.sub item.id
     matcher = ItemMatcher.new item.id
-    name = ("%05d - %s - %s" % [item.idx+1, item.title, item.id]).
-      tr('/\\:!', '_')
+    name = ("%05d - %s - %s" % [item.idx, item.title, item.id]).tr('/\\:!', '_')
 
     ls = matcher.glob @meta
     skip, other = ls.partition { |f| f.extname == ".skip" }

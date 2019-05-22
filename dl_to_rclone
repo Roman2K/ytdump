@@ -10,7 +10,7 @@ dest=$1 ; shift
 root=$(dirname "$0")
 
 done=`rclone -v lsf "$dest"`
-echo "$done" | ruby "$root"/dl.rb "$@" "$url"
+echo "$done" | bundle exec ruby "$root"/dl.rb "$@" "$url"
 st0=$?
 
 rclone -v copy out "$dest" && rm -r out

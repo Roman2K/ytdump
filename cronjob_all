@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+log=/tmp/cronjob_ytdump_all.log
+
+truncate --size 0 "$log"
+ls playlists | while read d; do
+  echo running playlists/$d >> "$log"
+  ./cronjob "$d"
+done
