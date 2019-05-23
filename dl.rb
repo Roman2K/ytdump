@@ -35,9 +35,11 @@ end
 class Downloader
   NTHREADS = 4
 
-  def initialize(out:, meta:, done: [], ydl_opts: [], log: Log.new)
+  def initialize(out:, meta:, done: [], ydl_opts: [], check_empty: true,
+    log: Log.new
+  )
     @ydl = Exe.new "youtube-dl"
-    @ydl_opts, @log = ydl_opts, log
+    @ydl_opts, @check_empty, @log = ydl_opts, check_empty, log
 
     @out, @meta = [out, meta].map { |p|
       Pathname(p).tap do |dir|
@@ -94,6 +96,7 @@ class Downloader
   end
 
   def dl_playlist_items(items)
+    raise "empty playlist" if @check_empty && items.empty?
     @log.info "enqueueing %d playlist items" % items.size
     items.sort_by(&:idx).each { |i| @q << i }
   end
@@ -254,15 +257,18 @@ class Log
 end
 
 if $0 == __FILE__
-  audio = !!ARGV.delete("-x")
-  debug = !!ARGV.delete("-v")
-  !ARGV.empty? or raise "usage: #{File.basename $0} [-v -x] PLAYLIST_URL ..."
-  urls = ARGV.dup
+  opts, urls = ARGV.partition { |s| s.start_with? "-" }
+  audio = !!opts.delete("-x")
+  debug = !!opts.delete("-v")
+  no_check_empty = !!opts.delete("--no-check-empty")
+  opts.empty? && !urls.empty? or raise "usage: #{File.basename $0}" \
+    "[-v -x --no-check-empty] PLAYLIST_URL ..."
 
   dler = Downloader.new \
     out: "out", meta: "meta",
     done: $stdin.tty? ? [] : $stdin.read.split("\n"),
     ydl_opts: audio ? %w( -x --audio-format mp3 ) : [],
+    check_empty: !no_check_empty,
     log: Log.new(level: debug ? :debug : :info)
   urls.each do |url|
     case url

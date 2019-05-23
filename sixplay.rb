@@ -19,12 +19,10 @@ class SixPlay
   end
 
   def episodes_from_html(html, uri)
-    self.class.string_doc(html).css("a").each_with_object([]) { |a, arr|
+    self.class.string_doc(html).css("a").each_with_object [] do |a, arr|
       ep = ep_from_el(a, uri) or next
       arr << ep if @select[ep]
-    }.tap { |eps|
-      raise "no episodes found" if eps.empty?
-    }
+    end
   end
 
   private def ep_from_el(el, uri)
