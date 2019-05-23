@@ -13,7 +13,7 @@ done=`rclone -v lsf "$dest"`
 echo "$done" | bundle exec ruby "$root"/dl.rb "$@" "$url"
 st0=$?
 
-rclone -v copy out "$dest" && rm -r out
+rclone -v move out "$dest"
 st1=$?
 
 [ $st0 = 0 -a $st1 = 0 ]
