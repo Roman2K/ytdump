@@ -1,8 +1,14 @@
 require 'net/http'
 require 'nokogiri'
+require_relative 'item'
+require_relative 'duration'
 
-module SixPlay
-  def self.get_playlist_items(url)
+class SixPlay
+  def initialize(&select)
+    @select = select || -> ep { true }
+  end
+
+  def playlist_items(url)
     uri = URI url
     uri.host.sub(/^www\./, "") == "6play.fr" && uri.path.split("/").size == 2 \
       or return
@@ -12,54 +18,52 @@ module SixPlay
     episodes_from_html(html, uri).map &:playlist_item
   end
 
-  def self.episodes_from_html(html, uri)
-    string_doc(html).css("a").each_with_object([]) { |a, arr|
+  def episodes_from_html(html, uri)
+    self.class.string_doc(html).css("a").each_with_object([]) { |a, arr|
       ep = ep_from_el(a, uri) or next
-      arr << ep
+      arr << ep if @select[ep]
     }.tap { |eps|
       raise "no episodes found" if eps.empty?
     }
   end
 
-  def self.ep_from_el(el, uri)
+  private def ep_from_el(el, uri)
     ep = Ep.new
 
-    # Duration
-    ep.duration = el.css(".tile__duration").first.yield_self do |dur_el|
-      dur_el or return
-      parse_duration dur_el.text
-    end
-
-    # URL
-    href = el[:href] or return
-    ep.uri = uri.dup.tap { |u| u.path = href; u.query = nil }
-
     # ID
+    href = el[:href] or return
     path_prefix = "#{uri.path}/"
     href.start_with? path_prefix or return
     rest = href[path_prefix.size..-1]
     ep.id = rest[/\-c_(\d+)\b/, 1] or return
 
-    # Number
-    ep.num = (EpNum.from_url(rest) || EpNum.new).tap do |num|
-      if !num.complete? \
-        and text = el.css("h2").first&.text \
-        and title_num = EpNum.from_title(text)
-      then
+    # URL
+    ep.uri = uri.dup.tap { |u| u.path = href; u.query = nil }
+
+    # Duration
+    ep.duration = el.css(".tile__duration").first.yield_self do |dur_el|
+      dur_el or raise "missing duration element"
+      self.class.parse_duration dur_el.text
+    end
+
+    # Title
+    ep.title = el.css("h2").first&.text or raise "missing title element"
+
+    # Episode number
+    ep.num = (EpNum.from_url(rest) || EpNum.new).yield_self do |num|
+      if !num.complete? && title_num = EpNum.from_title(ep.title)
         num.merge! title_num
       end
-      if num.e && !num.complete? \
-        and title_num = season_num(el)
-      then
+      if num.e && !num.complete? && title_num = season_num(el)
         num.merge! title_num
       end
-      num.e or return
+      num if num.e
     end
 
     ep
   end
 
-  def self.season_num(el)
+  private def season_num(el)
     while el.respond_to?(:parent) && el = el.parent
       s = el.css("h2").first&.text \
         and num = EpNum.from_title(s) and num.s \
@@ -76,23 +80,31 @@ module SixPlay
   end
 
   def self.parse_duration(s)
-    min = 0
+    secs = 0
     until s.empty?
-      min +=
+      secs +=
         case s
-        when /^(\d+)h */ then $1.to_i * 3600
-        when /^(\d+)min */ then $1.to_i * 60
-        when /^(\d+)s */ then $1.to_i
+        when /^(\d+)h\s*/ then $1.to_i * 3600
+        when /^(\d+)min\s*/ then $1.to_i * 60
+        when /^(\d+)s\s*/ then $1.to_i
         else raise "unrecognized string: %p" % s
         end
       s = $'
     end
-    min
+    secs > 0 or raise "invalid duration"
+    secs
   end
 
-  Ep = Struct.new :id, :num, :uri, :duration do
+  Ep = Struct.new :id, :title, :num, :uri, :duration do
     def playlist_item
-      Item[id.to_i, id, uri.to_s, num.to_s]
+      Item.new \
+        idx: id.to_i,
+        id: id,
+        url: uri.to_s,
+        title: "%s (%s)" % [
+          [num, title].compact.join(" - "),
+          Duration.fmt(duration),
+        ]
     end
   end
 
@@ -121,6 +133,7 @@ module SixPlay
     def merge!(x)
       self.s ||= x.s
       self.e ||= x.e
+      self.name ||= x.name
       self
     end
 

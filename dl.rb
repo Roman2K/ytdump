@@ -2,6 +2,7 @@ require 'json'
 require 'open3'
 require 'fileutils'
 require 'pathname'
+require_relative 'item'
 require_relative 'sixplay'
 
 class Exe
@@ -28,24 +29,6 @@ class Exe
     def to_s
       "`#{@cmd * " "}` exit #{@status}: #{@stderr}"
     end
-  end
-end
-
-Item = Struct.new :idx, :id, :url, :title do
-  def self.from_json(idx, attrs)
-    id = attrs.fetch "id"
-    title = attrs.fetch("title") do
-      URI(attrs.fetch("url")).path.split("/").fetch(-1)
-    end
-    url =
-      case attrs.fetch("ie_key")
-      when "Youtube"
-        "https://youtu.be/#{id}"
-      else
-        attrs.fetch "url"
-      end
-
-    self[idx, id, url, title]
   end
 end
 
@@ -80,11 +63,15 @@ class Downloader
     @log.debug "ydl opts: %p" % [@ydl_opts]
   end
 
+  SIXPLAY = SixPlay.new do |ep|
+    ep.duration >= 20 * 60
+  end
+
   def dl_playlist(url)
     @log.debug "updating youtube-dl" do
       Exe.new("pip").run "install", "--user", "--upgrade", "youtube-dl"
     end
-    if items = SixPlay.get_playlist_items(url)
+    if items = SIXPLAY.playlist_items(url)
       dl_playlist_items items
     else
       dl_playlist_json "[#{get_playlist(url).split("\n") * ","}]"

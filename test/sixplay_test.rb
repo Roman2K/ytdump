@@ -3,10 +3,11 @@ require 'minitest/autorun'
 require 'sixplay'
 
 class SixPlayTest < Minitest::Test
-  def test_episodes_from_html
-    html = page "moundir"
-    uri = URI "https://www.6play.fr/moundir-et-les-apprentis-aventuriers-p_5848"
-    eps = SixPlay.episodes_from_html html, uri
+  def test_episodes_from_html_season
+    parser = SixPlay.new { |ep| ep.num }
+
+    eps = parse_eps parser, "moundir",
+      "https://www.6play.fr/moundir-et-les-apprentis-aventuriers-p_5848"
     # season 4: 8
     # season 3: 41
     # total: 49
@@ -14,9 +15,8 @@ class SixPlayTest < Minitest::Test
     assert_equal({4 => 8, 3 => 41}, stats(eps))
     assert_equal 2280, eps.map(&:duration).min
 
-    html = page "princes"
-    uri = URI "https://www.6play.fr/les-princes-et-les-princesses-de-lamour-p_3442"
-    eps = SixPlay.episodes_from_html html, uri
+    eps = parse_eps parser, "princes",
+      "https://www.6play.fr/les-princes-et-les-princesses-de-lamour-p_3442"
     # season 0: 55 + 1 (2/2) = 56 (ep 40 has season-6 in URL)
     # season 5: 60 + 1 (2/2) = 60 (missing ep 9)
     # total: 116
@@ -25,25 +25,58 @@ class SixPlayTest < Minitest::Test
     assert_equal %w(12 2-2 12 22),
       eps.sort_by(&:id).map(&:num).select { |n| n.e == 1 }.map(&:name)
 
-    html = page "ile"
-    uri = URI "https://www.6play.fr/l-ile-de-la-tentation-p_13757"
-    eps = SixPlay.episodes_from_html html, uri
+    eps = parse_eps parser, "ile",
+      "https://www.6play.fr/l-ile-de-la-tentation-p_13757"
     assert_equal({nil => 4}, stats(eps))
 
-    html = page "marseillais_asiantour"
-    uri = URI "https://www.6play.fr/les-marseillais-asian-tour-p_13125"
-    eps = SixPlay.episodes_from_html html, uri
+    eps = parse_eps parser, "marseillais_asiantour",
+      "https://www.6play.fr/les-marseillais-asian-tour-p_13125"
     assert_equal({nil => 61}, stats(eps))
 
-    html = page "marseillais_australia"
-    uri = URI "https://www.6play.fr/les-marseillais-australia-p_8711"
-    eps = SixPlay.episodes_from_html html, uri
+    eps = parse_eps parser, "marseillais_australia",
+      "https://www.6play.fr/les-marseillais-australia-p_8711"
     assert_equal({nil => 61}, stats(eps))
 
-    html = page "marseillais_restedm"
-    uri = URI "https://www.6play.fr/les-marseillais-vs-le-reste-du-monde-p_6092"
-    eps = SixPlay.episodes_from_html html, uri
+    eps = parse_eps parser, "marseillais_restedm",
+      "https://www.6play.fr/les-marseillais-vs-le-reste-du-monde-p_6092"
     assert_equal({3 => 50}, stats(eps))
+
+    eps = parse_eps parser, "marseillais_restedm",
+      "https://www.6play.fr/les-marseillais-vs-le-reste-du-monde-p_6092"
+    assert_equal({3 => 50}, stats(eps))
+  end
+
+  private def parse_eps(parser, name, url)
+    html = page name
+    uri = URI url
+    parser.episodes_from_html html, uri
+  end
+
+  def test_episodes_from_html_no_season
+    parser = SixPlay.new { |ep| ep.duration >= 30 * 60 }
+
+    eps = parse_eps parser, "meillpatissier",
+      "https://www.6play.fr/le-meilleur-patissier-les-professionnels-p_6762"
+    assert_equal [
+      "S00E02 - Le choc des nations / épisode 2 (1h55m)",
+      "S00E02 - Artus refait le match / épisode 2 (48m)",
+    ], eps.map { |ep| ep.playlist_item.title }
+
+    eps = parse_eps parser, "norbert",
+      "https://www.6play.fr/norbert-commis-d-office-p_4668"
+    assert_equal 6, eps.size
+
+    eps = parse_eps parser, "maisonav",
+      "https://www.6play.fr/maison-a-vendre-p_874"
+    assert_equal 8, eps.size
+
+    eps = parse_eps parser, "rechappart",
+      "https://www.6play.fr/recherche-appartement-ou-maison-p_918"
+    assert_equal 1, eps.size
+
+    eps = parse_eps parser, "cauchemar",
+      "https://www.6play.fr/cauchemar-en-cuisine-avec-philippe-etchebest-p_841"
+    assert_equal 9, eps.size
   end
 
   private def stats(eps)
@@ -58,7 +91,7 @@ class SixPlayTest < Minitest::Test
   end
 end
 
-module SixPlay
+class SixPlay
 
 class EpNumTest < Minitest::Test
   def test_from_EpNum
@@ -78,9 +111,9 @@ class EpNumTest < Minitest::Test
     assert_equal EpNum[4,6], num
 
     a = EpNum[nil,7]
-    b = EpNum[1,2]
+    b = EpNum[1,2,"xxx"]
     a.merge! b
-    assert_equal EpNum[1,7], a
+    assert_equal EpNum[1,7,"xxx"], a
   end
 
   def test_to_s
