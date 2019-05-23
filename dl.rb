@@ -36,10 +36,11 @@ class Downloader
   NTHREADS = 4
 
   def initialize(out:, meta:, done: [], ydl_opts: [], check_empty: true,
-    log: Log.new
+    min_duration: DEFAULT_MIN_DURATION, log: Log.new
   )
     @ydl = Exe.new "youtube-dl"
-    @ydl_opts, @check_empty, @log = ydl_opts, check_empty, log
+    @ydl_opts, @check_empty, @min_duration, @log =
+      ydl_opts, check_empty, min_duration, log
 
     @out, @meta = [out, meta].map { |p|
       Pathname(p).tap do |dir|
@@ -65,15 +66,17 @@ class Downloader
     @log.debug "ydl opts: %p" % [@ydl_opts]
   end
 
-  SIXPLAY = SixPlay.new do |ep|
-    ep.duration >= 20 * 60
-  end
+  DEFAULT_MIN_DURATION = 20 * 60
 
   def dl_playlist(url)
     @log.debug "updating youtube-dl" do
       Exe.new("pip").run "install", "--user", "--upgrade", "youtube-dl"
     end
-    if items = SIXPLAY.playlist_items(url)
+    min_duration = @min_duration || DEFAULT_MIN_DURATION
+    parsers = [
+      SixPlay.new { |ep| ep.duration >= min_duration },
+    ]
+    if items = parsers.lazy.map { |p| p.playlist_items(url) }.find { |a| a }
       dl_playlist_items items
     else
       dl_playlist_json "[#{get_playlist(url).split("\n") * ","}]"
@@ -256,27 +259,38 @@ class Log
   end
 end
 
-if $0 == __FILE__
-  opts, urls = ARGV.partition { |s| s.start_with? "-" }
-  audio = !!opts.delete("-x")
-  debug = !!opts.delete("-v")
-  no_check_empty = !!opts.delete("--no-check-empty")
-  opts.empty? && !urls.empty? or raise "usage: #{File.basename $0}" \
-    "[-v -x --no-check-empty] PLAYLIST_URL ..."
+module Commands
+  def self.cmd_dl(*urls, audio: false, debug: false, check_empty: true,
+    min_duration: Downloader::DEFAULT_MIN_DURATION
+  )
+    dler = Downloader.new \
+      out: "out", meta: "meta",
+      done: $stdin.tty? ? [] : $stdin.read.split("\n"),
+      ydl_opts: audio ? %w( -x --audio-format mp3 ) : [],
+      check_empty: check_empty,
+      min_duration: min_duration.to_i,
+      log: Log.new(level: debug ? :debug : :info)
 
-  dler = Downloader.new \
-    out: "out", meta: "meta",
-    done: $stdin.tty? ? [] : $stdin.read.split("\n"),
-    ydl_opts: audio ? %w( -x --audio-format mp3 ) : [],
-    check_empty: !no_check_empty,
-    log: Log.new(level: debug ? :debug : :info)
-  urls.each do |url|
-    case url
-    when /^\[/
-      dler.dl_playlist_json url
-    else
-      dler.dl_playlist url
+    urls.each do |url|
+      case url
+      when /^\[/
+        dler.dl_playlist_json url
+      else
+        dler.dl_playlist url
+      end
+    end
+    dler.finish
+  end
+end
+
+if $0 == __FILE__
+  require 'metacli'
+  argv = ARGV.map do |arg|
+    case arg
+    when "-x" then "--audio"
+    when "-v" then "--debug"
+    else arg
     end
   end
-  dler.finish
+  MetaCLI.new(argv).run Commands
 end
