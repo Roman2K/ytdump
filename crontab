@@ -1,9 +1,1 @@
-0 1,7,13,19 * * * cd code/ytdump && ./cronjob favorites
-0 1,7,13,19 * * * cd code/ytdump && ./cronjob nou
-0 1,7,13,19 * * * cd code/ytdump && ./cronjob music
-0 1,7,13,19 * * * cd code/ytdump && ./cronjob music_long
-0 1,7,13,19 * * * cd code/ytdump && ./cronjob electronic
-0 1,7,13,19 * * * cd code/ytdump && ./cronjob sc_eargasm
-0 1,7,13,19 * * * cd code/ytdump && ./cronjob sc_repost
-0 1,7,13,19 * * * cd code/ytdump && ./cronjob sc_likes
-0 1,7,13,19 * * * cd code/ytdump && ./cronjob sc_likes_long
+0 1,7,13,19 * * * cd code/ytdump && ./cronjob_all
