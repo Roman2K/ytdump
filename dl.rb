@@ -124,6 +124,8 @@ class Downloader
     @log.info("getting playlist") { @ydl.run "-j", "--flat-playlist", url }
   end
 
+  KEEP_EXTS = %w(.mkv .mp4 .ytdl .part)
+
   def dl(item)
     log = @log.sub item.id
     matcher = ItemMatcher.new item.id
@@ -134,6 +136,11 @@ class Downloader
     skip.tap do |a|
       skip = a.shift
       other.concat a
+    end
+
+    keep, other = other.partition { |f| KEEP_EXTS.include? f.extname }
+    if !keep.empty?
+      log.info "keeping leftover files: %p" % fns(keep)
     end
 
     if !other.empty?
@@ -161,7 +168,7 @@ class Downloader
     rescue Exe::ExitError => err
       if err.status == 1
         case err.stderr
-        when /unknown reason/
+        when /unknown reason/, /urlopen/
           raise
         when /^ERROR: /
           log.info "unavailable, marking as skippable: #{err.stderr.strip}"
