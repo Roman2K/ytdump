@@ -4,7 +4,7 @@ require 'sixplay'
 
 class SixPlayTest < Minitest::Test
   def test_episodes_from_html
-    html = File.read __dir__ + "/moundir.html"
+    html = page "moundir"
     uri = URI "https://www.6play.fr/moundir-et-les-apprentis-aventuriers-p_5848"
     eps = SixPlay.episodes_from_html html, uri
     # season 4: 8
@@ -12,8 +12,9 @@ class SixPlayTest < Minitest::Test
     # total: 49
     assert_equal 49, eps.size
     assert_equal({4 => 8, 3 => 41}, stats(eps))
+    assert_equal 2280, eps.map(&:duration).min
 
-    html = File.read __dir__ + "/princes.html"
+    html = page "princes"
     uri = URI "https://www.6play.fr/les-princes-et-les-princesses-de-lamour-p_3442"
     eps = SixPlay.episodes_from_html html, uri
     # season 0: 55 + 1 (2/2) = 56 (ep 40 has season-6 in URL)
@@ -24,22 +25,22 @@ class SixPlayTest < Minitest::Test
     assert_equal %w(12 2-2 12 22),
       eps.sort_by(&:id).map(&:num).select { |n| n.e == 1 }.map(&:name)
 
-    html = File.read __dir__ + "/ile.html"
+    html = page "ile"
     uri = URI "https://www.6play.fr/l-ile-de-la-tentation-p_13757"
     eps = SixPlay.episodes_from_html html, uri
     assert_equal({nil => 4}, stats(eps))
 
-    html = File.read __dir__ + "/marseillais_asiantour.html"
+    html = page "marseillais_asiantour"
     uri = URI "https://www.6play.fr/les-marseillais-asian-tour-p_13125"
     eps = SixPlay.episodes_from_html html, uri
     assert_equal({nil => 61}, stats(eps))
 
-    html = File.read __dir__ + "/marseillais_australia.html"
+    html = page "marseillais_australia"
     uri = URI "https://www.6play.fr/les-marseillais-australia-p_8711"
     eps = SixPlay.episodes_from_html html, uri
     assert_equal({nil => 61}, stats(eps))
 
-    html = File.read __dir__ + "/marseillais_restedm.html"
+    html = page "marseillais_restedm"
     uri = URI "https://www.6play.fr/les-marseillais-vs-le-reste-du-monde-p_6092"
     eps = SixPlay.episodes_from_html html, uri
     assert_equal({3 => 50}, stats(eps))
@@ -50,6 +51,10 @@ class SixPlayTest < Minitest::Test
       h[ep.num.s] += 1
       h
     end
+  end
+
+  private def page(name)
+    File.read __dir__ + "/pages/#{name}.html"
   end
 end
 

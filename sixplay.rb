@@ -13,20 +13,34 @@ module SixPlay
   end
 
   def self.episodes_from_html(html, uri)
-    doc = string_doc html
-    doc.css("a").each_with_object [] do |a, arr|
+    string_doc(html).css("a").each_with_object([]) { |a, arr|
       ep = ep_from_el(a, uri) or next
       arr << ep
-    end
+    }.tap { |eps|
+      raise "no episodes found" if eps.empty?
+    }
   end
 
   def self.ep_from_el(el, uri)
+    ep = Ep.new
+
+    # Duration
+    ep.duration = el.css(".tile__duration").first.yield_self do |dur_el|
+      dur_el or return
+      parse_duration dur_el.text
+    end
+
+    # URL
     href = el[:href] or return
+    ep.uri = uri.dup.tap { |u| u.path = href; u.query = nil }
+
+    # ID
     path_prefix = "#{uri.path}/"
     href.start_with? path_prefix or return
     rest = href[path_prefix.size..-1]
-    ep = Ep.new
     ep.id = rest[/\-c_(\d+)\b/, 1] or return
+
+    # Number
     ep.num = (EpNum.from_url(rest) || EpNum.new).tap do |num|
       if !num.complete? \
         and text = el.css("h2").first&.text \
@@ -41,7 +55,7 @@ module SixPlay
       end
       num.e or return
     end
-    ep.uri = uri.dup.tap { |u| u.path = href; u.query = nil }
+
     ep
   end
 
@@ -61,7 +75,22 @@ module SixPlay
     Nokogiri::HTML.parse s
   end
 
-  Ep = Struct.new :id, :num, :uri do
+  def self.parse_duration(s)
+    min = 0
+    until s.empty?
+      min +=
+        case s
+        when /^(\d+)h */ then $1.to_i * 3600
+        when /^(\d+)min */ then $1.to_i * 60
+        when /^(\d+)s */ then $1.to_i
+        else raise "unrecognized string: %p" % s
+        end
+      s = $'
+    end
+    min
+  end
+
+  Ep = Struct.new :id, :num, :uri, :duration do
     def playlist_item
       Item[id.to_i, id, uri.to_s, num.to_s]
     end
