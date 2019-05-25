@@ -6,15 +6,20 @@ require_relative 'item'
 require_relative 'sixplay'
 
 class Exe
-  def initialize(name)
+  def initialize(name, log=Log.new(name))
     @name = name
+    @log = log
   end
 
   def run(*args)
+    args.map! &:to_s
     out, err, st = Open3.capture3 @name, *args
+    @log.debug "running %p %p" % [@name, args]
     if !st.success?
+      @log.debug "failed: %p" % st
       raise ExitError.new [@name, *args], st.exitstatus, err
     end
+    @log.debug "success: %p" % st
     out
   end
 
@@ -35,12 +40,16 @@ end
 class Downloader
   NTHREADS = 4
 
-  def initialize(out:, meta:, done: [], ydl_opts: [], check_empty: true,
-    min_duration: nil, dry_run: false, log: Log.new
+  def initialize(out:, meta:, done: [],
+    ydl_opts: [], check_empty: true, min_duration: nil, rclone_dest: nil,
+    nthreads: NTHREADS,
+    dry_run: false, log: Log.new
   )
-    @ydl = Exe.new "youtube-dl"
-    @ydl_opts, @check_empty, @min_duration, @dry_run, @log =
-      ydl_opts, check_empty, min_duration, dry_run, log
+    @ydl = Exe.new "youtube-dl", log.sub("youtube-dl")
+    @dry_run, @log = dry_run, log
+    @ydl_opts, @check_empty, @min_duration, @rclone_dest, @nthreads =
+      ydl_opts, check_empty, min_duration, rclone_dest, nthreads
+    @nthreads = 1 if @dry_run
 
     @out, @meta = [out, meta].map { |p|
       Pathname(p).tap do |dir|
@@ -49,8 +58,14 @@ class Downloader
     }
     @done = done.map { |p| Pathname p }
 
+    @log.debug "out dir: %p" % fns([@out])
+    @log.debug "meta dir: %p" % fns([@meta])
+    @log.debug "done: %d" % @done.size
+    @log.debug "threads: %d" % @nthreads
+    @log.debug "ydl opts: %p" % [@ydl_opts]
+
     @q = Queue.new
-    @threads = (@dry_run ? 1 : NTHREADS).times.map do
+    @threads = @nthreads.times.map do
       Thread.new do
         Thread.current.abort_on_exception = true
         while item = @q.shift
@@ -59,11 +74,16 @@ class Downloader
       end
     end
 
-    @log.debug "out dir: %p" % fns([@out])
-    @log.debug "meta dir: %p" % fns([@meta])
-    @log.debug "done: %d" % @done.size
-    @log.debug "threads: %d" % @threads.size
-    @log.debug "ydl opts: %p" % [@ydl_opts]
+    if @rclone_dest
+      rclone = Exe.new "rclone", @log.sub("rclone")
+      @threads << Thread.new do
+        Thread.current.abort_on_exception = true
+        until @threads.count(&:alive?) <= 1
+          sleep 1
+          rclone.run "move", "-v", @out, @rclone_dest
+        end
+      end
+    end
   end
 
   def dl_playlist(url)
@@ -142,11 +162,6 @@ class Downloader
       other.concat a
     end
 
-    keep, other = other.partition { |f| KEEP_EXTS.include? f.extname }
-    if !keep.empty?
-      log.info "keeping leftover files: %p" % fns(keep)
-    end
-
     if !other.empty?
       log.info "deleting leftover files: %p" % fns(other) do
         FileUtils.rm other
@@ -221,8 +236,8 @@ class Log
   LEVELS = %i( debug info warn error ).freeze
   LEVELS_W = LEVELS.map(&:length).max
 
-  def initialize(prefix=nil, level: LEVELS.first, io: $stderr, mutex: Mutex.new)
-    @prefix, @io, @mu = prefix, io, mutex
+  def initialize(prefix=nil, level: LEVELS.first, io: $stderr)
+    @prefix, @io = prefix, io
     self.level = level
   end
 
@@ -249,13 +264,7 @@ class Log
     puts *args, level: level, &block if find_level(level) >= @level_idx
   end
 
-  private def puts(*args, &block)
-    @mu.synchronize do
-      do_puts *args, &block
-    end
-  end
-
-  private def do_puts(*msgs, level: nil)
+  private def puts(*msgs, level: nil)
     msgs.map! { |msg| "%*s %s" % [LEVELS_W, level.upcase, add_prefix(msg)] }
     @io.print msgs.join("\n")
     res = if block_given?
@@ -274,22 +283,31 @@ class Log
   end
 
   def sub(prefix)
-    self.class.new add_prefix(prefix), level: level, io: @io, mutex: @mu
+    self.class.new add_prefix(prefix), level: level, io: @io
   end
 end
 
 module Commands
   def self.cmd_dl(*urls, audio: false, debug: false, check_empty: true,
-    min_duration: nil, dry_run: false
+    min_duration: nil, rclone_dest: nil, nthreads: nil, dry_run: false
   )
-    dler = Downloader.new \
+    dler = Downloader.new **{
       out: "out", meta: "meta",
       done: $stdin.tty? ? [] : $stdin.read.split("\n"),
       ydl_opts: audio ? %w( -x --audio-format mp3 ) : [],
       check_empty: check_empty,
-      min_duration: min_duration&.to_i,
+      rclone_dest: rclone_dest,
       dry_run: dry_run,
-      log: Log.new(level: debug ? :debug : :info)
+      log: Log.new(level: debug ? :debug : :info),
+    }.tap { |h|
+      opts = {
+        min_duration: min_duration&.to_i,
+        nthreads: nthreads&.to_i,
+      }
+      opts.each do |key, val|
+        h[key] = val if val
+      end
+    }
 
     urls.each do |url|
       case url
