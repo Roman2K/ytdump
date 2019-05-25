@@ -161,11 +161,12 @@ class Downloader
     rescue Exe::ExitError => err
       if err.status == 1
         case err.stderr
-        when /unknown reason/, /urlopen/
-          raise
+        when /unknown reason/, /urlopen/, /\b410\b/
+          log.error "failed to download: #{err.stderr}"
+          return
         when /^ERROR: /
           log.info "unavailable, marking as skippable: #{err.stderr.strip}"
-          FileUtils.touch @meta.join(name+".skip")
+          File.write @meta.join(name+".skip"), err.stderr
           return
         end
       end
