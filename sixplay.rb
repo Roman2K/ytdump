@@ -4,24 +4,24 @@ require_relative 'item'
 require_relative 'duration'
 
 class SixPlay
-  def initialize(&select)
-    @select = select || -> ep { true }
-  end
+  MIN_DURATION = 20 * 60
 
-  def playlist_items(url)
+  def min_duration; MIN_DURATION end
+
+  def episodes(url)
     uri = URI url
     uri.host.sub(/^www\./, "") == "6play.fr" && uri.path.split("/").size == 2 \
       or return
     resp = Net::HTTP.get_response uri
     resp.kind_of? Net::HTTPSuccess or raise "unexpected response: %p" % resp
     html = resp.body.tap { |s| s.force_encoding Encoding::UTF_8 }
-    episodes_from_html(html, uri).map &:playlist_item
+    episodes_from_html(html, uri)
   end
 
   def episodes_from_html(html, uri)
     self.class.string_doc(html).css("a").each_with_object [] do |a, arr|
       ep = ep_from_el(a, uri) or next
-      arr << ep if @select[ep]
+      arr << ep
     end
   end
 
@@ -99,10 +99,8 @@ class SixPlay
         idx: id.to_i,
         id: id,
         url: uri.to_s,
-        title: "%s (%s)" % [
-          [num, title].compact.join(" - "),
-          Duration.fmt(duration),
-        ]
+        duration: duration,
+        title: [num, title].compact.join(" - ")
     end
   end
 

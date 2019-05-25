@@ -36,7 +36,7 @@ class Downloader
   NTHREADS = 4
 
   def initialize(out:, meta:, done: [], ydl_opts: [], check_empty: true,
-    min_duration: DEFAULT_MIN_DURATION, log: Log.new
+    min_duration: nil, log: Log.new
   )
     @ydl = Exe.new "youtube-dl"
     @ydl_opts, @check_empty, @min_duration, @log =
@@ -66,18 +66,17 @@ class Downloader
     @log.debug "ydl opts: %p" % [@ydl_opts]
   end
 
-  DEFAULT_MIN_DURATION = 20 * 60
-
   def dl_playlist(url)
     @log.debug "updating youtube-dl" do
       Exe.new("pip").run "install", "--user", "--upgrade", "youtube-dl"
     end
-    min_duration = @min_duration || DEFAULT_MIN_DURATION
     parsers = [
-      SixPlay.new { |ep| ep.duration >= min_duration },
+      SixPlay.new,
     ]
-    if items = parsers.lazy.map { |p| p.playlist_items(url) }.find { |a| a }
-      dl_playlist_items items
+    if found = parsers.lazy.map { |p| [p, p.episodes(url)] }.find { |p,a| a }
+      parser, items = found
+      @min_duration ||= parser.min_duration
+      dl_playlist_items items.map &:playlist_item
     else
       dl_playlist_json "[#{get_playlist(url).split("\n") * ","}]"
     end
@@ -99,6 +98,13 @@ class Downloader
   end
 
   def dl_playlist_items(items)
+    if min = @min_duration
+      @log.info "selecting items >= %s" % [Duration.fmt(min)]
+      items.select! do |item|
+        d = item.duration or raise "missing duration in item %p" % item
+        d >= min
+      end
+    end
     raise "empty playlist" if @check_empty && items.empty?
     @log.info "enqueueing %d playlist items" % items.size
     items.sort_by(&:idx).each { |i| @q << i }
@@ -110,11 +116,11 @@ class Downloader
   end
 
   private def get_playlist(url)
-    File.read("debug_ydl_out").tap do
-      @log.info "read cached debug playlist"
-    end
+    File.read "debug"
   rescue Errno::ENOENT
-    @log.info("getting playlist") { @ydl.run "-j", "--flat-playlist", url }
+    @log.info("getting playlist") do
+      @ydl.run *["-j", *("--flat-playlist" unless @min_duration), url]
+    end
   end
 
   KEEP_EXTS = %w(.mkv .mp4 .ytdl .part)
@@ -122,7 +128,12 @@ class Downloader
   def dl(item)
     log = @log.sub item.id
     matcher = ItemMatcher.new item.id
-    name = ("%05d - %s - %s" % [item.idx, item.title, item.id]).tr('/\\:!', '_')
+    name = ("%05d - %s%s - %s" % [
+      item.idx,
+      item.title,
+      item.duration.yield_self { |d| d ? " (%s)" % Duration.fmt(d) : "" },
+      item.id,
+    ]).tr('/\\:!', '_')
 
     ls = matcher.glob @meta
     skip, other = ls.partition { |f| f.extname == ".skip" }
@@ -262,14 +273,14 @@ end
 
 module Commands
   def self.cmd_dl(*urls, audio: false, debug: false, check_empty: true,
-    min_duration: Downloader::DEFAULT_MIN_DURATION
+    min_duration: nil
   )
     dler = Downloader.new \
       out: "out", meta: "meta",
       done: $stdin.tty? ? [] : $stdin.read.split("\n"),
       ydl_opts: audio ? %w( -x --audio-format mp3 ) : [],
       check_empty: check_empty,
-      min_duration: min_duration.to_i,
+      min_duration: min_duration&.to_i,
       log: Log.new(level: debug ? :debug : :info)
 
     urls.each do |url|
