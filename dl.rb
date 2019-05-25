@@ -36,11 +36,11 @@ class Downloader
   NTHREADS = 4
 
   def initialize(out:, meta:, done: [], ydl_opts: [], check_empty: true,
-    min_duration: nil, log: Log.new
+    min_duration: nil, dry_run: false, log: Log.new
   )
     @ydl = Exe.new "youtube-dl"
-    @ydl_opts, @check_empty, @min_duration, @log =
-      ydl_opts, check_empty, min_duration, log
+    @ydl_opts, @check_empty, @min_duration, @dry_run, @log =
+      ydl_opts, check_empty, min_duration, dry_run, log
 
     @out, @meta = [out, meta].map { |p|
       Pathname(p).tap do |dir|
@@ -50,7 +50,7 @@ class Downloader
     @done = done.map { |p| Pathname p }
 
     @q = Queue.new
-    @threads = NTHREADS.times.map do
+    @threads = (@dry_run ? 1 : NTHREADS).times.map do
       Thread.new do
         Thread.current.abort_on_exception = true
         while item = @q.shift
@@ -69,7 +69,7 @@ class Downloader
   def dl_playlist(url)
     @log.debug "updating youtube-dl" do
       Exe.new("pip").run "install", "--user", "--upgrade", "youtube-dl"
-    end
+    end unless @dry_run
     parsers = [
       SixPlay.new,
     ]
@@ -123,7 +123,7 @@ class Downloader
     end
   end
 
-  KEEP_EXTS = %w(.mkv .mp4 .ytdl .part)
+  KEEP_EXTS = %w(.mkv .mp4 .ytdl .part .webm)
 
   def dl(item)
     log = @log.sub item.id
@@ -164,11 +164,18 @@ class Downloader
       return
     end
 
+    args = [
+      "-o", @meta.join("#{name}.%(ext)s").to_s,
+      "-q", *@ydl_opts,
+      item.url
+    ]
+    if @dry_run
+      log.info "dry run: youtube-dl %p" % [args]
+      return
+    end
+
     begin
-      @ydl.run \
-        "-o", @meta.join("#{name}.%(ext)s").to_s,
-        "-q", *@ydl_opts,
-        item.url
+      @ydl.run *args
     rescue Exe::ExitError => err
       if err.status == 1
         case err.stderr
@@ -273,7 +280,7 @@ end
 
 module Commands
   def self.cmd_dl(*urls, audio: false, debug: false, check_empty: true,
-    min_duration: nil
+    min_duration: nil, dry_run: false
   )
     dler = Downloader.new \
       out: "out", meta: "meta",
@@ -281,6 +288,7 @@ module Commands
       ydl_opts: audio ? %w( -x --audio-format mp3 ) : [],
       check_empty: check_empty,
       min_duration: min_duration&.to_i,
+      dry_run: dry_run,
       log: Log.new(level: debug ? :debug : :info)
 
     urls.each do |url|
