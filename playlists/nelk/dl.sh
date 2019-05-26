@@ -1,3 +1,3 @@
-exec ../../dl_to_rclone \
+exec ../../dl \
   'https://www.youtube.com/channel/UCkhxWF5CTMUgxneqAFP96LQ' \
-  drive:media/yt/nelk
+  --rclone_dest=drive:media/yt/nelk

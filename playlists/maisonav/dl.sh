@@ -1,3 +1,3 @@
-exec ../../dl_to_rclone \
+exec ../../dl \
   'https://www.6play.fr/maison-a-vendre-p_874' \
-  drive:media/replay/maisonav
+  --rclone_dest=drive:media/replay/maisonav

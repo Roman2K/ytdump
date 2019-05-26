@@ -1,3 +1,3 @@
-exec ../../dl_to_rclone \
+exec ../../dl \
   'https://www.6play.fr/moundir-et-les-apprentis-aventuriers-p_5848' \
-  drive:media/replay/moundir
+  --rclone_dest=drive:media/replay/moundir

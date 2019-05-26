@@ -1,3 +1,3 @@
-exec ../../dl_to_rclone \
+exec ../../dl \
   'https://www.6play.fr/un-diner-presque-parfait-p_820' \
-  drive:media/replay/diner
+  --rclone_dest=drive:media/replay/diner

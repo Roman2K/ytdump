@@ -1,3 +1,3 @@
-exec ../../dl_to_rclone \
+exec ../../dl \
   'https://www.6play.fr/recherche-appartement-ou-maison-p_918' \
-  drive:media/replay/rechappart
+  --rclone_dest=drive:media/replay/rechappart

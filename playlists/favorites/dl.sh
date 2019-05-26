@@ -1,3 +1,3 @@
-exec ../../dl_to_rclone \
+exec ../../dl \
   'https://www.youtube.com/playlist?list=FLBO0BVmvznFmczvRVZ5in6Q' \
-  drive:media/yt/fav_dl
+  --rclone_dest=drive:media/yt/fav_dl

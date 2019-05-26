@@ -13,7 +13,8 @@ name=ytdump/$playlist_name
   echo "running cronjob '$name'"
   date \
     && bash -lc "
-      exec alerterr --name=$name --on_err='/ERROR|downloaded|unavailable/' -- \
+      exec alerterr \
+        --name=$name --on_err='/^ *ERROR|downloaded|unavailable/' -- \
         flock lock \
           bash dl.sh
     "

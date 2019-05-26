@@ -1,4 +1,4 @@
-exec ../../dl_to_rclone \
+exec ../../dl \
   'https://soundcloud.com/roman2k/reposts' \
-  drive:media/music/soundcloud/repost \
+  --rclone_dest=drive:media/music/soundcloud/repost \
   -x

@@ -1,4 +1,4 @@
-exec ../../dl_to_rclone \
+exec ../../dl \
   'https://soundcloud.com/roman2k/sets/ultimate-eargasm' \
-  drive:media/music/soundcloud/eargasm \
+  --rclone_dest=drive:media/music/soundcloud/eargasm \
   -x

@@ -1,3 +1,3 @@
-exec ../../dl_to_rclone \
+exec ../../dl \
   'https://www.6play.fr/les-princes-et-les-princesses-de-lamour-p_3442' \
-  drive:media/replay/princes
+  --rclone_dest=drive:media/replay/princes

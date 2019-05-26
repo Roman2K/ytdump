@@ -1,3 +1,3 @@
-exec ../../dl_to_rclone \
+exec ../../dl \
   'https://www.6play.fr/norbert-commis-d-office-p_4668' \
-  drive:media/replay/norbert
+  --rclone_dest=drive:media/replay/norbert

@@ -1,4 +1,4 @@
-exec ../../dl_to_rclone \
+exec ../../dl \
   'https://www.6play.fr/les-marseillais-vs-le-reste-du-monde-p_6092' \
-  drive:media/replay/marseillais_restedm \
+  --rclone_dest=drive:media/replay/marseillais_restedm \
   --no-check_empty

@@ -1,4 +1,4 @@
-exec ../../dl_to_rclone \
+exec ../../dl \
   'https://www.6play.fr/les-marseillais-south-africa-p_5646' \
-  drive:media/replay/marseillais_southafrica \
+  --rclone_dest=drive:media/replay/marseillais_southafrica \
   --no-check_empty

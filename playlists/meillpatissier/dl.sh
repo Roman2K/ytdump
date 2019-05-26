@@ -1,3 +1,3 @@
-exec ../../dl_to_rclone \
+exec ../../dl \
   'https://www.6play.fr/le-meilleur-patissier-les-professionnels-p_6762' \
-  drive:media/replay/meillpatissier
+  --rclone_dest=drive:media/replay/meillpatissier

@@ -1,3 +1,3 @@
-exec ../../dl_to_rclone \
+exec ../../dl \
   'https://www.6play.fr/cauchemar-en-cuisine-avec-philippe-etchebest-p_841' \
-  drive:media/replay/cauchemar
+  --rclone_dest=drive:media/replay/cauchemar

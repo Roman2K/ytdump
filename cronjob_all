@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 set -eo pipefail
 
-ls playlists | xargs -n1 -P4 ./cronjob
+ls playlists | xargs -n1 -P8 -o ./cronjob

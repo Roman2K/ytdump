@@ -78,9 +78,11 @@ class Downloader
       rclone = Exe.new "rclone", @log.sub("rclone")
       @threads << Thread.new do
         Thread.current.abort_on_exception = true
-        until @threads.count(&:alive?) <= 1
+        loop do
           sleep 1
+          stop = @threads.count(&:alive?) <= 1
           rclone.run "move", "-v", @out, @rclone_dest
+          break if stop
         end
       end
     end
@@ -153,7 +155,7 @@ class Downloader
       item.title,
       item.duration.yield_self { |d| d ? " (%s)" % Duration.fmt(d) : "" },
       item.id,
-    ]).tr('/\\:!', '_')
+    ]).tr('/\\:!'+"\n", '_')
 
     ls = matcher.glob @meta
     skip, other = ls.partition { |f| f.extname == ".skip" }
@@ -195,10 +197,10 @@ class Downloader
       if err.status == 1
         case err.stderr
         when /unknown reason/, /urlopen/, /\b410\b/
-          log.error "failed to download: #{err.stderr}"
+          log.warn "failed to download: #{err.stderr}"
           return
         when /^ERROR: /
-          log.info "unavailable, marking as skippable: #{err.stderr.strip}"
+          log.warn "unavailable, marking as skippable: #{err.stderr.strip}"
           File.write @meta.join(name+".skip"), err.stderr
           return
         end
@@ -291,14 +293,27 @@ module Commands
   def self.cmd_dl(*urls, audio: false, debug: false, check_empty: true,
     min_duration: nil, rclone_dest: nil, nthreads: nil, dry_run: false
   )
+    log = Log.new(level: debug ? :debug : :info)
+
+    done = if !$stdin.tty?
+      $stdin.read
+    else
+      if rclone_dest
+        rcl = Exe.new "rclone", log.sub("rclone")
+        rcl.run "-v", "lsf", rclone_dest
+      else
+        ""
+      end
+    end.split("\n")
+
     dler = Downloader.new **{
       out: "out", meta: "meta",
-      done: $stdin.tty? ? [] : $stdin.read.split("\n"),
+      done: done,
       ydl_opts: audio ? %w( -x --audio-format mp3 ) : [],
       check_empty: check_empty,
       rclone_dest: rclone_dest,
       dry_run: dry_run,
-      log: Log.new(level: debug ? :debug : :info),
+      log: log,
     }.tap { |h|
       opts = {
         min_duration: min_duration&.to_i,

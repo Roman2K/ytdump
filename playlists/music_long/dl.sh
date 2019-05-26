@@ -1,4 +1,4 @@
-exec ../../dl_to_rclone \
+exec ../../dl \
   'https://www.youtube.com/playlist?list=PLl-okm7qF_1m0ZMpDiZDZbHRbRJuFOySG' \
-  drive:media/music/long/yt \
+  --rclone_dest=drive:media/music/long/yt \
   -x
