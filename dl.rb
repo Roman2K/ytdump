@@ -155,7 +155,7 @@ class Downloader
       item.title,
       item.duration.yield_self { |d| d ? " (%s)" % Duration.fmt(d) : "" },
       item.id,
-    ]).tr('/\\:!'+"\n", '_')
+    ]).tr('/\\:!'"\n", '_')
 
     ls = matcher.glob @meta
     skip, other = ls.partition { |f| f.extname == ".skip" }
@@ -297,13 +297,11 @@ module Commands
 
     done = if !$stdin.tty?
       $stdin.read
+    elsif rclone_dest
+      rcl = Exe.new "rclone", log.sub("rclone")
+      rcl.run "-v", "lsf", rclone_dest
     else
-      if rclone_dest
-        rcl = Exe.new "rclone", log.sub("rclone")
-        rcl.run "-v", "lsf", rclone_dest
-      else
-        ""
-      end
+      ""
     end.split("\n")
 
     dler = Downloader.new **{
@@ -315,13 +313,10 @@ module Commands
       dry_run: dry_run,
       log: log,
     }.tap { |h|
-      opts = {
+      h.update({
         min_duration: min_duration&.to_i,
         nthreads: nthreads&.to_i,
-      }
-      opts.each do |key, val|
-        h[key] = val if val
-      end
+      }.delete_if { |k,v| v.nil? })
     }
 
     urls.each do |url|
