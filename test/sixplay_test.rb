@@ -3,6 +3,8 @@ require 'minitest/autorun'
 require 'sixplay'
 
 class SixPlayTest < Minitest::Test
+  MIN_DURATION = 20 * 60
+
   def test_episodes_from_html_season
     parser = SixPlay.new { |ep| ep.num }
 
@@ -14,6 +16,10 @@ class SixPlayTest < Minitest::Test
     assert_equal 49, eps.size
     assert_equal({4 => 8, 3 => 41}, stats(eps))
     assert_equal 2280, eps.map(&:duration).min
+
+    eps = parse_eps parser, "moundir_derchance",
+      "https://www.6play.fr/moundir-et-la-plage-de-la-derniere-chance-p_14151"
+    assert_equal 0, eps.size
 
     eps = parse_eps parser, "princes",
       "https://www.6play.fr/les-princes-et-les-princesses-de-lamour-p_3442"
@@ -46,20 +52,22 @@ class SixPlayTest < Minitest::Test
     assert_equal({3 => 50}, stats(eps))
   end
 
-  private def parse_eps(parser, name, url)
+  private def parse_eps(parser, name, url, min_duration: 20 * 60)
     html = page name
     uri = URI url
-    parser.episodes_from_html html, uri
+    parser.
+      episodes_from_html(html, uri).
+      select { |ep| ep.duration >= min_duration }
   end
 
   def test_episodes_from_html_no_season
-    parser = SixPlay.new { |ep| ep.duration >= 30 * 60 }
+    parser = SixPlay.new
 
     eps = parse_eps parser, "meillpatissier",
       "https://www.6play.fr/le-meilleur-patissier-les-professionnels-p_6762"
     assert_equal [
-      "S00E02 - Le choc des nations / épisode 2 (1h55m)",
-      "S00E02 - Artus refait le match / épisode 2 (48m)",
+      "S00E02 - Le choc des nations / épisode 2",
+      "S00E02 - Artus refait le match / épisode 2",
     ], eps.map { |ep| ep.playlist_item.title }
 
     eps = parse_eps parser, "norbert",

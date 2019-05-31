@@ -58,11 +58,11 @@ class Downloader
     }
     @done = done.map { |p| Pathname p }
 
-    @log.debug "out dir: %p" % fns([@out])
-    @log.debug "meta dir: %p" % fns([@meta])
-    @log.debug "done: %d" % @done.size
-    @log.debug "threads: %d" % @nthreads
-    @log.debug "ydl opts: %p" % [@ydl_opts]
+    @log.info "out dir: %p" % fns([@out])
+    @log.info "meta dir: %p" % fns([@meta])
+    @log.info "done: %d" % @done.size
+    @log.info "threads: %d" % @nthreads
+    @log.info "ydl opts: %p" % [@ydl_opts]
 
     @q = Queue.new
     @threads = @nthreads.times.map do
@@ -81,7 +81,7 @@ class Downloader
         loop do
           sleep 1
           stop = @threads.count(&:alive?) <= 1
-          rclone.run "move", "-v", @out, @rclone_dest
+          puts rclone.run("move", "-v", @out, @rclone_dest)
           break if stop
         end
       end
@@ -295,11 +295,11 @@ module Commands
   )
     log = Log.new(level: debug ? :debug : :info)
 
-    done = if !$stdin.tty?
-      $stdin.read
-    elsif rclone_dest
+    done = if rclone_dest
       rcl = Exe.new "rclone", log.sub("rclone")
       rcl.run "-v", "lsf", rclone_dest
+    elsif !$stdin.tty?
+      $stdin.read
     else
       ""
     end.split("\n")

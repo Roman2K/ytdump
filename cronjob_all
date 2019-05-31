@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
 set -eo pipefail
 
-ls playlists | xargs -n1 -P8 -o ./cronjob
+{
+  ls playlists | xargs -n1 -P8 ./cronjob
+} 2>&1 | tee /tmp/ytdump_cronjob_all.log

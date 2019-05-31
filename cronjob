@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -eo pipefail
 
 [ $# = 1 ] || {
   echo "usage: `basename $0` playlist_name" >&2
@@ -11,11 +12,11 @@ name=ytdump/$playlist_name
 
 {
   echo "running cronjob '$name'"
-  date \
-    && bash -lc "
-      exec alerterr \
-        --name=$name --on_err='/^ *ERROR|downloaded|unavailable/' -- \
-        flock lock \
-          bash dl.sh
-    "
+  date
+  bash -lc "
+    exec alerterr \
+      --name=$name --on_err='/^ *ERROR|downloaded|unavailable/' -- \
+      flock lock \
+        bash dl.sh
+  "
 } 2>&1 | tee cronjob.log
