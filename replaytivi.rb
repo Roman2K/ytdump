@@ -24,10 +24,10 @@ class ReplayTivi
         },
         item: Item.new(
           title: (a.css("img[alt]").first&.[]("alt") \
-            =~ /Saison\s+(\d+)\s+\/\s+[EÉ]pisode\s+(\d+)/i \
-            and "S%02dE%02d" % [$1, $2] \
+            =~ /Saison\s+(\d+)\s.*[EÉ]pisode\s+(\d+)/i \
+            and "S%02dE%02d" % [$1,$2] \
             or raise "missing season+ep number in thumbnail"),
-          duration: (a.css(".icon-video").text[/(\d+)\s+min/, 1] \
+          duration: (a.css(".icon-video").text[/(\d+)\s+min/i, 1] \
             or raise "missing duration").to_i * 60
         )
     end

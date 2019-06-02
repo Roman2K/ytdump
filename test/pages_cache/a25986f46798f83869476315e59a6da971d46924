@@ -1,0 +1,671 @@
+o:Net::HTTPOK:@http_version"1.1:
+@code"200:@message"OK:@header{"server["o2switch PowerBoost"	date[""Sun, 02 Jun 2019 12:16:21 GMT"content-type["text/html; charset=utf-8"transfer-encoding["chunked"connection["keep-alive"	vary["Accept-Encoding"x-powered-by["PHP/5.6.40:
+@body"�}<!doctype html>
+<!--[if lte IE 6]> <html class="no-js ie6 ie67 ie678" lang="fr"> <![endif]-->
+<!--[if IE 7]> <html class="no-js ie7 ie67 ie678" lang="fr"> <![endif]-->
+<!--[if IE 8]> <html class="no-js ie8 ie678" lang="fr"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="fr"> <!--<![endif]-->
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=10">
+	<title>Replay Moundir et les apprentis aventuriers - Saison 4 / Épisode 5 du 16 mai 2019 sur W9</title>
+	<meta name="viewport" content="initial-scale=1.0">
+	<meta name="robots" content="index,follow,noarchive" />
+	<!--[if lt IE 9]><script src="/js/html5shiv.js"></script><![endif]-->
+	<link rel="stylesheet" href="/css/knacss.css" media="all">
+	<link rel="stylesheet" href="/css/r/style.css" media="all">
+	<link rel="canonical" href="http://www.replaytivi.fr/replay/moundir-et-les-apprentis-aventuriers-291864">
+    <link href='http://fonts.googleapis.com/css?family=Play' rel='stylesheet' type='text/css'>
+	<link href="/css/mgmenu.css" rel="stylesheet" type="text/css">
+
+	<link rel="shortcut icon" type="image/png" href="/img/design/favicon.png" />
+	<link rel="alternate" type="application/rss+xml" title="ReplayTivi, les derniers replays" href="http://feeds.feedburner.com/ReplayTivi" />
+
+	<script async src="/js/cmp.js"></script>
+
+		<!-- fb -->
+	<meta property="og:title" content="Replay de Moundir et les apprentis aventuriers : Saison 4 / Épisode 5 du 16 mai 2019, sur W9"/>
+	<meta property="og:url" content="http://www.replaytivi.fr/replay/moundir-et-les-apprentis-aventuriers-291864"/>
+	<meta property="og:description" content="Vous avez manqué Moundir et les apprentis aventuriers, diffusé le 16/05/2019 sur W9 ? Pas de panique voici le replay dispo sur 6Play W9."/>
+	<meta property="og:image" content="http://www.replaytivi.fr/assets/epi/336/2019/05/16/e291864.jpg"/>
+
+	<!-- twitter -->
+	<meta name="twitter:card" content="summary"/>
+	<meta name="twitter:site" content="@Replay_Tivi"/>
+	<meta name="twitter:creator" content="@Replay_Tivi"/>
+	<meta name="twitter:title" content="Replay de Moundir et les apprentis aventuriers : Saison 4 / Épisode 5 du 16 mai 2019, sur W9"/>
+	<meta name="twitter:url" content="http://www.replaytivi.fr/replay/moundir-et-les-apprentis-aventuriers-291864"/>
+	<meta name="twitter:description" content="Vous avez manqué Moundir et les apprentis aventuriers, diffusé le 16/05/2019 sur W9 ? Pas de panique voici le replay dispo sur 6Play W9."/>
+	<meta name="twitter:image" content="http://www.replaytivi.fr/assets/epi/336/2019/05/16/e291864.jpg"/>
+
+	<!-- Google+ -->
+	<meta itemprop="name" content="Replay de Moundir et les apprentis aventuriers : Saison 4 / Épisode 5 du 16 mai 2019, sur W9"/>
+	<meta itemprop="description" content="Vous avez manqué Moundir et les apprentis aventuriers, diffusé le 16/05/2019 sur W9 ? Pas de panique voici le replay dispo sur 6Play W9."/>
+	<meta itemprop="image" content="http://www.replaytivi.fr/assets/epi/336/2019/05/16/e291864.jpg"/>
+
+
+	
+
+</head>
+<body class="mw1140p center">
+	<header>
+
+		<div id="banniere">
+			<a href="/">ReplayTivi</a>
+			<div id="15894-1">
+				<script src="//ads.themoneytizer.com/s/gen.js?type=1"></script>
+				<script src="//ads.themoneytizer.com/s/requestform.js?siteId=15894&formatId=1" ></script>
+			</div>
+			<div style="clear: both;"></div>
+		</div>
+
+		<nav id="mgmenu1" role="navigation" class="mgmenu_container">
+			<ul class="mgmenu">
+				<li class="mgmenu_button">Menu</li>
+
+ 				<li><a href="/" class="icomenu" title="Accueil"><span class="icon_home icons_menu"></span></a></li>
+
+				<li><span>CHAINES</span>
+  					<div class="dropdown_container dropdown_fullwidth">
+						<div class="autogrid mls">
+							<!-- cache 2019-06-02 12:36:03 -->
+				 <div class=""><a title="MyTF1" href="/chaine/tf1"><span class="tf1-30 sprite30"></span></a></div>				 <div class=""><a title="Pluzz France 2" href="/chaine/france-2"><span class="france2-30 sprite30"></span></a></div>				 <div class=""><a title="Pluzz France 3" href="/chaine/france-3"><span class="france3-30 sprite30"></span></a></div>				 <div class=""><a title="Canal Plus" href="/chaine/canalplus"><span class="canalplus-30 sprite30"></span></a></div>				 <div class=""><a title="Pluzz France 5" href="/chaine/france-5"><span class="france5-30 sprite30"></span></a></div>				 <div class=""><a title="6 Play M6" href="/chaine/m6"><span class="m6-30 sprite30"></span></a></div>				 <div class=""><a title="C8 Replay" href="/chaine/c8"><span class="c8-30 sprite30"></span></a></div>				 <div class=""><a title="6Play W9" href="/chaine/w9"><span class="w9-30 sprite30"></span></a></div>				 <div class=""><a title="TMC Replay" href="/chaine/tmc"><span class="tmc-30 sprite30"></span></a></div>				 <div class=""><a title="TFX Replay" href="/chaine/tfx"><span class="nt1-30 sprite30"></span></a></div>				 <div class=""><a title="NRJ 12 Replay" href="/chaine/nrj12"><span class="nrj12-30 sprite30"></span></a></div>				 <div class=""><a title="Pluzz France 4" href="/chaine/france-4"><span class="france4-30 sprite30"></span></a></div>				 <div class=""><a title="Pluzz France Ô" href="/chaine/france-o"><span class="franceo-30 sprite30"></span></a></div>				 <div class=""><a title="6Play 6TER" href="/chaine/6ter"><span class="sixter-30 sprite30"></span></a></div>				 <div class=""><a title="NRJ PLay / Chérie 25" href="/chaine/cherie25"><span class="cherie25-30 sprite30"></span></a></div>				 <div class=""><a title="TF1 Séries Films Replay" href="/chaine/tf1-series-films"><span class="hd1-30 sprite30"></span></a></div>				 <div class=""><a title="CStar Replay" href="/chaine/cstar"><span class="cstar-30 sprite30"></span></a></div>				 <div class=""><a title="" href="/chaine/"><span class="-30 sprite30"></span></a></div>				 <div class=""><a title="" href="/chaine/"><span class="-30 sprite30"></span></a></div>
+						</div>
+	                </div>
+	            </li>
+
+
+<!--
+				<li class="right_item"><a class="icomenu"><span class="icon_search icons_menu"></span></a></li>
+-->
+			</ul>
+		</nav>
+
+	</header>
+
+	<div id="container">
+
+<div class="pas">
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- Replaytivi responsive -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-8818569466588281"
+     data-ad-slot="6162706676"
+     data-ad-format="auto"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+</div>
+
+
+<nav class="mls">
+	<div class="breadcrumb" itemscope itemtype="http://data-vocabulary.org/Breadcrumb">
+		<a itemprop="url" title="Retour &agrave; la page d'accueil" href="/"><span itemprop="title">Accueil</span></a>
+> <a itemprop="url" href="http://www.replaytivi.fr/chaine/w9"><span itemprop="title">Replay 6Play W9</span></a>
+> <a itemprop="url" href="http://www.replaytivi.fr/programme/moundir-et-les-apprentis-aventuriers"><span itemprop="title">Moundir et les apprentis aventuriers</span></a>	</div>
+</nav>
+
+<div class="grid">
+	<div class="grid2-1">
+		<section>
+			
+	<article class="mls mrs">
+			<h1>Moundir et les apprentis aventuriers : Saison 4 / Épisode 5</h1>
+
+			<div class="line mbm">
+				<div  class="text18"><p><b>Saison 4 / Épisode 5</b> est l'épisode n°5 de la saison 4 de l'émission de téléréalité <b><a href="/programme/moundir-et-les-apprentis-aventuriers">Moundir et les apprentis aventuriers</a></b>.</p><blockquote>Pour la quatrième saison de « Moundir et les apprentis aventuriers »,
+c'est au cœur de la nature hostile du sud de la Thaïlande que 14 volontaires, accro à leur petit confort, se lancent le défi le plus incroyable de leur vie : survivre...</blockquote><p>Diffusé initialement le jeudi 16 mai 2019, sur W9, l'émission de téléréalité <strong><a href="/programme/moundir-et-les-apprentis-aventuriers">Moundir et les apprentis aventuriers</a></strong> est toujours disponible sur W9, vous pouvez accédez à la rediffusion ci-dessous.. Les rediff sur le net sont limitées dans le temps.</p></div>
+			</div>
+
+							<div class="w728p">
+					<div class="autogrid2">
+						<div class="w336p mbm txtleft">
+							<div class="h4-like strong">Infos 6Play W9 rediffusion</div>
+							<div style="height: 90px;">
+								<ul>
+									<li><b>Programme</b> : <a href="/programme/moundir-et-les-apprentis-aventuriers">Moundir et les apprentis aventuriers</a></li>
+									<li><b>Episode</b> : <li><b>Episode</b> : S04E05 - Saison 4 / Épisode 5</li></li>
+									<li><b>Dernière diffusion</b> : le 16 mai 2019</li>
+									<li style=""><b>Heure de début</b> : 19h50</li>
+									<li><b>Durée :</b> 46 min</li>
+								</ul>
+							</div>
+						</div>
+
+						<div class="w336p mbm txtleft">
+							<div class="h4-like strong">Partager cette vidéo</div>
+							<div style="height: 90px;">
+								<div class="social-banner clearfix">
+	<div class="txt tot_share"></div>
+	<a target="_blank" rel="nofollow" class="sprite fb_share" href="https://www.facebook.com/sharer.php?u=http://www.replaytivi.fr/replay/moundir-et-les-apprentis-aventuriers-291864&t=Vous avez manqué Moundir et les apprentis aventuriers, diffusé le 16/05/2019 sur W9 ? Pas de panique voici le replay dispo sur 6Play W9." onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=500,width=700');return false;"></a>
+	<a target="_blank" rel="nofollow" class="sprite tw_share" href="https://twitter.com/share?url=http://www.replaytivi.fr/replay/moundir-et-les-apprentis-aventuriers-291864&text=Vous avez manqué Moundir et les apprentis aventuriers, diffusé le 16/05/2019 sur W9 ? Pas de panique voici le replay dispo sur 6Play W9.&via=Replay_Tivi" onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=400,width=700');return false;"></a>
+	<a target="_blank" rel="nofollow" class="sprite gg_share" href="https://plus.google.com/share?url=http://www.replaytivi.fr/replay/moundir-et-les-apprentis-aventuriers-291864&hl=fr" onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=450,width=650');return false;"></a>
+</div>
+
+
+							</div>
+						</div>
+
+						<div class="w336p w336h mbm">
+<div class="txtcenter">PUB</div>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- 336x280 RTV -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:336px;height:280px"
+     data-ad-client="ca-pub-8818569466588281"
+     data-ad-slot="9783728278"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+						</div>
+
+						<div class="w336p mbm txtcenter">
+							<div class="txtcenter"><br/></div>
+							<div class="vignette336">
+                                <a class="trkrpl" id="4971-291864" target="_blank" rel="nofollow" href="http://www.6play.fr/moundir-et-les-apprentis-aventuriers-p_5848/saison-4-episode-5-c_12373261" title="accédez au replay de Moundir et les apprentis aventuriers"><img alt="Moundir et les apprentis aventuriers" src="/assets/epi/336/2019/05/16/e291864.jpg" /><div class="play"></div></a>
+                            </div>
+						</div>
+					</div>
+				</div>
+
+			<div class="headingS">
+	 <div class="date">Autres vidéos en replay pour Moundir et les apprentis aventuriers</div>
+</div>
+<div class="grid">
+	<div class="autogrid4">
+		<div class="thumbnail">
+	<a href="/replay/moundir-et-les-apprentis-aventuriers-293310">
+		<div style="position:relative;">
+			<span class="icon-video"><span>47 mins</span></span>
+			<img src="/assets/epi/160/2019/05/31/e293310.jpg" alt="Saison 4 / Épisode 16" style="position:relative;z-index:1; margin: auto;" />
+		</div>
+		<span>Saison 4 / Épisode 16</span>
+	</a>
+</div><div class="thumbnail">
+	<a href="/replay/moundir-et-les-apprentis-aventuriers-293239">
+		<div style="position:relative;">
+			<span class="icon-video"><span>47 mins</span></span>
+			<img src="/assets/epi/160/2019/05/30/e293239.jpg" alt="Saison 4 / Épisode 15" style="position:relative;z-index:1; margin: auto;" />
+		</div>
+		<span>Saison 4 / Épisode 15</span>
+	</a>
+</div><div class="thumbnail">
+	<a href="/replay/moundir-et-les-apprentis-aventuriers-293163">
+		<div style="position:relative;">
+			<span class="icon-video"><span>42 mins</span></span>
+			<img src="/assets/epi/160/2019/05/29/e293163.jpg" alt="Saison 4 / Épisode 14" style="position:relative;z-index:1; margin: auto;" />
+		</div>
+		<span>Saison 4 / Épisode 14</span>
+	</a>
+</div><div class="thumbnail">
+	<a href="/replay/moundir-et-les-apprentis-aventuriers-293077">
+		<div style="position:relative;">
+			<span class="icon-video"><span>47 mins</span></span>
+			<img src="/assets/epi/160/2019/05/28/e293077.jpg" alt="Saison 4 / Épisode 13" style="position:relative;z-index:1; margin: auto;" />
+		</div>
+		<span>Saison 4 / Épisode 13</span>
+	</a>
+</div><div class="thumbnail">
+	<a href="/replay/moundir-et-les-apprentis-aventuriers-292974">
+		<div style="position:relative;">
+			<span class="icon-video"><span>43 mins</span></span>
+			<img src="/assets/epi/160/2019/05/27/e292974.jpg" alt="Saison 4 / Épisode 12" style="position:relative;z-index:1; margin: auto;" />
+		</div>
+		<span>Saison 4 / Épisode 12</span>
+	</a>
+</div><div class="thumbnail">
+	<a href="/replay/moundir-et-les-apprentis-aventuriers-292690">
+		<div style="position:relative;">
+			<span class="icon-video"><span>45 mins</span></span>
+			<img src="/assets/epi/160/2019/05/24/e292690.jpg" alt="Saison 4 / Épisode 11" style="position:relative;z-index:1; margin: auto;" />
+		</div>
+		<span>Saison 4 / Épisode 11</span>
+	</a>
+</div><div class="thumbnail">
+	<a href="/replay/moundir-et-les-apprentis-aventuriers-292579">
+		<div style="position:relative;">
+			<span class="icon-video"><span>45 mins</span></span>
+			<img src="/assets/epi/160/2019/05/23/e292579.jpg" alt="Saison 4 / Épisode 10" style="position:relative;z-index:1; margin: auto;" />
+		</div>
+		<span>Saison 4 / Épisode 10</span>
+	</a>
+</div><div class="thumbnail">
+	<a href="/replay/moundir-et-les-apprentis-aventuriers-292477">
+		<div style="position:relative;">
+			<span class="icon-video"><span>46 mins</span></span>
+			<img src="/assets/epi/160/2019/05/22/e292477.jpg" alt="Saison 4 / Épisode 9" style="position:relative;z-index:1; margin: auto;" />
+		</div>
+		<span>Saison 4 / Épisode 9</span>
+	</a>
+</div><div class="thumbnail">
+	<a href="/replay/moundir-et-les-apprentis-aventuriers-292379">
+		<div style="position:relative;">
+			<span class="icon-video"><span>51 mins</span></span>
+			<img src="/assets/epi/160/2019/05/21/e292379.jpg" alt="Saison 4 / Épisode 8" style="position:relative;z-index:1; margin: auto;" />
+		</div>
+		<span>Saison 4 / Épisode 8</span>
+	</a>
+</div><div class="thumbnail">
+	<a href="/replay/moundir-et-les-apprentis-aventuriers-292276">
+		<div style="position:relative;">
+			<span class="icon-video"><span>47 mins</span></span>
+			<img src="/assets/epi/160/2019/05/20/e292276.jpg" alt="Saison 4 / Épisode 7" style="position:relative;z-index:1; margin: auto;" />
+		</div>
+		<span>Saison 4 / Épisode 7</span>
+	</a>
+</div><div class="thumbnail">
+	<a href="/replay/moundir-et-les-apprentis-aventuriers-291981">
+		<div style="position:relative;">
+			<span class="icon-video"><span>49 mins</span></span>
+			<img src="/assets/epi/160/2019/05/17/e291981.jpg" alt="Saison 4 / Épisode 6" style="position:relative;z-index:1; margin: auto;" />
+		</div>
+		<span>Saison 4 / Épisode 6</span>
+	</a>
+</div><div class="thumbnail">
+	<a href="/replay/moundir-et-les-apprentis-aventuriers-291747">
+		<div style="position:relative;">
+			<span class="icon-video"><span>46 mins</span></span>
+			<img src="/assets/epi/160/2019/05/15/e291747.jpg" alt="Saison 4 / Épisode 4" style="position:relative;z-index:1; margin: auto;" />
+		</div>
+		<span>Saison 4 / Épisode 4</span>
+	</a>
+</div><div class="thumbnail">
+	<a href="/replay/moundir-et-les-apprentis-aventuriers-291635">
+		<div style="position:relative;">
+			<span class="icon-video"><span>48 mins</span></span>
+			<img src="/assets/epi/160/2019/05/14/e291635.jpg" alt="Saison 4 / Épisode 3" style="position:relative;z-index:1; margin: auto;" />
+		</div>
+		<span>Saison 4 / Épisode 3</span>
+	</a>
+</div><div class="thumbnail">
+	<a href="/replay/moundir-et-les-apprentis-aventuriers-291530">
+		<div style="position:relative;">
+			<span class="icon-video"><span>46 mins</span></span>
+			<img src="/assets/epi/160/2019/05/13/e291530.jpg" alt="Saison 4 / Épisode 2" style="position:relative;z-index:1; margin: auto;" />
+		</div>
+		<span>Saison 4 / Épisode 2</span>
+	</a>
+</div><div class="thumbnail">
+	<a href="/replay/moundir-et-les-apprentis-aventuriers-291529">
+		<div style="position:relative;">
+			<span class="icon-video"><span>48 mins</span></span>
+			<img src="/assets/epi/160/2019/05/13/e291529.jpg" alt="Saison 4 / Épisode 1" style="position:relative;z-index:1; margin: auto;" />
+		</div>
+		<span>Saison 4 / Épisode 1</span>
+	</a>
+</div><div class="thumbnail">
+	<a href="/replay/moundir-et-les-apprentis-aventuriers-262082">
+		<div style="position:relative;">
+			<span class="icon-video"><span>42 mins</span></span>
+			<img src="/assets/epi/160/2018/07/13/e262082.jpg" alt="Saison 3 / Épisode 41" style="position:relative;z-index:1; margin: auto;" />
+		</div>
+		<span>Saison 3 / Épisode 41</span>
+	</a>
+</div><div class="thumbnail">
+	<a href="/replay/moundir-et-les-apprentis-aventuriers-262011">
+		<div style="position:relative;">
+			<span class="icon-video"><span>41 mins</span></span>
+			<img src="/assets/epi/160/2018/07/12/e262011.jpg" alt="Saison 3 / Épisode 40" style="position:relative;z-index:1; margin: auto;" />
+		</div>
+		<span>Saison 3 / Épisode 40</span>
+	</a>
+</div><div class="thumbnail">
+	<a href="/replay/moundir-et-les-apprentis-aventuriers-261960">
+		<div style="position:relative;">
+			<span class="icon-video"><span>44 mins</span></span>
+			<img src="/assets/epi/160/2018/07/11/e261960.jpg" alt="Saison 3 / Épisode 39" style="position:relative;z-index:1; margin: auto;" />
+		</div>
+		<span>Saison 3 / Épisode 39</span>
+	</a>
+</div><div class="thumbnail">
+	<a href="/replay/moundir-et-les-apprentis-aventuriers-261906">
+		<div style="position:relative;">
+			<span class="icon-video"><span>44 mins</span></span>
+			<img src="/assets/epi/160/2018/07/10/e261906.jpg" alt="Saison 3 / Épisode 38" style="position:relative;z-index:1; margin: auto;" />
+		</div>
+		<span>Saison 3 / Épisode 38</span>
+	</a>
+</div><div class="thumbnail">
+	<a href="/replay/moundir-et-les-apprentis-aventuriers-261852">
+		<div style="position:relative;">
+			<span class="icon-video"><span>46 mins</span></span>
+			<img src="/assets/epi/160/2018/07/10/e261852.jpg" alt="Saison 3 / Épisode 37" style="position:relative;z-index:1; margin: auto;" />
+		</div>
+		<span>Saison 3 / Épisode 37</span>
+	</a>
+</div><div class="thumbnail">
+	<a href="/replay/moundir-et-les-apprentis-aventuriers-261418">
+		<div style="position:relative;">
+			<span class="icon-video"><span>44 mins</span></span>
+			<img src="/assets/epi/160/2018/07/06/e261418.jpg" alt="Saison 3 / Épisode 36" style="position:relative;z-index:1; margin: auto;" />
+		</div>
+		<span>Saison 3 / Épisode 36</span>
+	</a>
+</div><div class="thumbnail">
+	<a href="/replay/moundir-et-les-apprentis-aventuriers-261262">
+		<div style="position:relative;">
+			<span class="icon-video"><span>43 mins</span></span>
+			<img src="/assets/epi/160/2018/07/05/e261262.jpg" alt="Saison 3 / Épisode 35" style="position:relative;z-index:1; margin: auto;" />
+		</div>
+		<span>Saison 3 / Épisode 35</span>
+	</a>
+</div><div class="thumbnail">
+	<a href="/replay/moundir-et-les-apprentis-aventuriers-261121">
+		<div style="position:relative;">
+			<span class="icon-video"><span>46 mins</span></span>
+			<img src="/assets/epi/160/2018/07/04/e261121.jpg" alt="Saison 3 / Épisode 34" style="position:relative;z-index:1; margin: auto;" />
+		</div>
+		<span>Saison 3 / Épisode 34</span>
+	</a>
+</div><div class="thumbnail">
+	<a href="/replay/moundir-et-les-apprentis-aventuriers-260973">
+		<div style="position:relative;">
+			<span class="icon-video"><span>47 mins</span></span>
+			<img src="/assets/epi/160/2018/07/03/e260973.jpg" alt="Saison 3 / Épisode 33" style="position:relative;z-index:1; margin: auto;" />
+		</div>
+		<span>Saison 3 / Épisode 33</span>
+	</a>
+</div>
+	</div>
+</div><div class="headingS">
+	 <div class="date">Programmes du même genre que <em>Moundir et les apprentis aventuriers</em></div>
+</div>
+<div class="grid">
+	<div class="autogrid4">
+		<div class="thumbnail">
+	<a href="http://www.replaytivi.fr/programme/lamour-est-dans-le-pre">
+		<div style="position:relative;">
+			<img src="/assets/prg/160/4/p894.jpg" alt="L'amour est dans le pré" style="position:relative;z-index:1; margin: auto;" />
+		</div>
+		<b>L'amour est dans le pré</b>
+	</a>
+</div><div class="thumbnail">
+	<a href="http://www.replaytivi.fr/programme/les-princes-de-lamour">
+		<div style="position:relative;">
+			<img src="/assets/prg/160/4/p941.jpg" alt="Les princes de l'amour" style="position:relative;z-index:1; margin: auto;" />
+		</div>
+		<b>Les princes de l'amour</b>
+	</a>
+</div><div class="thumbnail">
+	<a href="http://www.replaytivi.fr/programme/les-marseillais-en-thailande">
+		<div style="position:relative;">
+			<img src="/assets/prg/160/5/p1184.jpg" alt="Les Marseillais en Thaïlande" style="position:relative;z-index:1; margin: auto;" />
+		</div>
+		<b>Les Marseillais en Thaïlande</b>
+	</a>
+</div><div class="thumbnail">
+	<a href="http://www.replaytivi.fr/programme/les-anges-7-latin-america">
+		<div style="position:relative;">
+			<img src="/assets/prg/160/6/p1398.jpg" alt="Les Anges 7 - Latin America" style="position:relative;z-index:1; margin: auto;" />
+		</div>
+		<b>Les Anges 7 - Latin America</b>
+	</a>
+</div><div class="thumbnail">
+	<a href="http://www.replaytivi.fr/programme/las-vegas-academy">
+		<div style="position:relative;">
+			<img src="/assets/prg/160/8/p1847.jpg" alt="LAS VEGAS ACADEMY" style="position:relative;z-index:1; margin: auto;" />
+		</div>
+		<b>LAS VEGAS ACADEMY</b>
+	</a>
+</div><div class="thumbnail">
+	<a href="http://www.replaytivi.fr/programme/the-island-seuls-au-monde">
+		<div style="position:relative;">
+			<img src="/assets/prg/160/8/p1856.jpg" alt="The Island : seuls au monde" style="position:relative;z-index:1; margin: auto;" />
+		</div>
+		<b>The Island : seuls au monde</b>
+	</a>
+</div><div class="thumbnail">
+	<a href="http://www.replaytivi.fr/programme/qui-veut-pouser-mon-fils">
+		<div style="position:relative;">
+			<img src="/assets/prg/160/9/p2197.jpg" alt="Qui veut épouser mon fils" style="position:relative;z-index:1; margin: auto;" />
+		</div>
+		<b>Qui veut épouser mon fils</b>
+	</a>
+</div><div class="thumbnail">
+	<a href="http://www.replaytivi.fr/programme/les-chtis-vs-les-marseillais-la-revanche">
+		<div style="position:relative;">
+			<img src="/assets/prg/160/11/p2604.jpg" alt="Les Ch'tis vs les Marseillais : la revanche" style="position:relative;z-index:1; margin: auto;" />
+		</div>
+		<b>Les Ch'tis vs les Marseillais : la revanche</b>
+	</a>
+</div><div class="thumbnail">
+	<a href="http://www.replaytivi.fr/programme/les-vacances-des-anges">
+		<div style="position:relative;">
+			<img src="/assets/prg/160/11/p2614.jpg" alt="Les Vacances Des Anges" style="position:relative;z-index:1; margin: auto;" />
+		</div>
+		<b>Les Vacances Des Anges</b>
+	</a>
+</div><div class="thumbnail">
+	<a href="http://www.replaytivi.fr/programme/secret-story">
+		<div style="position:relative;">
+			<img src="/assets/prg/160/11/p2618.jpg" alt="Secret Story" style="position:relative;z-index:1; margin: auto;" />
+		</div>
+		<b>Secret Story</b>
+	</a>
+</div><div class="thumbnail">
+	<a href="http://www.replaytivi.fr/programme/pascal-le-grand-frere">
+		<div style="position:relative;">
+			<img src="/assets/prg/160/12/p2980.jpg" alt="Pascal, le Grand Frère" style="position:relative;z-index:1; margin: auto;" />
+		</div>
+		<b>Pascal, le Grand Frère</b>
+	</a>
+</div><div class="thumbnail">
+	<a href="http://www.replaytivi.fr/programme/coup-de-jeune-a-vegas">
+		<div style="position:relative;">
+			<img src="/assets/prg/160/13/p3122.jpg" alt="Coup de Jeune A Vegas" style="position:relative;z-index:1; margin: auto;" />
+		</div>
+		<b>Coup de Jeune A Vegas</b>
+	</a>
+</div>
+	</div>
+</div>
+
+	</article>
+			<img src="/stats/4971/291864" />
+		</section>
+		<div>
+			<aside>
+	<div class="heading mls mrs">
+		 <div>TOP PROGRAMMES W9</div>
+	</div>
+
+	<div class="autogrid sid_top10 mls mrs">
+		<!-- cache 2019-06-02 13:35:04 -->
+<div class="mbs center">
+	<a href="/programme/moundir-et-les-apprentis-aventuriers" title="Moundir et les app...">
+		<img src="/assets/prg/160/20/p4971.jpg" alt="Moundir et les app..." />
+	</a>
+</div>
+<div class="mbs center">
+	<a href="/programme/les-marseillais-asian-tour" title="Les Marseillais : Asian Tour">
+		<img src="/assets/prg/160/36/p8917.jpg" alt="Les Marseillais : Asian Tour" />
+	</a>
+</div>
+<div class="mbs center">
+	<a href="/programme/les-princes-et-les-princesses-de-lamour" title="Les princes et les...">
+		<img src="/assets/prg/160/32/p7974.jpg" alt="Les princes et les..." />
+	</a>
+</div>
+<div class="mbs center">
+	<a href="/programme/un-diner-presque-parfait" title="Un dîner presque parfait">
+		<img src="/assets/prg/160/4/p927.jpg" alt="Un dîner presque parfait" />
+	</a>
+</div>
+<div class="mbs center">
+	<a href="/programme/ncis" title="N.C.I.S">
+		<img src="/assets/prg/160/5/p1140.jpg" alt="N.C.I.S" />
+	</a>
+</div>
+<div class="mbs center">
+	<a href="/programme/lle-de-la-tentation" title="L'Île de la tentation">
+		<img src="/assets/prg/160/36/p8958.jpg" alt="L'Île de la tentation" />
+	</a>
+</div>
+<div class="mbs center">
+	<a href="/programme/enquetes-criminelles" title="Enquêtes criminelles">
+		<img src="/assets/prg/160/4/p933.jpg" alt="Enquêtes criminelles" />
+	</a>
+</div>
+<div class="mbs center">
+	<a href="/programme/enquete-daction" title="Enquête d'Action">
+		<img src="/assets/prg/160/4/p932.jpg" alt="Enquête d'Action" />
+	</a>
+</div>
+<div class="mbs center">
+	<a href="/programme/football-quipe-de-france-fminine" title="Football - Équipe...">
+		<img src="/assets/prg/160/35/p8709.jpg" alt="Football - Équipe..." />
+	</a>
+</div>
+<div class="mbs center">
+	<a href="/programme/kaamelott" title="Kaamelott">
+		<img src="/assets/prg/160/4/p942.jpg" alt="Kaamelott" />
+	</a>
+</div>
+<div class="mbs center">
+	<a href="/programme/les-100-vidos-qui-ont-fait-rire-le-monde-entier" title="Les 100 vidéos qu...">
+		<img src="/assets/prg/160/35/p8740.jpg" alt="Les 100 vidéos qu..." />
+	</a>
+</div>
+<div class="mbs center">
+	<a href="/programme/extrme-tattoo" title="Extrême tattoo">
+		<img src="/assets/prg/160/36/p8925.jpg" alt="Extrême tattoo" />
+	</a>
+</div>
+	</div>
+
+	<div style="width:300px; margin:auto;"">
+		<div id="15894-3">
+			<script src="//ads.themoneytizer.com/s/gen.js?type=3"></script>
+			<script src="//ads.themoneytizer.com/s/requestform.js?siteId=15894&formatId=3" ></script>
+		</div>
+	</div>
+
+	<div class="heading mls mrs">
+		 <div>TOP REPLAY W9</div>
+	</div>
+
+	<div class="autogrid sid_top10 mls mrs">
+		<!-- cache 2019-06-02 13:35:04 -->
+<div class="mbs center">
+	<a href="/replay/moundir-et-les-apprentis-aventuriers-292974" title="Moundir et les apprentis aventuriers - Saison 4 / Épisode 12">
+		<img src="/assets/epi/160/2019/05/27/e292974.jpg" alt="Moundir et les apprentis aventuriers" />
+	</a>
+</div>
+<div class="mbs center">
+	<a href="/replay/moundir-et-les-apprentis-aventuriers-293239" title="Moundir et les apprentis aventuriers - Saison 4 / Épisode 15">
+		<img src="/assets/epi/160/2019/05/30/e293239.jpg" alt="Moundir et les apprentis aventuriers" />
+	</a>
+</div>
+<div class="mbs center">
+	<a href="/replay/moundir-et-les-apprentis-aventuriers-293163" title="Moundir et les apprentis aventuriers - Saison 4 / Épisode 14">
+		<img src="/assets/epi/160/2019/05/29/e293163.jpg" alt="Moundir et les apprentis aventuriers" />
+	</a>
+</div>
+<div class="mbs center">
+	<a href="/replay/moundir-et-les-apprentis-aventuriers-292690" title="Moundir et les apprentis aventuriers - Saison 4 / Épisode 11">
+		<img src="/assets/epi/160/2019/05/24/e292690.jpg" alt="Moundir et les apprentis aventuriers" />
+	</a>
+</div>
+<div class="mbs center">
+	<a href="/replay/moundir-et-les-apprentis-aventuriers-293077" title="Moundir et les apprentis aventuriers - Saison 4 / Épisode 13">
+		<img src="/assets/epi/160/2019/05/28/e293077.jpg" alt="Moundir et les apprentis aventuriers" />
+	</a>
+</div>
+<div class="mbs center">
+	<a href="/replay/moundir-et-les-apprentis-aventuriers-293310" title="Moundir et les apprentis aventuriers - Saison 4 / Épisode 16">
+		<img src="/assets/epi/160/2019/05/31/e293310.jpg" alt="Moundir et les apprentis aventuriers" />
+	</a>
+</div>
+<div class="mbs center">
+	<a href="/replay/moundir-et-les-apprentis-aventuriers-291529" title="Moundir et les apprentis aventuriers - Saison 4 / Épisode 1">
+		<img src="/assets/epi/160/2019/05/13/e291529.jpg" alt="Moundir et les apprentis aventuriers" />
+	</a>
+</div>
+<div class="mbs center">
+	<a href="/replay/moundir-et-les-apprentis-aventuriers-292579" title="Moundir et les apprentis aventuriers - Saison 4 / Épisode 10">
+		<img src="/assets/epi/160/2019/05/23/e292579.jpg" alt="Moundir et les apprentis aventuriers" />
+	</a>
+</div>
+	</div>
+
+</aside>		</div>
+	</div>
+
+</div>
+
+		</div>
+
+		<footer class="pas autogrid">
+        	<div>
+				2019 &copy; <a href="http://www.replaytivi.fr">ReplayTivi</a>
+				<br/>
+				0.142 sec
+			</div>
+			<div>
+				<div id="15894-28"><script src="//ads.themoneytizer.com/s/gen.js?type=28"></script><script src="//ads.themoneytizer.com/s/requestform.js?siteId=15894&formatId=28" ></script></div>
+			</div>
+        	<div>
+	            <a href="https://twitter.com/Replay_Tivi" title="Replay Tivi sur Twitter" target="_blank"><img src="/assets/img/social/twitter_icon.png" alt="twitter-icon" /></a>
+	            <a href="https://www.facebook.com/ReplayTivi" title="Replay Tivi sur Facebook" target="_blank"><img src="/assets/img/social/facebook_icon.png" alt="facebook-icon" /></a>
+        	</div>
+		</footer>
+
+	</div>
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-63473-12', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<script src="/js/all.js"></script>
+
+	<script src="/js/menu/mgmenu_plugins.js"></script>
+	<script src="/js/menu/mgmenu.js"></script>
+	<script>
+	$(document).ready(function($){
+	    $('#mgmenu1').universalMegaMenu({
+	        menu_effect: 'hover_fade',
+	        menu_speed_show: 300,
+	        menu_speed_hide: 200,
+	        menu_speed_delay: 200,
+	        menu_click_outside: true,
+	        menubar_trigger : false,
+	        menubar_hide : false,
+	        menu_responsive: true
+	    });
+	    megaMenuContactForm();
+	});
+	</script>
+
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({
+          google_ad_client: "ca-pub-8818569466588281",
+          enable_page_level_ads: true
+     });
+</script>
+
+
+<div id="15894-15"><script src="//ads.themoneytizer.com/s/gen.js?type=15"></script><script src="//ads.themoneytizer.com/s/requestform.js?siteId=15894&formatId=15" ></script></div>
+<script type="text/javascript" src="https://sac.ayads.co/sublime/8375"></script>
+
+</body>
+</html>
+:
+@readT:	@urio:URI::HTTP:@schemeI"	http:ET:
+@user0:@password0:
+@hostI"www.replaytivi.fr;T:
+@portiU:
+@pathI"8/replay/moundir-et-les-apprentis-aventuriers-291864;T:@query0:@opaque0:@fragment0:@parsero:URI::RFC3986_Parser:@regexp{:SCHEMEI/!\A[A-Za-z][A-Za-z0-9+\-.]*\z ;F:USERINFOI/'\A(?:%\h\h|[!$&-.0-;=A-Z_a-z~])*\z ;F:	HOSTI/h\A(?:(?<IP-literal>\[(?:(?<IPv6address>(?:\h{1,4}:){6}(?<ls32>\h{1,4}:\h{1,4}|(?<IPv4address>(?<dec-octet>[1-9]\d|1\d{2}|2[0-4]\d|25[0-5]|\d)\.\g<dec-octet>\.\g<dec-octet>\.\g<dec-octet>))|::(?:\h{1,4}:){5}\g<ls32>|\h{,4}::(?:\h{1,4}:){4}\g<ls32>|(?:(?:\h{1,4}:)?\h{1,4})?::(?:\h{1,4}:){3}\g<ls32>|(?:(?:\h{1,4}:){,2}\h{1,4})?::(?:\h{1,4}:){2}\g<ls32>|(?:(?:\h{1,4}:){,3}\h{1,4})?::\h{1,4}:\g<ls32>|(?:(?:\h{1,4}:){,4}\h{1,4})?::\g<ls32>|(?:(?:\h{1,4}:){,5}\h{1,4})?::\h{1,4}|(?:(?:\h{1,4}:){,6}\h{1,4})?::)|(?<IPvFuture>v\h+\.[!$&-.0-;=A-Z_a-z~]+))\])|\g<IPv4address>|(?<reg-name>(?:%\h\h|[!$&-.0-9;=A-Z_a-z~])*))\z ;F:ABS_PATHI/L\A/(?:%\h\h|[!$&-.0-;=@-Z_a-z~])*(?:/(?:%\h\h|[!$&-.0-;=@-Z_a-z~])*)*\z ;F:REL_PATHI/K\A(?:%\h\h|[!$&-.0-;=@-Z_a-z~])+(?:/(?:%\h\h|[!$&-.0-;=@-Z_a-z~])*)*\z ;F:
+QUERYI/)\A(?:%\h\h|[!$&-.0-;=@-Z_a-z~/?])*\z ;F:FRAGMENTI/)\A(?:%\h\h|[!$&-.0-;=@-Z_a-z~/?])*\z ;F:OPAQUEI/\A(?:[^/].*)?\z ;F:	PORTI/4\A[\x09\x0a\x0c\x0d ]*\d*[\x09\x0a\x0c\x0d ]*\z ;F:@decode_contentT:@socket0:@body_existT
