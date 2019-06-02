@@ -4,9 +4,7 @@ require_relative 'item'
 require_relative 'duration'
 
 class SixPlay
-  MIN_DURATION = 20 * 60
-
-  def min_duration; MIN_DURATION end
+  def min_duration; 20 * 60 end
 
   def episodes(url)
     uri = URI url

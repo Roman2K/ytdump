@@ -6,7 +6,7 @@ class SixPlayTest < Minitest::Test
   MIN_DURATION = 20 * 60
 
   def test_episodes_from_html_season
-    parser = SixPlay.new { |ep| ep.num }
+    parser = SixPlay.new
 
     eps = parse_eps parser, "moundir",
       "https://www.6play.fr/moundir-et-les-apprentis-aventuriers-p_5848"

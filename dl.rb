@@ -4,6 +4,7 @@ require 'fileutils'
 require 'pathname'
 require_relative 'item'
 require_relative 'sixplay'
+require_relative 'replaytivi'
 
 class Exe
   def initialize(name, log=Log.new(name))
@@ -94,6 +95,7 @@ class Downloader
     end unless @dry_run
     parsers = [
       SixPlay.new,
+      ReplayTivi.new,
     ]
     if found = parsers.lazy.map { |p| [p, p.episodes(url)] }.find { |p,a| a }
       parser, items = found
