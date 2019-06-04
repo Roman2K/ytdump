@@ -1,4 +1,10 @@
 GIT
+  remote: git://github.com/Roman2K/log-ruby.git
+  revision: 2a91b95dbad4f22b4a7433df51a3e84196d9a596
+  specs:
+    log-ruby (0.1.0)
+
+GIT
   remote: git://github.com/Roman2K/metacli.git
   revision: d5668d1c1cf5cae42f2a49d15a75f2d0cf3a7a5c
   specs:
@@ -21,6 +27,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  log-ruby!
   metacli!
   minitest
   nokogiri

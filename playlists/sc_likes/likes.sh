@@ -1,7 +1,6 @@
 LONG_DURATION=420000
 
 likes() {
-  # (cd code/sc-likes > /dev/null && cat likes.json)
   (cd code/sc-likes > /dev/null && bundle exec ruby main.rb)
 }
 

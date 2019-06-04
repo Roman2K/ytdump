@@ -2,12 +2,13 @@ require 'json'
 require 'open3'
 require 'fileutils'
 require 'pathname'
+require 'log'
 require_relative 'item'
 require_relative 'sixplay'
 require_relative 'replaytivi'
 
 class Exe
-  def initialize(name, log=Log.new(name))
+  def initialize(name, log=Log.new(prefix: name))
     @name = name
     @log = log
   end
@@ -188,6 +189,8 @@ class Downloader
       "-q", *@ydl_opts,
       item.url
     ]
+
+    log.info "downloading %s" % name
     if @dry_run
       log.info "dry run: youtube-dl %p" % [args]
       return
@@ -196,18 +199,17 @@ class Downloader
     begin
       @ydl.run *args
     rescue Exe::ExitError => err
-      if err.status == 1
-        case err.stderr
-        when /unknown reason/, /urlopen/, /\b410\b/
-          log.warn "failed to download: #{err.stderr}"
-          return
-        when /^ERROR: /
-          log.warn "unavailable, marking as skippable: #{err.stderr.strip}"
-          File.write @meta.join(name+".skip"), err.stderr
-          return
-        end
+      err.status == 1 or raise
+      stderr = err.stderr.strip
+      log = log[status: err.status, stderr: stderr]
+      case stderr
+      when UNRETRIABLE_STDERR_RE
+        log.error "unavailable, marking as skippable"
+        File.write @meta.join(name+".skip"), stderr
+      else
+        log.warn "temporary error, will retry"
       end
-      raise
+      return
     end
 
     log.info "successfully downloaded"
@@ -216,6 +218,18 @@ class Downloader
       FileUtils.mv f, @out
     end
   end
+
+  UNRETRIABLE_STDERR_RE = [
+    "No video formats found",
+    "This video is not available",
+    "This video is no longer available",
+    "This video is unavailable",
+    "This video contains content",
+    "This video has been removed",
+    "The uploader has not made this video available",
+  ].yield_self { |msgs|
+    /ERROR: (?:#{msgs.map { |m| Regexp.escape m } * "|"})/i
+  }
 
   private def fns(pathnames)
     pathnames.map { |p| p.basename.to_s }
@@ -233,61 +247,6 @@ class ItemMatcher
 
   def glob_arr(arr)
     arr.select { |p| p.fnmatch? @pat }
-  end
-end
-
-class Log
-  LEVELS = %i( debug info warn error ).freeze
-  LEVELS_W = LEVELS.map(&:length).max
-
-  def initialize(prefix=nil, level: LEVELS.first, io: $stderr)
-    @prefix, @io = prefix, io
-    self.level = level
-  end
-
-  def level=(name)
-    @level_idx = find_level name
-  end
-
-  def level
-    LEVELS.fetch @level_idx
-  end
-
-  private def find_level(name)
-    LEVELS.index(name) \
-      or raise ArgumentError, "unknown level: %p" % name
-  end
-
-  LEVELS.each do |level|
-    define_method level do |*args, &block|
-      log level, *args, &block
-    end
-  end
-
-  private def log(level, *args, &block)
-    puts *args, level: level, &block if find_level(level) >= @level_idx
-  end
-
-  private def puts(*msgs, level: nil)
-    msgs.map! { |msg| "%*s %s" % [LEVELS_W, level.upcase, add_prefix(msg)] }
-    @io.print msgs.join("\n")
-    res = if block_given?
-      @io.print "... "
-      t0 = Time.now
-      yield.tap do
-        @io.print "%.2fs" % [Time.now - t0]
-      end
-    end
-    @io.puts
-    res
-  end
-
-  private def add_prefix(s)
-    [@prefix, s].compact.join ": "
-  end
-
-  def sub(prefix)
-    self.class.new add_prefix(prefix), level: level, io: @io
   end
 end
 
@@ -342,5 +301,6 @@ if $0 == __FILE__
     else arg
     end
   end
+  argv << "--debug" if ENV["YTDUMP_DEBUG"] == "1"
   MetaCLI.new(argv).run Commands
 end
