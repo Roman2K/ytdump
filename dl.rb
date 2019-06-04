@@ -47,7 +47,7 @@ class Downloader
     nthreads: NTHREADS,
     dry_run: false, log: Log.new
   )
-    @ydl = Exe.new "youtube-dl", log.sub("youtube-dl")
+    @ydl = Exe.new "youtube-dl", log["youtube-dl"]
     @dry_run, @log = dry_run, log
     @ydl_opts, @check_empty, @min_duration, @rclone_dest, @nthreads =
       ydl_opts, check_empty, min_duration, rclone_dest, nthreads
@@ -77,7 +77,7 @@ class Downloader
     end
 
     if @rclone_dest
-      rclone = Exe.new "rclone", @log.sub("rclone")
+      rclone = Exe.new "rclone", @log["rclone"]
       @threads << Thread.new do
         Thread.current.abort_on_exception = true
         loop do
@@ -151,7 +151,7 @@ class Downloader
   KEEP_EXTS = %w(.mkv .mp4 .ytdl .part .webm)
 
   def dl(item)
-    log = @log.sub item.id
+    log = @log[item.id]
     matcher = ItemMatcher.new item.id
     name = ("%05d - %s%s - %s" % [
       item.idx,
@@ -257,7 +257,7 @@ module Commands
     log = Log.new(level: debug ? :debug : :info)
 
     done = if rclone_dest
-      rcl = Exe.new "rclone", log.sub("rclone")
+      rcl = Exe.new "rclone", log["rclone"]
       rcl.run "-v", "lsf", rclone_dest
     elsif !$stdin.tty?
       $stdin.read
