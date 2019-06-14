@@ -170,7 +170,7 @@ class Downloader
     if @min_df \
       && short = [@out, @meta].find { |d| Utils.df(d, DF_BLOCK_SIZE) < @min_df }
     then
-      log[short: short, min: "%d%s" % [@min_df, DF_BLOCK_SIZE]].
+      log[short: short, min: "%f%s" % [@min_df, DF_BLOCK_SIZE]].
         error "not enough disk space left"
       return
     end
@@ -300,7 +300,7 @@ module Commands
       h.update({
         min_duration: min_duration&.to_i,
         nthreads: nthreads&.to_i,
-        min_df: min_df&.to_i,
+        min_df: min_df&.to_f,
       }.delete_if { |k,v| v.nil? })
     }
 
