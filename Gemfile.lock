@@ -1,14 +1,14 @@
 GIT
-  remote: git://github.com/Roman2K/log-ruby.git
-  revision: 2a91b95dbad4f22b4a7433df51a3e84196d9a596
-  specs:
-    log-ruby (0.1.0)
-
-GIT
   remote: git://github.com/Roman2K/metacli.git
   revision: d5668d1c1cf5cae42f2a49d15a75f2d0cf3a7a5c
   specs:
     metacli (0.1.0)
+
+GIT
+  remote: git://github.com/Roman2K/utils-ruby.git
+  revision: 08c0506bf0b40e66b5efa101619218d225dc8b28
+  specs:
+    utils-ruby (0.1.0)
 
 GEM
   remote: https://rubygems.org/
@@ -27,11 +27,11 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  log-ruby!
   metacli!
   minitest
   nokogiri
   pry
+  utils-ruby!
 
 BUNDLED WITH
    2.0.1

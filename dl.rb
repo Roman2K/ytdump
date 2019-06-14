@@ -2,13 +2,13 @@ require 'json'
 require 'open3'
 require 'fileutils'
 require 'pathname'
-require 'log'
+require 'utils'
 require_relative 'item'
 require_relative 'sixplay'
 require_relative 'replaytivi'
 
 class Exe
-  def initialize(name, log=Log.new(prefix: name))
+  def initialize(name, log=Utils::Log.new(prefix: name))
     @name = name
     @log = log
   end
@@ -44,15 +44,16 @@ class Downloader
 
   def initialize(out:, meta:, done: [],
     ydl_opts: [], min_duration: nil, rclone_dest: nil, nthreads: NTHREADS,
-    check_empty: true, notfound_ok: false,
-    dry_run: false, log: Log.new
+    check_empty: true, notfound_ok: false, min_df: nil,
+    dry_run: false, log: Utils::Log.new
   )
     @ydl = Exe.new "youtube-dl", log["youtube-dl"]
     @dry_run, @log = dry_run, log
 
     @ydl_opts, @min_duration, @rclone_dest, @nthreads =
       ydl_opts, min_duration, rclone_dest, nthreads
-    @check_empty, @notfound_ok = check_empty, notfound_ok
+    @check_empty, @notfound_ok, @min_df =
+      check_empty, notfound_ok, min_df
 
     @nthreads = 1 if @dry_run
 
@@ -162,9 +163,18 @@ class Downloader
   end
 
   KEEP_EXTS = %w(.mkv .mp4 .ytdl .part .webm)
+  DF_BLOCK_SIZE = 'M'
 
   def dl(item)
     log = @log[item.id]
+    if @min_df \
+      && short = [@out, @meta].find { |d| Utils.df(d, DF_BLOCK_SIZE) < @min_df }
+    then
+      log[short: short, min: "%d%s" % [@min_df, DF_BLOCK_SIZE]].
+        error "not enough disk space left"
+      return
+    end
+
     matcher = ItemMatcher.new item.id
     name = ("%05d - %s%s - %s" % [
       item.idx,
@@ -266,10 +276,10 @@ end
 module Commands
   def self.cmd_dl(*urls,
     audio: false, min_duration: nil, rclone_dest: nil, nthreads: nil,
-    check_empty: true, notfound_ok: false,
+    check_empty: true, notfound_ok: false, min_df: nil,
     dry_run: false, debug: false
   )
-    log = Log.new(level: debug ? :debug : :info)
+    log = Utils::Log.new(level: debug ? :debug : :info)
 
     done = if rclone_dest
       rcl = Exe.new "rclone", log["rclone"]
@@ -290,6 +300,7 @@ module Commands
       h.update({
         min_duration: min_duration&.to_i,
         nthreads: nthreads&.to_i,
+        min_df: min_df&.to_i,
       }.delete_if { |k,v| v.nil? })
     }
 
