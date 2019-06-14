@@ -43,14 +43,17 @@ class Downloader
   NTHREADS = 4
 
   def initialize(out:, meta:, done: [],
-    ydl_opts: [], check_empty: true, min_duration: nil, rclone_dest: nil,
-    nthreads: NTHREADS,
+    ydl_opts: [], min_duration: nil, rclone_dest: nil, nthreads: NTHREADS,
+    check_empty: true, notfound_ok: false,
     dry_run: false, log: Log.new
   )
     @ydl = Exe.new "youtube-dl", log["youtube-dl"]
     @dry_run, @log = dry_run, log
-    @ydl_opts, @check_empty, @min_duration, @rclone_dest, @nthreads =
-      ydl_opts, check_empty, min_duration, rclone_dest, nthreads
+
+    @ydl_opts, @min_duration, @rclone_dest, @nthreads =
+      ydl_opts, min_duration, rclone_dest, nthreads
+    @check_empty, @notfound_ok = check_empty, notfound_ok
+
     @nthreads = 1 if @dry_run
 
     @out, @meta = [out, meta].map { |p|
@@ -94,6 +97,7 @@ class Downloader
     @log.debug "updating youtube-dl" do
       Exe.new("pip").run "install", "--user", "--upgrade", "youtube-dl"
     end unless @dry_run
+
     parsers = [
       SixPlay.new,
       ReplayTivi.new,
@@ -101,10 +105,19 @@ class Downloader
     if found = parsers.lazy.map { |p| [p, p.episodes(url)] }.find { |p,a| a }
       parser, items = found
       @min_duration ||= parser.min_duration
-      dl_playlist_items items.map &:playlist_item
-    else
-      dl_playlist_json "[#{get_playlist(url).split("\n") * ","}]"
+      return dl_playlist_items items.map &:playlist_item
     end
+
+    pl = begin
+      get_playlist url
+    rescue Exe::ExitError => err
+      if err.status == 1 && err.stderr =~ /404: Not Found/i && @notfound_ok
+        @log.info "playlist not found but tolerated by setting, aborting"
+        return
+      end
+      raise
+    end
+    dl_playlist_json "[#{pl.split("\n") * ","}]"
   end
 
   def dl_playlist_json(s)
@@ -251,8 +264,10 @@ class ItemMatcher
 end
 
 module Commands
-  def self.cmd_dl(*urls, audio: false, debug: false, check_empty: true,
-    min_duration: nil, rclone_dest: nil, nthreads: nil, dry_run: false
+  def self.cmd_dl(*urls,
+    audio: false, min_duration: nil, rclone_dest: nil, nthreads: nil,
+    check_empty: true, notfound_ok: false,
+    dry_run: false, debug: false
   )
     log = Log.new(level: debug ? :debug : :info)
 
@@ -266,13 +281,11 @@ module Commands
     end.split("\n")
 
     dler = Downloader.new **{
-      out: "out", meta: "meta",
-      done: done,
+      out: "out", meta: "meta", done: done,
       ydl_opts: audio ? %w( -x --audio-format mp3 ) : [],
-      check_empty: check_empty,
       rclone_dest: rclone_dest,
-      dry_run: dry_run,
-      log: log,
+      check_empty: check_empty, notfound_ok: notfound_ok,
+      dry_run: dry_run, log: log,
     }.tap { |h|
       h.update({
         min_duration: min_duration&.to_i,
