@@ -87,7 +87,9 @@ class Downloader
         loop do
           sleep 1
           stop = @threads.count(&:alive?) <= 1
-          puts rclone.run("move", "-v", @out, @rclone_dest)
+          rclone.run("move", "-v", @out, @rclone_dest).tap do |out|
+            puts out if out =~ /\S/
+          end
           break if stop
         end
       end
@@ -162,7 +164,6 @@ class Downloader
     end
   end
 
-  KEEP_EXTS = %w(.mkv .mp4 .ytdl .part .webm)
   DF_BLOCK_SIZE = 'M'
 
   def dl(item)
