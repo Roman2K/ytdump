@@ -140,7 +140,7 @@ class Downloader
 
   def dl_playlist_items(items)
     if min = @min_duration
-      @log.info "selecting items >= %s" % [Duration.fmt(min)]
+      @log.info "selecting items >= %s" % [Utils::Fmt.duration(min)]
       items.select! do |item|
         d = item.duration or raise "missing duration in item %p" % item
         d >= min
@@ -180,7 +180,9 @@ class Downloader
     name = ("%05d - %s%s - %s" % [
       item.idx,
       item.title,
-      item.duration.yield_self { |d| d ? " (%s)" % Duration.fmt(d) : "" },
+      item.duration.yield_self { |d|
+        d ? " (%s)" % Utils::Fmt.duration(d) : ""
+      },
       item.id,
     ]).tr('/\\:!'"\n", '_')
 

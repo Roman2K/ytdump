@@ -1,7 +1,6 @@
 require 'net/http'
 require 'nokogiri'
 require_relative 'item'
-require_relative 'duration'
 
 class SixPlay
   def min_duration; 20 * 60 end
