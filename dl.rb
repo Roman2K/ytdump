@@ -67,8 +67,10 @@ class Downloader
     @log.info "out dir: %p" % fns([@out])
     @log.info "meta dir: %p" % fns([@meta])
     @log.info "done: %d" % @done.size
-    @log.info "threads: %d" % @nthreads
     @log.info "ydl opts: %p" % [@ydl_opts]
+    @log.info "threads: %d" % @nthreads
+    @log.info "min df: %s" \
+      % @min_df.yield_self { |n| n ? "%f%s" % [n, DF_BLOCK_SIZE] : "-" }
 
     @q = Queue.new
     @threads = @nthreads.times.map do
