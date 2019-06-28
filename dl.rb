@@ -128,14 +128,8 @@ class Downloader
   def dl_playlist_json(s)
     items = JSON.parse(s).
       reverse.
-      tap { |all| @log.info "found %d raw playlist items" % all.size }.
-      map.with_index { |attrs, idx|
-        begin
-          Item.from_json idx+1, attrs
-        rescue KeyError
-        end
-      }.
-      compact
+      map.
+      with_index { |attrs, idx| Item.from_json idx+1, attrs }
 
     dl_playlist_items items
   end
