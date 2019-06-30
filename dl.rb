@@ -152,11 +152,19 @@ class Downloader
     @threads.each &:join
   end
 
+  RETRIABLE_YTDL_PL_ERR = -> err do
+    Exe::ExitError === err \
+      && err.status == 1 \
+      && err.stderr =~ /\bHTTP Error 5\d\d\b/
+  end
+
   private def get_playlist(url)
     File.read "debug"
   rescue Errno::ENOENT
-    @log.info("getting playlist") do
-      @ydl.run *["-j", *("--flat-playlist" unless @min_duration), url]
+    Utils.retry 5, RETRIABLE_YTDL_PL_ERR, wait: ->{ 1+rand } do
+      @log.info("getting playlist") do
+        @ydl.run *["-j", *("--flat-playlist" unless @min_duration), url]
+      end
     end
   end
 
