@@ -98,9 +98,14 @@ class Downloader
     end
   end
 
+  PIP_LOCK = File.join Dir.tmpdir, "pip_update.lock"
+
   def dl_playlist(url)
+    flock = Exe.new "flock", Utils::Log.new(prefix: "pip")
     @log.debug "updating youtube-dl" do
-      Exe.new("pip").run "install", "--user", "--upgrade", "youtube-dl"
+      flock.run PIP_LOCK,
+        "pip", "install", "--user", "--upgrade",
+        "git+https://github.com/ytdl-org/youtube-dl"
     end unless @dry_run
 
     parsers = [
@@ -155,13 +160,13 @@ class Downloader
   RETRIABLE_YTDL_PL_ERR = -> err do
     Exe::ExitError === err \
       && err.status == 1 \
-      && err.stderr =~ /\bHTTP Error 5\d\d\b/
+      && err.stderr =~ /\bHTTP Error 5\d\d\b/i
   end
 
   private def get_playlist(url)
     File.read "debug"
   rescue Errno::ENOENT
-    Utils.retry 5, RETRIABLE_YTDL_PL_ERR, wait: ->{ 1+rand } do
+    Utils.retry 3, RETRIABLE_YTDL_PL_ERR, wait: ->{ 1+rand } do
       @log.info("getting playlist") do
         @ydl.run *["-j", *("--flat-playlist" unless @min_duration), url]
       end
@@ -227,7 +232,9 @@ class Downloader
     end
 
     begin
-      @ydl.run *args
+      Utils.retry 3, RETRIABLE_YTDL_ERR do
+        @ydl.run *args
+      end
     rescue Exe::ExitError => err
       err.status == 1 or raise
       stderr = err.stderr.strip
@@ -247,6 +254,12 @@ class Downloader
       log.info "output file: %p" % fns([f])
       FileUtils.mv f, @out
     end
+  end
+
+  RETRIABLE_YTDL_ERR = -> err do
+    Exe::ExitError === err \
+      && err.status == 1 \
+      && err.stderr =~ /Unable to extract Initial JS player/i
   end
 
   UNRETRIABLE_STDERR_RE = [
@@ -332,6 +345,6 @@ if $0 == __FILE__
     else arg
     end
   end
-  argv << "--debug" if ENV["YTDUMP_DEBUG"] == "1"
+  argv << "--debug" if ENV["DEBUG"] == "1"
   MetaCLI.new(argv).run Commands
 end
