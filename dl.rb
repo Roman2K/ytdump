@@ -166,6 +166,7 @@ class Downloader
   end
 
   DF_BLOCK_SIZE = 'M'
+  SKIP_RETRY_DELAY = 7 * 24 * 3600
 
   def dl(item)
     log = @log[item.id]
@@ -203,6 +204,12 @@ class Downloader
     if !ls.empty?
       log.debug "already downloaded: %p" % fns(ls)
       return
+    end
+
+    if skip && (age = Time.now - skip.ctime) >= SKIP_RETRY_DELAY
+      log[last_skip: Utils::Fmt.duration(age)].info "retrying skipped"
+      skip.delete
+      skip = nil
     end
 
     if skip
