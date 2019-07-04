@@ -7,45 +7,13 @@ require_relative 'item'
 require_relative 'sixplay'
 require_relative 'replaytivi'
 
-class Exe
-  def initialize(name, log=Utils::Log.new(prefix: name))
-    @name = name
-    @log = log
-  end
-
-  def run(*args)
-    args.map! &:to_s
-    out, err, st = Open3.capture3 @name, *args
-    @log.debug "running %p %p" % [@name, args]
-    if !st.success?
-      @log.debug "failed: %p" % st
-      raise ExitError.new [@name, *args], st.exitstatus, err
-    end
-    @log.debug "success: %p" % st
-    out
-  end
-
-  class ExitError < StandardError
-    def initialize(cmd, status, stderr)
-      super()
-      @cmd, @status, @stderr = cmd, status, stderr
-    end
-
-    attr_reader :cmd, :status, :stderr
-
-    def to_s
-      "`#{@cmd * " "}` exit #{@status}: #{@stderr}"
-    end
-  end
-end
-
 class Downloader
   NTHREADS = 4
 
   def initialize(out:, meta:, done: [],
     ydl_opts: [], min_duration: nil, rclone_dest: nil, nthreads: NTHREADS,
     check_empty: true, notfound_ok: false, min_df: nil,
-    dry_run: false, log: Utils::Log.new
+    cache: nil, dry_run: false, log: Utils::Log.new
   )
     @ydl = Exe.new "youtube-dl", log["youtube-dl"]
     @dry_run, @log = dry_run, log
@@ -54,8 +22,16 @@ class Downloader
       ydl_opts, min_duration, rclone_dest, nthreads
     @check_empty, @notfound_ok, @min_df =
       check_empty, notfound_ok, min_df
-
     @nthreads = 1 if @dry_run
+
+    @cache = if cache
+      Pathname(cache).yield_self do |dir|
+        dir.directory? or raise "cache is not a directory"
+        dir.glob("**/*").select &:file?
+      end
+    else
+      []
+    end
 
     @out, @meta = [out, meta].map { |p|
       Pathname(p).tap do |dir|
@@ -206,6 +182,16 @@ class Downloader
       return
     end
 
+    ls = matcher.glob_arr @cache
+    if !ls.empty?
+      log.info "cache hit"
+      ls.each do |f|
+        log.info "output file: %p" % fns([f])
+        FileUtils.cp f, @out
+      end
+      return
+    end
+
     if skip && (age = Time.now - skip.ctime) >= SKIP_RETRY_DELAY
       log[last_skip: Utils::Fmt.duration(age)].info "retrying skipped"
       skip.delete
@@ -286,6 +272,38 @@ class Downloader
   end
 end
 
+class Exe
+  def initialize(name, log=Utils::Log.new(prefix: name))
+    @name = name
+    @log = log
+  end
+
+  def run(*args)
+    args.map! &:to_s
+    out, err, st = Open3.capture3 @name, *args
+    @log.debug "running %p %p" % [@name, args]
+    if !st.success?
+      @log.debug "failed: %p" % st
+      raise ExitError.new [@name, *args], st.exitstatus, err
+    end
+    @log.debug "success: %p" % st
+    out
+  end
+
+  class ExitError < StandardError
+    def initialize(cmd, status, stderr)
+      super()
+      @cmd, @status, @stderr = cmd, status, stderr
+    end
+
+    attr_reader :cmd, :status, :stderr
+
+    def to_s
+      "`#{@cmd * " "}` exit #{@status}: #{@stderr}"
+    end
+  end
+end
+
 class Set_ThreadSafe
   def initialize
     @set = Set.new
@@ -320,7 +338,7 @@ module Commands
   def self.cmd_dl(*urls,
     audio: false, min_duration: nil, rclone_dest: nil, nthreads: nil,
     check_empty: true, notfound_ok: false, min_df: nil,
-    dry_run: false, debug: false
+    cache: nil, dry_run: false, debug: false
   )
     log = Utils::Log.new(level: debug ? :debug : :info)
 
@@ -338,7 +356,7 @@ module Commands
       ydl_opts: audio ? %w( -x --audio-format mp3 ) : [],
       rclone_dest: rclone_dest,
       check_empty: check_empty, notfound_ok: notfound_ok,
-      dry_run: dry_run, log: log,
+      cache: cache, dry_run: dry_run, log: log,
     }.tap { |h|
       h.update({
         min_duration: min_duration&.to_i,
