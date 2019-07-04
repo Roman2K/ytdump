@@ -63,6 +63,7 @@ class Downloader
       end
     }
     @done = done.map { |p| Pathname p }
+    @dled = Set_ThreadSafe.new
 
     @log.info "out dir: %p" % fns([@out])
     @log.info "meta dir: %p" % fns([@meta])
@@ -168,6 +169,13 @@ class Downloader
 
   def dl(item)
     log = @log[item.id]
+
+    if @dled.include? item.id
+      log.debug "already downloaded or downloading, skipping"
+      return
+    end
+    @dled << item.id
+
     if @min_df \
       && short = [@out, @meta].find { |d| Utils.df(d, DF_BLOCK_SIZE) < @min_df }
     then
@@ -267,6 +275,22 @@ class Downloader
 
   private def fns(pathnames)
     pathnames.map { |p| p.basename.to_s }
+  end
+end
+
+class Set_ThreadSafe
+  def initialize
+    @set = Set.new
+    @mu = Mutex.new
+  end
+
+  def <<(el)
+    @mu.synchronize { @set << el }
+    self
+  end
+
+  def include?(el)
+    @mu.synchronize { @set.include? el }
   end
 end
 
