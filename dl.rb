@@ -185,14 +185,6 @@ class Downloader
     end
 
     matcher = ItemMatcher.new item.id
-    name = ("%05d - %s%s - %s" % [
-      item.idx,
-      item.title,
-      item.duration.yield_self { |d|
-        d ? " (%s)" % Utils::Fmt.duration(d) : ""
-      },
-      item.id,
-    ]).tr('/\\:!'"\n", '_')
 
     ls = matcher.glob @meta
     skip, other = ls.partition { |f| f.extname == ".skip" }
@@ -217,6 +209,15 @@ class Downloader
       log.debug "skipping"
       return
     end
+
+    name = ("%05d - %s%s - %s" % [
+      item.idx,
+      item.title,
+      item.duration.yield_self { |d|
+        d ? " (%s)" % Utils::Fmt.duration(d) : ""
+      },
+      item.id,
+    ]).tr('/\\:!'"\n", '_')
 
     args = [
       "-o", @meta.join("#{name}.%(ext)s").to_s,
