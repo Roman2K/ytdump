@@ -2,5 +2,8 @@
 set -eo pipefail
 
 {
+  flock -w 30 /tmp/pip_update.lock \
+    pip install --user --upgrade git+https://github.com/ytdl-org/youtube-dl
+
   ls playlists | xargs -n1 -P8 ./cronjob
 } 2>&1 | tee /tmp/ytdump_cronjob_all.log

@@ -98,16 +98,7 @@ class Downloader
     end
   end
 
-  PIP_LOCK = File.join Dir.tmpdir, "pip_update.lock"
-
   def dl_playlist(url)
-    flock = Exe.new "flock", Utils::Log.new(prefix: "pip")
-    @log.debug "updating youtube-dl" do
-      flock.run PIP_LOCK,
-        "pip", "install", "--user", "--upgrade",
-        "git+https://github.com/ytdl-org/youtube-dl"
-    end unless @dry_run
-
     parsers = [
       SixPlay.new,
       ReplayTivi.new,
