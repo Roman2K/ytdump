@@ -40,6 +40,7 @@ class Downloader
     }
     @done = done.map { |p| Pathname p }
     @dled = Set_ThreadSafe.new
+    @out_size = 0
 
     @log.info "out dir: %p" % fns([@out])
     @log.info "meta dir: %p" % fns([@meta])
@@ -123,6 +124,7 @@ class Downloader
   def finish
     @q.close
     @threads.each &:join
+    @log.info "downloaded %s" % [Utils::Fmt.size(@out_size)]
   end
 
   RETRIABLE_YTDL_PL_ERR = -> err do
@@ -182,13 +184,19 @@ class Downloader
       return
     end
 
+    add_out_file = -> cp, f {
+      %i( cp mv ).include? cp \
+        or raise ArgumentError, "unknown cp method: %p" % cp
+      size = f.size
+      @out_size += size
+      log.info "output file: %p (%s)" % [fn(f), Utils::Fmt.size(size)]
+      FileUtils.public_send cp, f, @out
+    }.curry 2
+
     ls = matcher.glob_arr @cache
     if !ls.empty?
       log.info "cache hit"
-      ls.each do |f|
-        log.info "output file: %p" % fns([f])
-        FileUtils.cp f, @out
-      end
+      ls.each &add_out_file[:cp]
       return
     end
 
@@ -243,10 +251,7 @@ class Downloader
     end
 
     log.info "successfully downloaded"
-    matcher.glob(@meta).each do |f|
-      log.info "output file: %p" % fns([f])
-      FileUtils.mv f, @out
-    end
+    matcher.glob(@meta).each &add_out_file[:mv]
   end
 
   RETRIABLE_YTDL_ERR = -> err do
@@ -268,9 +273,8 @@ class Downloader
     /ERROR: (?:#{msgs.map { |m| Regexp.escape m } * "|"})/i
   }
 
-  private def fns(pathnames)
-    pathnames.map { |p| p.basename.to_s }
-  end
+  private def fns(ps); ps.map { |p| fn p } end
+  private def fn(p); p.basename.to_s end
 end
 
 class Exe
