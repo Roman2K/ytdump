@@ -263,6 +263,7 @@ class Downloader
     "This video contains content",
     "This video has been removed",
     "The uploader has not made this video available",
+    "This video is only available to Music Premium members",
   ].yield_self { |msgs|
     /ERROR: (?:#{msgs.map { |m| Regexp.escape m } * "|"})/i
   }
