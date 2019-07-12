@@ -1,5 +1,5 @@
-require 'net/http'
 require 'nokogiri'
+require_relative 'eps_parse'
 require_relative 'item'
 
 class SixPlay
@@ -9,19 +9,10 @@ class SixPlay
     uri = URI url
     uri.host.sub(/^www\./, "") == "6play.fr" && uri.path.split("/").size == 2 \
       or return
-    resp = request_get uri
-    resp.kind_of? Net::HTTPSuccess or raise "unexpected response: %p" % resp
-    html = resp.body.tap { |s| s.force_encoding Encoding::UTF_8 }
+    html = EpsParse.request_get!(uri).
+      body.
+      tap { |s| s.force_encoding Encoding::UTF_8 }
     episodes_from_html(html, uri)
-  end
-
-  private def request_get(uri)
-    Net::HTTP.start uri.host, uri.port, use_ssl: uri.scheme == 'https' do |http|
-      http.request_get uri, {
-        'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:67.0) Gecko/20100101 Firefox/67.0',
-        'Cache-Control' => 'no-cache',
-      }
-    end
   end
 
   def episodes_from_html(html, uri)

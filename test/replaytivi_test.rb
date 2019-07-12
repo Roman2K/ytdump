@@ -5,7 +5,7 @@ require 'digest/sha1'
 
 class ReplayTiviTest < Minitest::Test
   def test_episodes
-    replace_method ReplayTivi, :get_response!, method(:get_response!) do
+    replace_method EpsParse, :request_get!, method(:request_get!) do
       do_test_episodes
     end
   end
@@ -31,7 +31,7 @@ class ReplayTiviTest < Minitest::Test
     assert_equal 2820, item.duration
   end
 
-  private def get_response!(uri)
+  private def request_get!(uri)
     path = File.join __dir__, "pages_cache", Digest::SHA1.hexdigest(uri.to_s)
     $stderr.puts "reading cached page #{uri} at #{path}"
     begin

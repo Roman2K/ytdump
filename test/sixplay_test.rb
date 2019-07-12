@@ -3,8 +3,6 @@ require 'minitest/autorun'
 require 'sixplay'
 
 class SixPlayTest < Minitest::Test
-  MIN_DURATION = 20 * 60
-
   def test_episodes_from_html_season
     parser = SixPlay.new
 
@@ -27,7 +25,7 @@ class SixPlayTest < Minitest::Test
     # season 5: 60 + 1 (2/2) = 60 (missing ep 9)
     # total: 116
     assert_equal 116, eps.size
-		assert_equal({nil => 55, 6 => 1, 5 => 60}, stats(eps))
+    assert_equal({nil => 55, 6 => 1, 5 => 60}, stats(eps))
     assert_equal %w(12 2-2 12 22),
       eps.sort_by(&:id).map(&:num).select { |n| n.e == 1 }.map(&:name)
 

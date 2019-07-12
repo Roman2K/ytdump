@@ -1,5 +1,5 @@
-require 'net/http'
 require 'nokogiri'
+require_relative 'eps_parse'
 require_relative 'item'
 
 class ReplayTivi
@@ -13,7 +13,7 @@ class ReplayTivi
       && uri.path.start_with?("/programme/") \
       or return
 
-    resp = self.class.get_response! uri
+    resp = EpsParse.request_get! uri
 
     eps = Nokogiri::HTML.parse(resp.body).css("a:has(.icon-video)").map do |a|
       Ep.new \
@@ -51,7 +51,7 @@ class ReplayTivi
   Ep = Struct.new :item, :uri, keyword_init: true do
     def fetch_url!
       item.url =
-        Nokogiri::HTML.parse(ReplayTivi.get_response!(uri).body).
+        Nokogiri::HTML.parse(EpsParse.request_get!(uri).body).
           css("a:has(.play):first").
           first&.[]("href") \
             or raise "missing episode URL"
@@ -65,12 +65,6 @@ class ReplayTivi
 
     def playlist_item
       item
-    end
-  end
-
-  def self.get_response!(uri)
-    Net::HTTP.get_response(uri).tap do |resp|
-      resp.kind_of? Net::HTTPSuccess or raise "unexpected response: %p" % resp
     end
   end
 end

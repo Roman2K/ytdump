@@ -6,6 +6,7 @@ require 'utils'
 require_relative 'item'
 require_relative 'sixplay'
 require_relative 'replaytivi'
+require_relative 'tf1'
 
 class Downloader
   NTHREADS = 4
@@ -80,6 +81,7 @@ class Downloader
     parsers = [
       SixPlay.new,
       ReplayTivi.new,
+      TF1.new,
     ]
     if found = parsers.lazy.map { |p| [p, p.episodes(url)] }.find { |p,a| a }
       parser, items = found
