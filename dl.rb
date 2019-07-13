@@ -7,6 +7,7 @@ require_relative 'item'
 require_relative 'sixplay'
 require_relative 'replaytivi'
 require_relative 'tf1'
+require_relative 'anabolictv'
 
 class Downloader
   NTHREADS = 4
@@ -77,16 +78,22 @@ class Downloader
     end
   end
 
+  ITEM_PARSERS = [
+    SixPlay,
+    ReplayTivi,
+    TF1,
+    AnabolicTV,
+  ]
+
+  private def parse_items(url)
+    ITEM_PARSERS.lazy.
+      map { |p| p.new }.
+      map { |p| [p, p.playlist_items(url)] }.
+      find { |p,a| a }
+  end
+
   def dl_playlist(url)
-    parsers = [
-      SixPlay.new,
-      ReplayTivi.new,
-      TF1.new,
-    ]
-    if found = parsers.lazy.
-        map { |p| [p, p.playlist_items(url)] }.
-        find { |p,a| a }
-    then
+    if found = parse_items(url)
       parser, items = found
       @min_duration ||= parser.min_duration
       return dl_playlist_items items
