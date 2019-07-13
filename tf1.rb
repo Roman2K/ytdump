@@ -6,7 +6,7 @@ class TF1
   def min_duration; 20 * 60 end
 
   # https://www.tf1.fr/tf1/ninja-warrior/videos/replay
-  def episodes(url)
+  def playlist_items(url)
     uri = URI url
     uri.host.sub(/^www\./, "") == "tf1.fr" \
       && uri.path.split("/")[-2..-1] == %w( videos replay ) \
@@ -24,7 +24,7 @@ class TF1
       end
       id = ep_uri.path[/\-(\d+)\.\w+$/, 1] or raise "ID not found"
 
-      Ep.new Item.new \
+      Item.new \
         idx: id.to_i,
         id: id,
         url: ep_uri.to_s,
@@ -40,8 +40,6 @@ class TF1
           }.map(&:text).join(" - ")
     end
   end
-
-  Ep = Struct.new :playlist_item
 
   private def parse_duration(s)
     case s.strip

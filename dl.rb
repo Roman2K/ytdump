@@ -83,10 +83,13 @@ class Downloader
       ReplayTivi.new,
       TF1.new,
     ]
-    if found = parsers.lazy.map { |p| [p, p.episodes(url)] }.find { |p,a| a }
+    if found = parsers.lazy.
+        map { |p| [p, p.playlist_items(url)] }.
+        find { |p,a| a }
+    then
       parser, items = found
       @min_duration ||= parser.min_duration
-      return dl_playlist_items items.map &:playlist_item
+      return dl_playlist_items items
     end
 
     pl = begin

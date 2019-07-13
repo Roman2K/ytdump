@@ -5,14 +5,14 @@ require_relative 'item'
 class SixPlay
   def min_duration; 20 * 60 end
 
-  def episodes(url)
+  def playlist_items(url)
     uri = URI url
     uri.host.sub(/^www\./, "") == "6play.fr" && uri.path.split("/").size == 2 \
       or return
     html = EpsParse.request_get!(uri).
       body.
       tap { |s| s.force_encoding Encoding::UTF_8 }
-    episodes_from_html(html, uri)
+    episodes_from_html(html, uri).map &:playlist_item
   end
 
   def episodes_from_html(html, uri)

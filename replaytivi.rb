@@ -7,7 +7,7 @@ class ReplayTivi
 
   def min_duration; 20 * 60 end
 
-  def episodes(url)
+  def playlist_items(url)
     uri = URI url
     uri.host == "www.replaytivi.fr" \
       && uri.path.start_with?("/programme/") \
@@ -45,7 +45,7 @@ class ReplayTivi
     q.close
     threads.each &:join
 
-    eps
+    eps.map &:playlist_item
   end
 
   Ep = Struct.new :item, :uri, keyword_init: true do

@@ -9,7 +9,6 @@ class TF1Test < Minitest::Test
     eps = parse_eps parser, "nanny",
       "https://www.tf1.fr/tfx/super-nanny/videos/replay"
     assert_equal 3, eps.size
-    eps.map! &:playlist_item
 
     ep = eps.fetch 0
     assert_equal 46033473, ep.idx

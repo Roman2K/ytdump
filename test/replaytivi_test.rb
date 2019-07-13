@@ -13,14 +13,13 @@ class ReplayTiviTest < Minitest::Test
   def do_test_episodes
     parser = ReplayTivi.new
 
-    eps = parser.episodes \
+    items = parser.playlist_items \
       "http://www.replaytivi.fr/replay/moundir-et-les-apprentis-aventuriers-293310"
-    assert_nil eps
+    assert_nil items
 
-    eps = parser.episodes \
+    items = parser.playlist_items \
       "http://www.replaytivi.fr/programme/moundir-et-les-apprentis-aventuriers"
-    assert_equal 25, eps.size
-    items = eps.map &:playlist_item
+    assert_equal 25, items.size
 
     assert_equal "S04E16", items.first.title
     assert_equal "S03E33", items.last.title

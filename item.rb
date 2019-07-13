@@ -11,8 +11,8 @@ Item = Struct.new :idx, :id, :url, :title, :duration, keyword_init: true do
         URI(attrs.fetch("url")).path.split("/").fetch(-1)
       },
       duration: attrs["duration"],
-      url: case extractor
-        when "Youtube"
+      url: case extractor.downcase
+        when "youtube"
           "https://youtu.be/#{id}"
         else
           attrs.fetch "url" do
