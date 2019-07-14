@@ -3,7 +3,7 @@ require 'minitest/autorun'
 require 'anabolictv'
 
 class AnabolicTVTest < Minitest::Test
-  def test_episodes
+  def test_episodes_from_html
     parser = AnabolicTV.new
 
     eps = parse_eps parser, "bostin_anabtv",

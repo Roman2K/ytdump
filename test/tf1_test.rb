@@ -3,7 +3,7 @@ require 'minitest/autorun'
 require 'tf1'
 
 class TF1Test < Minitest::Test
-  def test_episodes
+  def test_episodes_from_html
     parser = TF1.new
 
     eps = parse_eps parser, "nanny",

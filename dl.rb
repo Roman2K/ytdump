@@ -8,6 +8,7 @@ require_relative 'sixplay'
 require_relative 'replaytivi'
 require_relative 'tf1'
 require_relative 'anabolictv'
+require_relative 'mtv'
 
 class Downloader
   NTHREADS = 4
@@ -83,6 +84,7 @@ class Downloader
     ReplayTivi,
     TF1,
     AnabolicTV,
+    MTV,
   ]
 
   private def parse_items(url)

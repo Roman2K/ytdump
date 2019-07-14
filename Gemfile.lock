@@ -6,7 +6,7 @@ GIT
 
 GIT
   remote: git://github.com/Roman2K/utils-ruby.git
-  revision: f585b12eb94bff3119d6ab0073b54719314c3c70
+  revision: 09112f6f227a14615c9de283f1371d18649bebf3
   specs:
     utils-ruby (0.1.0)
 
