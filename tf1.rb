@@ -11,6 +11,7 @@ class TF1
     uri.host.sub(/^www\./, "") == "tf1.fr" \
       && uri.path.split("/")[-2..-1] == %w( videos replay ) \
       or return
+
     resp = EpsParse.request_get! uri
     episodes_from_html resp.body, uri
   end
@@ -19,7 +20,11 @@ class TF1
     Nokogiri::HTML.parse(html).css("[class^='VideoCard_card__box']").map do |el|
       ep_uri = el.css("a:first").first.yield_self do |e|
         path = e&.[](:href) or raise "URL element not found"
-        path =~ %r{^/tf[x1]/} or raise "unexpected URL path: %p" % path
+        case path
+        when %r{^/tf[x1](?:-.+)?/}
+        when %r{^/tmc/}
+        else raise "unexpected URL path: %p" % path
+        end
         uri.dup.tap { |u| u.path = path }
       end
       id = ep_uri.path[/\-(\d+)\.\w+$/, 1] or raise "ID not found"

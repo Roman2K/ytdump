@@ -1,4 +1,3 @@
 exec ../../dl \
   'https://www.6play.fr/le-meilleur-patissier-les-professionnels-p_6762' \
-  --rclone_dest=drive:media/replay/meillpatissier \
-  --no-check_empty
+  --rclone_dest=drive:media/replay/meillpatissier

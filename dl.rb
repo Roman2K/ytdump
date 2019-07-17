@@ -99,6 +99,8 @@ class Downloader
       pl = File.read url
     elsif found = parse_items(url)
       parser, items = found
+      @log[parser: parser.class.name.split("::").last, items: items.size].
+        info "parser found items"
       @min_duration ||= parser.min_duration
       return dl_playlist_items items
     else
@@ -125,14 +127,15 @@ class Downloader
   end
 
   def dl_playlist_items(items)
+    raise "empty playlist" if @check_empty && items.empty?
     if min = @min_duration
-      @log.info "selecting items >= %s" % [Utils::Fmt.duration(min)]
+      @log[items: items.size].
+        info "selecting items >= %s" % [Utils::Fmt.duration(min)]
       items.select! do |item|
         d = item.duration or raise "missing duration in item %p" % item
         d >= min
       end
     end
-    raise "empty playlist" if @check_empty && items.empty?
     @log.info "enqueueing %d playlist items" % items.size
     items.sort_by(&:idx).each { |i| @q << i }
   end
