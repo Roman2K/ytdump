@@ -15,7 +15,7 @@ class Downloader
 
   def initialize(out:, meta:, done: [],
     ydl_opts: [], min_duration: nil, rclone_dest: nil, nthreads: NTHREADS,
-    check_empty: true, notfound_ok: false, min_df: nil,
+    sorted: false, check_empty: true, notfound_ok: false, min_df: nil,
     cache: nil, dry_run: false, log: Utils::Log.new
   )
     @ydl = Exe.new "youtube-dl", log["youtube-dl"]
@@ -23,8 +23,8 @@ class Downloader
 
     @ydl_opts, @min_duration, @rclone_dest, @nthreads =
       ydl_opts, min_duration, rclone_dest, nthreads
-    @check_empty, @notfound_ok, @min_df =
-      check_empty, notfound_ok, min_df
+    @sorted, @check_empty, @notfound_ok, @min_df =
+      sorted, check_empty, notfound_ok, min_df
     @nthreads = 1 if @dry_run
 
     @cache = if cache
@@ -95,27 +95,29 @@ class Downloader
   end
 
   def dl_playlist(url)
-    if found = parse_items(url)
+    if File.file? url
+      pl = File.read url
+    elsif found = parse_items(url)
       parser, items = found
       @min_duration ||= parser.min_duration
       return dl_playlist_items items
-    end
-
-    pl = begin
-      get_playlist url
-    rescue Exe::ExitError => err
-      if err.status == 1 && err.stderr =~ /404: Not Found/i && @notfound_ok
-        @log.info "playlist not found but tolerated by setting, aborting"
-        return
+    else
+      pl = begin
+        get_playlist url
+      rescue Exe::ExitError => err
+        if err.status == 1 && err.stderr =~ /404: Not Found/i && @notfound_ok
+          @log.info "playlist not found but tolerated by setting, aborting"
+          return
+        end
+        raise
       end
-      raise
     end
     dl_playlist_json "[#{pl.split("\n") * ","}]"
   end
 
   def dl_playlist_json(s)
     items = JSON.parse(s).
-      reverse.
+      tap { |a| a.reverse! unless @sorted }.
       map.
       with_index { |attrs, idx| Item.from_json idx+1, attrs }
 
@@ -158,7 +160,8 @@ class Downloader
   end
 
   DF_BLOCK_SIZE = 'M'
-  SKIP_RETRY_DELAY = 7 * 24 * 3600
+  DF_SHORT_WAIT, DF_SHORT_WAIT_MAX = 10, 5*60
+  SKIP_RETRY_DELAY = 7*24*3600
 
   def dl(item)
     log = @log[item.id]
@@ -168,14 +171,6 @@ class Downloader
       return
     end
     @dled << item.id
-
-    if @min_df \
-      && short = [@out, @meta].find { |d| Utils.df(d, DF_BLOCK_SIZE) < @min_df }
-    then
-      log[short: short, min: "%f%s" % [@min_df, DF_BLOCK_SIZE]].
-        error "not enough disk space left"
-      return
-    end
 
     matcher = ItemMatcher.new item.id
 
@@ -197,6 +192,8 @@ class Downloader
       log.debug "already downloaded: %p" % fns(ls)
       return
     end
+
+    df_short_wait log
 
     add_out_file = -> cp, f {
       %i( cp mv ).include? cp \
@@ -289,6 +286,36 @@ class Downloader
 
   private def fns(ps); ps.map { |p| fn p } end
   private def fn(p); p.basename.to_s end
+
+  private def df_short_wait(log)
+    wait = 0
+    while mnt = df_short
+      mnt_log = log[
+        mnt: mnt,
+        min: "%f%s" % [@min_df, DF_BLOCK_SIZE],
+        wait: Utils::Fmt.duration(wait),
+      ]
+      if wait < DF_SHORT_WAIT_MAX \
+        && (nentries = @out.entries.size-2) > 0 && @rclone_dest
+      then
+        w = DF_SHORT_WAIT
+        mnt_log[nentries: nentries].
+          warn "waiting %s for rclone to free up disk space" % [
+            Utils::Fmt.duration(w)
+          ]
+        sleep w; wait += w
+        next
+      end
+      msg = "not enough disk space left"
+      mnt_log.error msg
+      raise msg
+    end
+  end
+
+  private def df_short
+    min = @min_df or return
+    [@out, @meta].find { |d| Utils.df(d, DF_BLOCK_SIZE) < min }
+  end
 end
 
 class Exe
@@ -356,7 +383,7 @@ end
 module Commands
   def self.cmd_dl(*urls,
     audio: false, min_duration: nil, rclone_dest: nil, nthreads: nil,
-    check_empty: true, notfound_ok: false, min_df: nil,
+    sorted: false, check_empty: true, notfound_ok: false, min_df: nil,
     cache: nil, dry_run: false, debug: false
   )
     log = Utils::Log.new(level: debug ? :debug : :info)
@@ -374,7 +401,7 @@ module Commands
       out: "out", meta: "meta", done: done,
       ydl_opts: audio ? %w( -x --audio-format mp3 ) : [],
       rclone_dest: rclone_dest,
-      check_empty: check_empty, notfound_ok: notfound_ok,
+      sorted: sorted, check_empty: check_empty, notfound_ok: notfound_ok,
       cache: cache, dry_run: dry_run, log: log,
     }.tap { |h|
       h.update({
