@@ -20,4 +20,8 @@ Item = Struct.new :idx, :id, :url, :title, :duration, keyword_init: true do
           end
         end
   end
+
+  def valid?
+    values.all?
+  end
 end

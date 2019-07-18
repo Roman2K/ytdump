@@ -198,19 +198,33 @@ class Downloader
 
     df_short_wait log
 
-    add_out_file = -> cp, f {
-      %i( cp mv ).include? cp \
+    add_out_file = -> cp, f, ren: nil {
+      %i(cp mv).include? cp \
         or raise ArgumentError, "unknown cp method: %p" % cp
+      dest = ren && ren != f.basename.to_s ? @out.join(ren) : @out
       size = f.size
       @out_size += size
-      log.info "output file: %p (%s)" % [fn(f), Utils::Fmt.size(size)]
-      FileUtils.public_send cp, f, @out
+      log[file: fn(f), size: Utils::Fmt.size(size)].
+        info "#{cp}-ing output file to \"#{dest}\"" do
+          FileUtils.public_send cp, f, dest
+        end
     }.curry 2
+
+    name = ("%05d - %s%s - %s" % [
+      item.idx,
+      item.title,
+      item.duration.yield_self { |d|
+        d ? " (%s)" % Utils::Fmt.duration(d) : ""
+      },
+      item.id,
+    ]).tr('/\\:!'"\n", '_')
 
     ls = matcher.glob_arr @cache
     if !ls.empty?
       log.info "cache hit"
-      ls.each &add_out_file[:cp]
+      ls.each do |f|
+        add_out_file[:cp].call f, ren: "#{name}#{matcher.id_suffix f}"
+      end
       return
     end
 
@@ -224,15 +238,6 @@ class Downloader
       log.debug "skipping"
       return
     end
-
-    name = ("%05d - %s%s - %s" % [
-      item.idx,
-      item.title,
-      item.duration.yield_self { |d|
-        d ? " (%s)" % Utils::Fmt.duration(d) : ""
-      },
-      item.id,
-    ]).tr('/\\:!'"\n", '_')
 
     args = [
       "-o", @meta.join("#{name}.%(ext)s").to_s,
@@ -372,6 +377,12 @@ end
 class ItemMatcher
   def initialize(id)
     @pat = "* - #{id}.*"
+    @suffix_re = / - #{Regexp.escape id}(\..+)$/
+  end
+
+  def id_suffix(f)
+    f.basename.to_s =~ @suffix_re or raise "ID not found in filename"
+    $1
   end
 
   def glob(dir)
