@@ -198,17 +198,12 @@ class Downloader
 
     df_short_wait log
 
-    add_out_file = -> cp, f, ren: nil {
-      %i(cp mv).include? cp \
-        or raise ArgumentError, "unknown cp method: %p" % cp
-      dest = ren && ren != f.basename.to_s ? @out.join(ren) : @out
+    add_out_file = -> f do
       size = f.size
       @out_size += size
-      log[file: fn(f), size: Utils::Fmt.size(size)].
-        info "#{cp}-ing output file to \"#{dest}\"" do
-          FileUtils.public_send cp, f, dest
-        end
-    }.curry 2
+      log[size: Utils::Fmt.size(size)].info "output file: %s" % [fn(f)]
+      FileUtils.mv f, @out
+    end
 
     name = ("%05d - %s%s - %s" % [
       item.idx,
@@ -223,7 +218,7 @@ class Downloader
     if !ls.empty?
       log.info "cache hit"
       ls.each do |f|
-        add_out_file[:cp].call f, ren: "#{name}#{matcher.id_suffix f}"
+        cp_temp f, "#{name}#{matcher.id_suffix f}", &add_out_file
       end
       return
     end
@@ -270,7 +265,15 @@ class Downloader
     end
 
     log.info "successfully downloaded"
-    matcher.glob(@meta).each &add_out_file[:mv]
+    matcher.glob(@meta).each &add_out_file
+  end
+
+  private def cp_temp(f, ren)
+    Dir.mktmpdir do |dir|
+      dest = Pathname(dir).join ren
+      FileUtils.cp f, dest
+      yield dest
+    end
   end
 
   RETRIABLE_YTDL_ERR = -> err do
