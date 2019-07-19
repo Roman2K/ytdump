@@ -12,10 +12,10 @@ class Downloader
   def initialize(out:, meta:, done: [],
     ydl_opts: [], min_duration: nil, rclone_dest: nil, nthreads: NTHREADS,
     sorted: false, check_empty: true, notfound_ok: false, min_df: nil,
-    cache: nil, dry_run: false, log: Utils::Log.new
+    cache: nil, cleanup: true, dry_run: false, log: Utils::Log.new
   )
     @ydl = Exe.new "youtube-dl", log["youtube-dl"]
-    @dry_run, @log = dry_run, log
+    @cleanup, @dry_run, @log = cleanup, dry_run, log
 
     @ydl_opts, @min_duration, @rclone_dest, @nthreads =
       ydl_opts, min_duration, rclone_dest, nthreads
@@ -48,6 +48,7 @@ class Downloader
     @log.info "threads: %d" % @nthreads
     @log.info "min df: %s" \
       % @min_df.yield_self { |n| n ? "%f%s" % [n, DF_BLOCK_SIZE] : "-" }
+    @log.info "cleanup: %p" % @cleanup
 
     @q = Queue.new
     @threads = @nthreads.times.map do
@@ -171,11 +172,11 @@ class Downloader
       other.concat a
     end
 
-    if !other.empty?
+    if @cleanup && !other.empty?
       log.info "deleting leftover files: %p" % fns(other) do
         FileUtils.rm other
       end
-    end
+    end unless @dry_run
 
     ls = matcher.glob(@out) | matcher.glob_arr(@done)
     if !ls.empty?
@@ -206,7 +207,7 @@ class Downloader
       log.info "cache hit"
       ls.each do |f|
         cp_temp f, "#{name}#{matcher.id_suffix f}", &add_out_file
-      end
+      end unless @dry_run
       return
     end
 
@@ -388,7 +389,7 @@ module Commands
   def self.cmd_dl(*urls,
     audio: false, min_duration: nil, rclone_dest: nil, nthreads: nil,
     sorted: false, check_empty: true, notfound_ok: false, min_df: nil,
-    cache: nil, dry_run: false, debug: false
+    cache: nil, cleanup: true, dry_run: false, debug: false
   )
     log = Utils::Log.new(level: debug ? :debug : :info)
 
@@ -406,7 +407,7 @@ module Commands
       ydl_opts: audio ? %w( -x --audio-format mp3 ) : [],
       rclone_dest: rclone_dest,
       sorted: sorted, check_empty: check_empty, notfound_ok: notfound_ok,
-      cache: cache, dry_run: dry_run, log: log,
+      cache: cache, cleanup: cleanup, dry_run: dry_run, log: log,
     }.tap { |h|
       h.update({
         min_duration: min_duration&.to_i,
