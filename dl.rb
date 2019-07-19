@@ -367,6 +367,7 @@ end
 
 class ItemMatcher
   def initialize(id)
+    id = id.to_s
     @pat = "* - #{id}.*"
     @suffix_re = / - #{Regexp.escape id}(\..+)$/
   end
