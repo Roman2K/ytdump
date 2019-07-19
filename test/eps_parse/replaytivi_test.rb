@@ -1,10 +1,12 @@
-$:.unshift __dir__ + "/.."
+$:.unshift __dir__ + "/../.."
 require 'minitest/autorun'
-require 'replaytivi'
+require 'eps_parse'
+
+module EpsParse
 
 class ReplayTiviTest < Minitest::Test
   def test_playlist_items
-    EpsParse.with_cache Pathname(__dir__).join("pages_cache") do
+    EpsParse.with_cache Pathname(__dir__).join('..', 'pages_cache') do
       do_test_playlist_items
     end
   end
@@ -29,3 +31,5 @@ class ReplayTiviTest < Minitest::Test
     assert_equal 2820, item.duration
   end
 end
+
+end # EpsParse

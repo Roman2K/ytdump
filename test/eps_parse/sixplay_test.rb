@@ -1,6 +1,8 @@
-$:.unshift __dir__ + "/.."
+$:.unshift __dir__ + "/../.."
 require 'minitest/autorun'
-require 'sixplay'
+require 'eps_parse'
+
+module EpsParse
 
 class SixPlayTest < Minitest::Test
   def test_episodes_from_html_season
@@ -93,13 +95,11 @@ class SixPlayTest < Minitest::Test
   end
 
   private def page(name)
-    File.read __dir__ + "/pages/#{name}.html"
+    File.read __dir__ + "/../pages/#{name}.html"
   end
 end
 
-class SixPlay
-
-class EpNumTest < Minitest::Test
+class SixPlay; class EpNumTest < Minitest::Test
   def test_from_EpNum
     num = EpNum.from_url "saison-4-episode-6-c_12373263"
     assert_equal EpNum[4,6], num
@@ -131,6 +131,6 @@ class EpNumTest < Minitest::Test
     end
     assert_match /missing episode/, exc.message
   end
-end
+end; end
 
-end # SixPlay
+end # EpsParse

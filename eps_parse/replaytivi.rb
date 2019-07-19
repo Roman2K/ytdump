@@ -1,6 +1,7 @@
 require 'nokogiri'
-require_relative 'eps_parse'
-require_relative 'item'
+require_relative '../item'
+
+module EpsParse
 
 class ReplayTivi
   NTHREADS = 4
@@ -68,3 +69,5 @@ class ReplayTivi
     end
   end
 end
+
+end # EpsParse

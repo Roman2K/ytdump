@@ -1,10 +1,12 @@
-$:.unshift __dir__ + "/.."
+$:.unshift __dir__ + "/../.."
 require 'minitest/autorun'
-require 'mtv'
+require 'eps_parse'
+
+module EpsParse
 
 class MTVTest < Minitest::Test
   def test_playlist_items
-    EpsParse.with_cache Pathname(__dir__).join("pages_cache") do
+    EpsParse.with_cache Pathname(__dir__).join('..', 'pages_cache') do
       do_test_playlist_items
     end
   end
@@ -34,3 +36,5 @@ class MTVTest < Minitest::Test
     assert_equal 201, i.idx
   end
 end
+
+end # EpsParse

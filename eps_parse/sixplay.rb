@@ -1,6 +1,7 @@
 require 'nokogiri'
-require_relative 'eps_parse'
-require_relative 'item'
+require_relative '../item'
+
+module EpsParse
 
 class SixPlay
   def min_duration; 20 * 60 end
@@ -138,3 +139,5 @@ class SixPlay
     end
   end
 end
+
+end # EpsParse

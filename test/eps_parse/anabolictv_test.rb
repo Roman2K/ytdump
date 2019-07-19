@@ -1,6 +1,8 @@
-$:.unshift __dir__ + "/.."
+$:.unshift __dir__ + "/../.."
 require 'minitest/autorun'
-require 'anabolictv'
+require 'eps_parse'
+
+module EpsParse
 
 class AnabolicTVTest < Minitest::Test
   def test_episodes_from_html
@@ -28,7 +30,7 @@ class AnabolicTVTest < Minitest::Test
   end
 
   private def page(name)
-    File.read __dir__ + "/pages/#{name}.html"
+    File.read __dir__ + "/../pages/#{name}.html"
   end
 
   private def parse_eps(parser, name, url)
@@ -37,3 +39,5 @@ class AnabolicTVTest < Minitest::Test
     parser.episodes_from_html(html, uri)
   end
 end
+
+end # EpsParse

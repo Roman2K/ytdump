@@ -1,7 +1,8 @@
 require 'nokogiri'
 require 'time'
-require_relative 'eps_parse'
-require_relative 'item'
+require_relative '../item'
+
+module EpsParse
 
 class AnabolicTV
   def min_duration; end
@@ -37,3 +38,5 @@ class AnabolicTV
       }
   end
 end
+
+end # EpsParse

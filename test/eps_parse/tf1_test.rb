@@ -1,6 +1,8 @@
-$:.unshift __dir__ + "/.."
+$:.unshift __dir__ + "/../.."
 require 'minitest/autorun'
-require 'tf1'
+require 'eps_parse'
+
+module EpsParse
 
 class TF1Test < Minitest::Test
   def test_playlist_items_single_page
@@ -33,7 +35,7 @@ class TF1Test < Minitest::Test
   end
 
   private def with_cache(&block)
-    EpsParse.with_cache Pathname(__dir__).join("pages_cache"), &block
+    EpsParse.with_cache Pathname(__dir__).join('..', 'pages_cache'), &block
   end
 
   def test_playlist_items_multipage
@@ -65,3 +67,5 @@ class TF1Test < Minitest::Test
     assert_equal 3060, it.duration
   end
 end
+
+end # EpsParse

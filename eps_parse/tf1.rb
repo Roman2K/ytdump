@@ -1,6 +1,7 @@
 require 'nokogiri'
-require_relative 'eps_parse'
-require_relative 'item'
+require_relative '../item'
+
+module EpsParse
 
 class TF1
   def min_duration; 20 * 60 end
@@ -193,3 +194,5 @@ class TF1
     end
   end
 end
+
+end # EpsParse

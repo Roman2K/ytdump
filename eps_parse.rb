@@ -3,6 +3,23 @@ require 'digest/sha1'
 require 'utils'
 
 module EpsParse
+  @parsers = []
+  def self.parser_autoload(name, path)
+    autoload(name, __dir__ + '/eps_parse/' + path).tap do
+      @parsers << name
+    end
+  end
+
+  parser_autoload :SixPlay, 'sixplay'
+  parser_autoload :ReplayTivi, 'replaytivi'
+  parser_autoload :TF1, 'tf1'
+  parser_autoload :AnabolicTV, 'anabolictv'
+  parser_autoload :MTV, 'mtv'
+
+  def self.all
+    @parsers.map { |name| const_get(name).new }
+  end
+
   extend self
 
   REQ_HEADERS = {

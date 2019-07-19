@@ -1,7 +1,8 @@
 require 'nokogiri'
 require 'json'
-require_relative 'eps_parse'
-require_relative 'item'
+require_relative '../item'
+
+module EpsParse
 
 class MTV
   def min_duration; end
@@ -57,3 +58,5 @@ class MTV
     items
   end
 end
+
+end # EpsParse

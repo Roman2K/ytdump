@@ -4,11 +4,7 @@ require 'fileutils'
 require 'pathname'
 require 'utils'
 require_relative 'item'
-require_relative 'sixplay'
-require_relative 'replaytivi'
-require_relative 'tf1'
-require_relative 'anabolictv'
-require_relative 'mtv'
+require_relative 'eps_parse'
 
 class Downloader
   NTHREADS = 4
@@ -79,17 +75,8 @@ class Downloader
     end
   end
 
-  ITEM_PARSERS = [
-    SixPlay,
-    ReplayTivi,
-    TF1,
-    AnabolicTV,
-    MTV,
-  ]
-
   private def parse_items(url)
-    ITEM_PARSERS.lazy.
-      map { |p| p.new }.
+    EpsParse.all.lazy.
       map { |p| [p, p.playlist_items(url)] }.
       find { |p,a| a }
   end
