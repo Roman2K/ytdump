@@ -46,8 +46,7 @@ class Downloader
     @log.info "done: %d" % @done.size
     @log.info "ydl opts: %p" % [@ydl_opts]
     @log.info "threads: %d" % @nthreads
-    @log.info "min df: %s" \
-      % @min_df.yield_self { |n| n ? "%f%s" % [n, DF_BLOCK_SIZE] : "-" }
+    @log.info "min df: %s" % @min_df.yield_self { |n| n ? fmt_df(n) : "-" }
     @log.info "cleanup: %p" % @cleanup
 
     @q = Queue.new
@@ -285,13 +284,19 @@ class Downloader
 
   private def fns(ps); ps.map { |p| fn p } end
   private def fn(p); p.basename.to_s end
+  private def fmt_df(n) "%s%s" % [Utils::Fmt.d(n, z: false), DF_BLOCK_SIZE] end
 
   private def df_short_wait(log)
     wait = 0
-    while mnt = df_short
+    last = nil
+    while short = df_short
+      mnt, free = short
+      wait = 0 if last && free > last
+      last = free
       mnt_log = log[
         mnt: mnt,
-        min: "%f%s" % [@min_df, DF_BLOCK_SIZE],
+        free: fmt_df(free),
+        min: fmt_df(@min_df),
         wait: Utils::Fmt.duration(wait),
       ]
       if wait < DF_SHORT_WAIT_MAX \
@@ -313,7 +318,11 @@ class Downloader
 
   private def df_short
     min = @min_df or return
-    [@out, @meta].find { |d| Utils.df(d, DF_BLOCK_SIZE) < min }
+    [@out, @meta].each do |d|
+      free = Utils.df(d, DF_BLOCK_SIZE)
+      return [d, free] if free < min
+    end
+    nil
   end
 end
 
