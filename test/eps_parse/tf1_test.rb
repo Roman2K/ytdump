@@ -15,8 +15,8 @@ class TF1Test < Minitest::Test
     assert_equal 3, items.size
 
     ep = items.fetch 0
-    assert_equal 73252702, ep.idx
-    assert_equal "73252702", ep.id
+    assert_equal "201907121905", ep.id
+    assert_equal 201907121905, ep.idx
     assert_equal \
       "https://www.tf1.fr/tfx/super-nanny/videos/super-nanny-depasses-par-nos-enfants-nous-narrivons-pas-a-organiser-notre-mariage-73252702.html",
       ep.url
@@ -26,11 +26,11 @@ class TF1Test < Minitest::Test
       ep.title
 
     ep = items.fetch 1
-    assert_equal "75742737", ep.id
+    assert_equal "201907122054", ep.id
     assert_equal 5580, ep.duration
 
     ep = items.fetch 2
-    assert_equal "80995795", ep.id
+    assert_equal "201907122250", ep.id
     assert_equal 5400, ep.duration
   end
 
