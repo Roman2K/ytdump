@@ -51,12 +51,12 @@ class TF1
       id_k = items.each_with_object(Hash.new 0) { |it,h|
         it.ids.to_h.each { |k,v| h[k] += 1 if v }
       }.yield_self { |h|
-        EpIDs::STRATEGIES.find { |k| h[k] == items.size }
+        %i(ep ts).find { |k| h[k] == items.size }
       } or raise "some IDs couldn't be generated"
 
       items.map.with_index do |it, idx|
         it.playlist_item do |pl_it|
-          pl_it.id, pl_it.idx = it.ids.fetch id_k
+          pl_it.id, pl_it.idx = it.ids.public_send id_k
           pl_it.idx ||= idx
         end
       end
@@ -158,27 +158,17 @@ class TF1
       end
     end
 
-    class EpIDs < Hash
-      STRATEGIES = %i( ep ts id sum ).freeze
-
+    EpIDs = Struct.new :ep, :ts do
       def initialize(uri, title)
+        super()
         if title =~ /\bS(\d+)\b.*\bEp?(\d+)\b/i
           s,e = [$1,$2].map &:to_i
-          store :ep, ["s%02de%02d" % [s,e], s * 100 + e]
+          self.ep = ["s%02de%02d" % [s,e], s * 100 + e]
         end
-        if title =~ /\b(\d\d)\D+(\d\d)\D+(\d\d)\D+(\d\d):(\d\d)\b/
-          ts = Time.new("20#{$3}", $2, $1, $4, $5, 0, 0).strftime("%Y%m%d%H%M")
-          store :ts, [ts, ts.to_i]
-        end
-        if uri.path =~ /-(\d{2,})\.\w+$/
-          id = $1
-          store :id, [id, id.to_i]
-        end
-        if uri.path =~ %r{/videos/(.+?)\.\w+$}
-          store :sum, Digest::SHA1.hexdigest($1)[0,7]
-        end
-        (keys - STRATEGIES).empty? or raise "stored unknown strategies"
-        freeze
+        title =~ /\b(\d\d)\D+(\d\d)\D+(\d\d)\D+(\d\d):(\d\d)\b/ \
+          or raise "failed to extract date-time from title"
+        ts = Time.new("20#{$3}", $2, $1, $4, $5, 0, 0).strftime("%Y%m%d%H%M")
+        self.ts = [ts, ts.to_i]
       end
     end
 
