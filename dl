@@ -3,4 +3,6 @@ set -eo pipefail
 
 root=$(dirname "$0")
 
-exec bundle exec ruby "$root"/dl.rb dl --min_df=2048 "$@"
+exec bundle exec ruby "$root"/dl.rb dl \
+  --min_df=2048 --no-cleanup \
+  "$@"

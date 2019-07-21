@@ -222,7 +222,7 @@ class Downloader
     end
 
     args = [
-      "-o", @meta.join("#{name}.%(ext)s").to_s,
+      "-o", @meta.join("#{name.gsub '%', '%%'}.%(ext)s").to_s,
       "-q", *@ydl_opts,
       item.url
     ]
