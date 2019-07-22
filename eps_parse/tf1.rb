@@ -86,7 +86,7 @@ class TF1
       q.close
       threads << Thread.new do
         Thread.current.abort_on_exception = true
-        Page.new(uris.last).each_next do |page|
+        Page.new(uris.last).each_succ do |page|
           items = Extractor.new(page.uri).
             items_from_html(EpsParse.request_get!(page.uri).body)
           break if items.empty?
@@ -106,14 +106,13 @@ class TF1
       attr_reader :uri
       attr_reader :num
 
-      def each_next
-        num = @num
-        loop do
-          num += 1
-          uri = @uri.dup.tap { |u| u.path = "#{@prefix}/#{num}" }
-          yield self.class.new(uri)
-        end
+      def +(n)
+        self.class.new @uri.dup.tap { |u| u.path = "#{@prefix}/#{@num + n}" }
       end
+
+      def succ; self + 1 end
+      def <=>(x); self.class === x and num <=> x.num end
+      def each_succ; cur = self; loop { yield (cur = cur.succ) } end
     end
 
     def items_from_html(html)

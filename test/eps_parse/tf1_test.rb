@@ -9,6 +9,17 @@ class TF1Test < Minitest::Test
     with_cache { do_test_playlist_items_single_page }
   end
 
+  def test_Page
+    p = TF1::Extractor::Page.new URI \
+      "https://www.tf1.fr/tf1-series-films/sous-le-soleil/videos/replay/11"
+    assert_equal 11, p.num
+    assert_equal 12, p.succ.num
+    assert_equal \
+      "https://www.tf1.fr/tf1-series-films/sous-le-soleil/videos/replay/10",
+      (p + -1).uri.to_s
+    assert_equal [11, 12, 13], (p .. p+2).map(&:num)
+  end
+
   def do_test_playlist_items_single_page
     items = TF1.new.playlist_items \
       "https://www.tf1.fr/tfx/super-nanny/videos/replay"
