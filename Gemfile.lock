@@ -1,12 +1,12 @@
 GIT
   remote: git://github.com/Roman2K/metacli.git
-  revision: d5668d1c1cf5cae42f2a49d15a75f2d0cf3a7a5c
+  revision: 3eb064e27e1e7b2a19280199b1e76e49ccdda634
   specs:
     metacli (0.1.0)
 
 GIT
   remote: git://github.com/Roman2K/utils-ruby.git
-  revision: 09112f6f227a14615c9de283f1371d18649bebf3
+  revision: 146aecf7a146a5bc3b36b3bc12c859e88d02f276
   specs:
     utils-ruby (0.1.0)
 

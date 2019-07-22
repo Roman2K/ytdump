@@ -5,6 +5,7 @@ require 'pathname'
 require 'utils'
 require_relative 'item'
 require_relative 'eps_parse'
+require_relative 'vidcat'
 
 class Downloader
   NTHREADS = 4
@@ -222,8 +223,8 @@ class Downloader
     end
 
     args = [
-      "-o", @meta.join("#{name.gsub '%', '%%'}.%(ext)s").to_s,
-      "-q", *@ydl_opts,
+      "-q", "--all-subs", *@ydl_opts, "-o",
+      @meta.join("#{name.gsub '%', '%%'}.idx%(playlist_index)s.%(ext)s").to_s,
       item.url
     ]
 
@@ -252,7 +253,11 @@ class Downloader
     end
 
     log.info "successfully downloaded"
-    matcher.glob(@meta).each &add_out_file
+    ->{ matcher.glob(@meta) }.tap do |get_fs|
+      cat = VidCat.new basename: -> s { s.sub /\.idx\d+$/, "" }, log: log
+      cat.cat get_fs[].sort
+      get_fs[].each &add_out_file
+    end
   end
 
   private def cp_temp(f, ren)
