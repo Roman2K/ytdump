@@ -16,6 +16,9 @@ class VidCat
   end
 
   def cat(files)
+    ##
+    # 1. For each video file, merge all related files (subtitles, etc.)
+    #
     vids, other = [], []
     files.each do |f|
       if !%w(.mp4 .mkv .webm).include?(f.extname)
@@ -35,22 +38,32 @@ class VidCat
     end
     [vids, other].each { |a| a.select! &:exist? }
 
+    ##
+    # 2. Concatenate all video files
+    #
     case vids.size
-    when 0
-    when 1
-      f = vids.fetch 0
-      dest = rename(f) { |base, ext| @basename[base] + ext }
-      fu :mv, f, dest if f != dest
+    when 0, 1
+      out = vids.first
     else
-      main = vids.min_by { |f| remove_suffix(f).to_s.length }
-      out = add_suffix main, ".mkv"
+      out = vids.min_by { |f| remove_suffix(f).to_s.length }
+      out = add_suffix out, ".mkv"
       ffconcat vids, out
       fu :rm, vids
-      final = rename(remove_suffix(out)) { |base, ext| @basename[base] + ext }
-      fu :mv, out, final if out != final
-      vids = [final]
     end
 
+    ##
+    # 3. Rename final video file
+    #
+    vids = []
+    if out
+      final = rename(remove_suffix(out)) { |base, ext| @basename[base] + ext }
+      fu :mv, out, final if out != final
+      vids << final
+    end
+
+    ##
+    # 4. Return single video file alongside extra files
+    #
     vids + other
   end
 

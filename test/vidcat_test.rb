@@ -45,6 +45,15 @@ class VidCatTest < Minitest::Test
       opts: {basename: -> s { s.sub /\d+$/, "" }}
 
     test_cat_out %w(
+      a01.mp4
+      a01.fr.srt
+    ),
+      merge: [%w( a01.mp4 a01.fr.srt )],
+      concat: [],
+      final: %w( a.mkv ),
+      opts: {basename: -> s { s.sub /\d+$/, "" }}
+
+    test_cat_out %w(
       a.mkv
     ),
       merge: [],

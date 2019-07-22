@@ -253,10 +253,10 @@ class Downloader
     end
 
     log.info "successfully downloaded"
-    ->{ matcher.glob(@meta) }.tap do |get_fs|
-      cat = VidCat.new basename: -> s { s.sub /\.idx\d+$/, "" }, log: log
-      cat.cat get_fs[].sort
-      get_fs[].each &add_out_file
+    ->{ matcher.glob(@meta) }.tap do |files|
+      cat = VidCat.new basename: -> s { s.sub /\.idx(\d+|NA)$/, "" }, log: log
+      cat.cat files[].sort
+      files[].each &add_out_file
     end
   end
 
