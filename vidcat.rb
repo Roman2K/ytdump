@@ -85,30 +85,29 @@ private
   end
 
   def ffmerge(fs, out)
-    run_cmd "ffmpeg", "-loglevel", "error", "-y",
-      *fs.flat_map { |f| ["-i", f.to_s] },
-      "-c:v", "copy", "-c:a", "copy", out.to_s,
-      name: "ffmerge"
+    @log["ffmerge", in: fs.size, out: out.to_s].debug "running" do
+      system "ffmpeg", "-loglevel", "error", "-y",
+        *fs.flat_map { |f| ["-i", f.to_s] },
+        "-c:v", "copy", "-c:a", "copy", out.to_s \
+          or raise "ffmerge failed"
+    end
   end
 
   def ffconcat(fs, out)
     Tempfile.create do |list|
       fs.each { |f| list.puts "file #{ffquote f.expand_path.to_s}" }
       list.close
-      run_cmd "ffmpeg", "-loglevel", "error", "-y",
-        "-f", "concat", "-safe", "0", "-i", list.path, "-c", "copy", out.to_s,
-        name: "ffconcat"
+      @log["ffconcat", in: fs.size, out: out.to_s].info "running" do
+        system "ffmpeg", "-loglevel", "error", "-y",
+          "-f", "concat", "-safe", "0",
+          "-i", list.path, "-c", "copy", out.to_s \
+            or raise "ffconcat failed"
+      end
     end
   end
 
   def ffquote(str)
     str.split(%(')).map { |s| %('#{s}') }.join %(\\')
-  end
-
-  def run_cmd(*cmd, name:)
-    @log.debug "running #{name}: #{shelljoin cmd}" do
-      system *cmd or raise "#{name} failed"
-    end
   end
 end
 
