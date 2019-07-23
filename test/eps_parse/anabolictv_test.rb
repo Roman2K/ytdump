@@ -29,14 +29,12 @@ class AnabolicTVTest < Minitest::Test
     assert_equal 20190614202412, ep.idx
   end
 
-  private def page(name)
-    File.read __dir__ + "/../pages/#{name}.html"
+  private def parse_eps(parser, name, url)
+    parser.episodes_from_html page(name), URI(url)
   end
 
-  private def parse_eps(parser, name, url)
-    html = page name
-    uri = URI url
-    parser.episodes_from_html(html, uri)
+  private def page(name)
+    File.read __dir__ + "/../pages/#{name}.html"
   end
 end
 

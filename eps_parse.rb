@@ -15,6 +15,7 @@ module EpsParse
   parser_autoload :TF1, 'tf1'
   parser_autoload :AnabolicTV, 'anabolictv'
   parser_autoload :MTV, 'mtv'
+  parser_autoload :FranceTV, 'francetv'
 
   def self.all
     @parsers.map { |name| const_get(name).new }
