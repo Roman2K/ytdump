@@ -109,24 +109,9 @@ class Downloader
     items = JSON.parse(s).
       tap { |a| a.reverse! unless @sorted }.
       map.
-      with_index { |attrs, idx| Item.from_json idx+1, attrs }.
-      tap { |a| fix_yt_item_bug! a }
+      with_index { |attrs, idx| Item.from_json idx+1, attrs }
 
     dl_playlist_items items
-  end
-
-  def fix_yt_item_bug!(items)
-    invalid = items.select(&:youtube_invalid_title?).group_by &:url
-    return if invalid.empty?
-    @log[count: invalid.size].warn "fixing invalid YouTube items"
-    get_playlist(*invalid.keys, full: true).split("\n").each do |json|
-      fix = Item.from_json 0, JSON.parse(json)
-      invalid.fetch(fix.url).each do |i|
-        @log[i.id, {from: i.title, to: fix.title}.transform_values(&:inspect)].
-          warn "fixing title"
-        i.title = fix.title
-      end
-    end
   end
 
   def dl_playlist_items(items)
@@ -206,6 +191,19 @@ class Downloader
       @out_size += size
       log[size: Utils::Fmt.size(size)].info "output file: %s" % [fn(f)]
       FileUtils.mv f, @out
+    end
+
+    if item.youtube_invalid_title?
+      begin
+        json = get_playlist item.url, full: true
+      rescue Exe::ExitError => err
+        err.status == 1 or raise
+        log[title: item.title, err: err].warn "failed to fix title"
+      else
+        fix = Item.from_json 0, JSON.parse(json)
+        log[from: item.title, to: fix.title].warn "fixing title"
+        item.title = fix.title
+      end
     end
 
     name = ("%05d - %s%s - %s" % [
