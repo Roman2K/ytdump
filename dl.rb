@@ -193,27 +193,28 @@ class Downloader
       FileUtils.mv f, @out
     end
 
-    if item.youtube_invalid_title?
-      begin
-        json = get_playlist item.url, full: true
-      rescue Exe::ExitError => err
-        err.status == 1 or raise
-        log[title: item.title, err: err].warn "failed to fix title"
-      else
-        fix = Item.from_json 0, JSON.parse(json)
-        log[from: item.title, to: fix.title].warn "fixing title"
-        item.title = fix.title
+    name = CachedStringer.new do
+      if item.youtube_invalid_title?
+        begin
+          json = get_playlist item.url, full: true
+        rescue Exe::ExitError => err
+          err.status == 1 or raise
+          log[title: item.title, err: err].warn "failed to fix title"
+        else
+          fix = Item.from_json 0, JSON.parse(json)
+          log[from: item.title, to: fix.title].warn "fixing title"
+          item.title = fix.title
+        end
       end
+      ("%05d - %s%s - %s" % [
+        item.idx,
+        item.title,
+        item.duration.yield_self { |d|
+          d ? " (%s)" % Utils::Fmt.duration(d) : ""
+        },
+        item.id,
+      ]).tr('/\\:!'"\n", '_')
     end
-
-    name = ("%05d - %s%s - %s" % [
-      item.idx,
-      item.title,
-      item.duration.yield_self { |d|
-        d ? " (%s)" % Utils::Fmt.duration(d) : ""
-      },
-      item.id,
-    ]).tr('/\\:!'"\n", '_')
 
     ls = matcher.glob_arr @cache
     if !ls.empty?
@@ -236,9 +237,10 @@ class Downloader
     end
 
     args = [
-      "-q", "--all-subs", *@ydl_opts, "-o",
-      @meta.join("#{name.gsub '%', '%%'}.idx%(playlist_index)s.%(ext)s").to_s,
-      item.url
+      "-q", "--all-subs", *@ydl_opts, item.url,
+      "-o", @meta.join(
+        "#{name.to_s.gsub '%', '%%'}.idx%(playlist_index)s.%(ext)s"
+      ).to_s,
     ]
 
     log.info "downloading %s" % name
@@ -258,7 +260,7 @@ class Downloader
       case stderr
       when UNRETRIABLE_STDERR_RE
         log.error "unavailable, marking as skippable"
-        File.write @meta.join(name+".skip"), stderr
+        File.write @meta.join("#{name}.skip"), stderr
       else
         log.warn "temporary error, will retry"
       end
@@ -271,6 +273,11 @@ class Downloader
       cat.cat files[].sort
       files[].each &add_out_file
     end
+  end
+
+  class CachedStringer
+    def initialize(&to_s); @to_s = to_s end
+    def to_s; @to_s = @to_s.call if Proc === @to_s; @to_s end
   end
 
   private def cp_temp(f, ren)
