@@ -24,7 +24,11 @@ class Downloader
       sorted, check_empty, notfound_ok, min_df
     @nthreads = 1 if @dry_run
 
+    @cache_mv = false
     @cache = if cache
+      if /^:/ =~ cache
+        cache, @cache_mv = $', true
+      end
       Pathname(cache).yield_self do |dir|
         dir.directory? or raise "cache is not a directory"
         dir.glob("**/*").select &:file?
@@ -220,7 +224,8 @@ class Downloader
     if !ls.empty?
       log.info "cache hit"
       ls.each do |f|
-        cp_temp f, "#{name}#{matcher.id_suffix f}", &add_out_file
+        FileMovePrep.new(f, "#{name}#{matcher.id_suffix f}").
+          public_send(@cache_mv ? :mv : :cp, &add_out_file)
       end unless @dry_run
       return
     end
@@ -280,10 +285,25 @@ class Downloader
     def to_s; @to_s = @to_s.call if Proc === @to_s; @to_s end
   end
 
-  private def cp_temp(f, ren)
-    Dir.mktmpdir do |dir|
-      dest = Pathname(dir).join ren
-      FileUtils.cp f, dest
+  class FileMovePrep
+    def initialize(f, ren)
+      @f, @ren = f, ren
+    end
+
+    def cp
+      Dir.mktmpdir do |dir|
+        dest = Pathname(dir).join @ren
+        FileUtils.cp @f, dest
+        yield dest
+      end
+    end
+
+    def mv
+      dest = @f.dirname.join @ren
+      if @f != dest
+        !dest.exist? or raise "dest already exists"
+        FileUtils.mv @f, dest
+      end
       yield dest
     end
   end
