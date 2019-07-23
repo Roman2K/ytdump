@@ -1,25 +1,20 @@
-require 'nokogiri'
 require 'json'
-require_relative '../item'
 
 module EpsParse
 
-class MTV
-  def min_duration; end
+class MTV < Parser
+  def uri_ok?(uri)
+    uri.host.sub(/^www\./, "") == "mtv.com" or return false
+    cs = uri.path.split("/")
+    cs[0,2] == ["", "shows"] && cs.last == "episode-guide" \
+      && cs.size == 4 && uri.query.nil? \
+  end
 
-  def playlist_items(url)
-    uri = URI(url).tap do |u|
-      u.host.sub(/^www\./, "") == "mtv.com" or return
-      cs = u.path.split("/")
-      cs[0,2] == ["", "shows"] && cs.last == "episode-guide" \
-        && cs.size == 4 && u.query.nil? \
-        or return
-    end
-
-    feed_uri = Nokogiri::HTML.parse(EpsParse.request_get!(uri).body).
+  def episodes_from_doc(doc, uri)
+    feed_uri = doc.
       css("[data-tffeed]:first").first&.[](:"data-tffeed").
-        tap { |u| u or raise "feed element not found" }.
-        yield_self { |u| URI u }
+      tap { |u| u or raise "feed element not found" }.
+      yield_self { |u| URI u }
 
     fetch_eps feed_uri
   end

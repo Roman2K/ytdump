@@ -1,22 +1,16 @@
-require 'nokogiri'
-require_relative '../item'
-
 module EpsParse
 
-class ReplayTivi
+class ReplayTivi < Parser
   NTHREADS = 4
 
   def min_duration; 20 * 60 end
 
-  def playlist_items(url)
-    uri = URI url
-    uri.host == "www.replaytivi.fr" \
-      && uri.path.start_with?("/programme/") \
-      or return
+  def uri_ok?(uri)
+    uri.host == "www.replaytivi.fr" && uri.path.start_with?("/programme/")
+  end
 
-    resp = EpsParse.request_get! uri
-
-    eps = Nokogiri::HTML.parse(resp.body).css("a:has(.icon-video)").map do |a|
+  def episodes_from_doc(doc, uri)
+    eps = doc.css("a:has(.icon-video)").map do |a|
       Ep.new \
         uri: uri.dup.tap { |u|
           u.path = a["href"].tap do |path|
@@ -46,26 +40,21 @@ class ReplayTivi
     q.close
     threads.each &:join
 
-    eps.map &:playlist_item
+    eps.map &:item
   end
 
   Ep = Struct.new :item, :uri, keyword_init: true do
     def fetch_url!
-      item.url =
-        Nokogiri::HTML.parse(EpsParse.request_get!(uri).body).
-          css("a:has(.play):first").
-          first&.[]("href") \
-            or raise "missing episode URL"
+      item.url = Parser.doc(EpsParse.request_get!(uri).body).
+        css("a:has(.play):first").
+        first&.[]("href") \
+          or raise "missing episode URL"
       item.id =
         case item.url
         when /6play\.fr\/.+c_(\d+)\b/ then $1
         else raise "unsupported replay website"
         end
       item.idx = item.id.to_i
-    end
-
-    def playlist_item
-      item
     end
   end
 end

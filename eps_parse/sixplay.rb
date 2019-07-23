@@ -1,23 +1,27 @@
-require 'nokogiri'
-require_relative '../item'
-
 module EpsParse
 
-class SixPlay
+class SixPlay < Parser
   def min_duration; 20 * 60 end
 
-  def playlist_items(url)
-    uri = URI url
-    uri.host.sub(/^www\./, "") == "6play.fr" && uri.path.split("/").size == 2 \
-      or return
-    html = EpsParse.request_get!(uri).
-      body.
-      tap { |s| s.force_encoding Encoding::UTF_8 }
-    episodes_from_html(html, uri).map &:playlist_item
+  def uri_ok?(uri)
+    uri.host.sub(/^www\./, "") == "6play.fr" && uri.path.split("/").size == 2
   end
 
   def episodes_from_html(html, uri)
-    self.class.string_doc(html).css("a").each_with_object [] do |a, arr|
+    html = html.dup.force_encoding Encoding::UTF_8
+    super
+  end
+
+  def episodes_from_doc(doc, uri)
+    items_from_doc(doc, uri).map &:playlist_item
+  end
+
+  def items_from_html(html, uri)
+    items_from_doc self.class.doc(html), uri
+  end
+
+  private def items_from_doc(doc, uri)
+    doc.css("a").each_with_object [] do |a, arr|
       ep = ep_from_el(a, uri) or next
       arr << ep
     end

@@ -4,12 +4,13 @@ require 'utils'
 
 module EpsParse
   @parsers = []
-  def self.parser_autoload(name, path)
+  def self.parser_autoload(name, path, parser: true)
     autoload(name, __dir__ + '/eps_parse/' + path).tap do
-      @parsers << name
+      @parsers << name if parser
     end
   end
 
+  parser_autoload :Parser, 'parser', parser: false
   parser_autoload :SixPlay, 'sixplay'
   parser_autoload :ReplayTivi, 'replaytivi'
   parser_autoload :TF1, 'tf1'

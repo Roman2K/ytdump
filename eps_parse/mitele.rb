@@ -1,25 +1,19 @@
-require 'nokogiri'
 require 'json'
-require_relative '../item'
 
 module EpsParse
 
-class Mitele
+class Mitele < Parser
   def min_duration; 20 * 60 end
 
   # https://www.mitele.es/programas-tv/ven-a-cenar-conmigo/1505720681723/
-  def playlist_items(url)
-    uri = URI(url).tap do |u|
-      u.host.sub(/^www\./, "") == "mitele.es" or return
-      cs = u.path.split("/")
-      cs[0,2] == ["", "programas-tv"] && cs.size == 4 or return
-    end
-    html = EpsParse.request_get!(uri).body
-    episodes_from_html(html, uri)
+  def uri_ok?(uri)
+    uri.host.sub(/^www\./, "") == "mitele.es" or return false
+    cs = uri.path.split("/")
+    cs[0,2] == ["", "programas-tv"] && cs.size == 4
   end
 
-  def episodes_from_html(html, uri)
-    Nokogiri::HTML.parse(html).css("script[type='text/javascript']").
+  def episodes_from_doc(doc, uri)
+    doc.css("script[type='text/javascript']").
       to_a.grep(/\bcontainer_mtweb\s*=/) { $' }.
       first.tap { |s| s or raise "metadata not found" }.
       yield_self { |s| JSON.parse s }.

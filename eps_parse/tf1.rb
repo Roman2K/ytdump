@@ -1,19 +1,16 @@
-require 'nokogiri'
-require_relative '../item'
-
 module EpsParse
 
-class TF1
+class TF1 < Parser
   def min_duration; 20 * 60 end
 
   # https://www.tf1.fr/tf1/ninja-warrior/videos/replay
-  def playlist_items(url)
-    uri = URI url
+  def uri_ok?(uri)
     uri.host.sub(/^www\./, "") == "tf1.fr" \
-      && uri.path.split("/")[-2..-1] == %w( videos replay ) \
-      or return
+      && uri.path.split("/")[-2..-1] == %w( videos replay )
+  end
 
-    Extractor.new(uri).from_html EpsParse.request_get!(uri).body
+  def episodes_from_html(html, uri)
+    Extractor.new(uri).from_html html
   end
 
   class Extractor
@@ -125,7 +122,7 @@ class TF1
           tap { |e| e or raise "link element not found" }.
           yield_self { |e| internal_uri_from_el e }
 
-        EpItem.new \
+        Ep.new \
           uri: ep_uri,
           duration: el.css("[class*='_duration_']").
             first.tap { |e| e or raise "duration not found" }.
@@ -140,7 +137,7 @@ class TF1
       end
     end
 
-    EpItem = Struct.new :uri, :duration, :title, keyword_init: true do
+    Ep = Struct.new :uri, :duration, :title, keyword_init: true do
       def ids
         @ids ||= EpIDs.new uri, title
       end

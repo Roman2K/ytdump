@@ -5,7 +5,7 @@ require 'eps_parse'
 module EpsParse
 
 class SixPlayTest < Minitest::Test
-  def test_episodes_from_html_season
+  def test_items_from_html
     parser = SixPlay.new
 
     eps = parse_eps parser, "moundir",
@@ -53,14 +53,12 @@ class SixPlayTest < Minitest::Test
   end
 
   private def parse_eps(parser, name, url, min_duration: 20 * 60)
-    html = page name
-    uri = URI url
     parser.
-      episodes_from_html(html, uri).
+      items_from_html(page(name), URI(url)).
       select { |ep| ep.duration >= min_duration }
   end
 
-  def test_episodes_from_html_no_season
+  def test_items_from_html_no_season
     parser = SixPlay.new
 
     eps = parse_eps parser, "meillpatissier",
