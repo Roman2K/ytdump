@@ -109,9 +109,24 @@ class Downloader
     items = JSON.parse(s).
       tap { |a| a.reverse! unless @sorted }.
       map.
-      with_index { |attrs, idx| Item.from_json idx+1, attrs }
+      with_index { |attrs, idx| Item.from_json idx+1, attrs }.
+      tap { |a| fix_yt_item_bug! a }
 
     dl_playlist_items items
+  end
+
+  def fix_yt_item_bug!(items)
+    invalid = items.select(&:youtube_invalid_title?).group_by &:url
+    return if invalid.empty?
+    @log[count: invalid.size].warn "fixing invalid YouTube items"
+    get_playlist(*invalid.keys, full: true).split("\n").each do |json|
+      fix = Item.from_json 0, JSON.parse(json)
+      invalid.fetch(fix.url).each do |i|
+        @log[i.id, {from: i.title, to: fix.title}.transform_values(&:inspect)].
+          warn "fixing title"
+        i.title = fix.title
+      end
+    end
   end
 
   def dl_playlist_items(items)
@@ -140,12 +155,12 @@ class Downloader
       && err.stderr =~ /\bHTTP Error 5\d\d\b/i
   end
 
-  private def get_playlist(url)
+  private def get_playlist(*urls, full: !!@min_duration)
     File.read "debug"
   rescue Errno::ENOENT
     Utils.retry 3, RETRIABLE_YTDL_PL_ERR, wait: ->{ 1+rand } do
       @log.info("getting playlist") do
-        @ydl.run *["-j", *("--flat-playlist" unless @min_duration), url]
+        @ydl.run *["-j", *("--flat-playlist" unless full), *urls]
       end
     end
   end
