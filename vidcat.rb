@@ -41,30 +41,23 @@ class VidCat
     ##
     # 2. Concatenate all video files
     #
-    case vids.size
-    when 0, 1
-      out = vids.first
-    else
+    if vids.size >= 2
       out = vids.min_by { |f| remove_suffix(f).to_s.length }
       out = add_suffix out, ".mkv"
+      vids.delete out
       ffconcat vids, out
       fu :rm, vids
+      vids = [out]
     end
 
     ##
-    # 3. Rename final video file
+    # 3. Return single video file alongside extra files
     #
-    vids = []
-    if out
-      final = rename(remove_suffix(out)) { |base, ext| @basename[base] + ext }
-      fu :mv, out, final if out != final
-      vids << final
+    (vids + other).map do |f|
+      dest = rename(remove_suffix(f)) { |base, ext| @basename[base] + ext }
+      fu :mv, f, dest if f != dest
+      dest
     end
-
-    ##
-    # 4. Return single video file alongside extra files
-    #
-    vids + other
   end
 
 private

@@ -62,10 +62,11 @@ class VidCatTest < Minitest::Test
 
     test_cat_out %w(
       a.mkv
+      x.ogg
     ),
       merge: [],
       concat: [],
-      final: %w( b.mkv ),
+      final: %w( b.mkv b.ogg ),
       opts: {basename: -> s { "b" }}
 
     test_cat_out %w(
