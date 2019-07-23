@@ -18,12 +18,18 @@ class MiteleTest < Minitest::Test
     assert_equal \
       "https://www.mitele.es/programas-tv/ven-a-cenar-conmigo/5c9a0e4eb95c9bcd698b45ac/player/",
       ep.url
-    assert_equal "Celebramos 300 programas con poderío", ep.title
+    assert_equal \
+      "27-mar-2019 (mié) - Celebramos 300 programas con poderío",
+      ep.title
     assert_equal 2503, ep.duration
+
+    ep = eps.find { |e| e.idx == 169 } or raise "ep 169 not found"
+    assert_equal "16-may-2018 (mié) - Juanjo, ¿juego limpio?", ep.title
 
     ep = eps.fetch -1
     assert_equal "5aaf9ccab95c9b77358b484f", ep.id
     assert_equal 131, ep.idx
+    assert_equal "19-mar-2018 (lun) - Un fanático de las patatas bravas", ep.title
   end
 
   private def parse_eps(parser, name, url)
