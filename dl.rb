@@ -182,21 +182,6 @@ class Downloader
       end
     end unless @dry_run
 
-    ls = matcher.glob(@out) | matcher.glob_arr(@done)
-    if !ls.empty?
-      log.debug "already downloaded: %p" % fns(ls)
-      return
-    end
-
-    df_short_wait log
-
-    add_out_file = -> f do
-      size = f.size
-      @out_size += size
-      log[size: Utils::Fmt.size(size)].info "output file: %s" % [fn(f)]
-      FileUtils.mv f, @out
-    end
-
     name = CachedStringer.new do
       if item.youtube_invalid_title?
         begin
@@ -217,7 +202,36 @@ class Downloader
           d ? " (%s)" % Utils::Fmt.duration(d) : ""
         },
         item.id,
-      ]).tr('/\\:!'"\n", '_')
+      ]).tr('/\\:?!"'"\n", '_')
+    end
+
+    ls = matcher.glob(@out)
+    if !ls.empty?
+      log[loc: :out].debug "already downloaded: %p" % fns(ls)
+      ls.each do |f|
+        dest = f.dirname.join "#{name}#{matcher.id_suffix f}"
+        f != dest or next
+        log[from: f.basename, to: dest.basename].
+          info "renaming existing output file"
+        !dest.exist? or raise "dest already exists"
+        FileUtils.mv f, dest unless @dry_run
+      end
+      return
+    end
+
+    ls = matcher.glob_arr(@done)
+    if !ls.empty?
+      log[loc: :done].debug "already downloaded: %p" % fns(ls)
+      return
+    end
+
+    df_short_wait log
+
+    add_out_file = -> f do
+      size = f.size
+      @out_size += size
+      log[size: Utils::Fmt.size(size)].info "output file: %s" % [fn(f)]
+      FileUtils.mv f, @out
     end
 
     ls = matcher.glob_arr @cache
@@ -442,6 +456,7 @@ end
 
 module Commands
   def self.cmd_dl(*urls,
+    out: "out", meta: "meta",
     audio: false, min_duration: nil, rclone_dest: nil, nthreads: nil,
     sorted: false, check_empty: true, notfound_ok: false, min_df: nil,
     cache: nil, cleanup: true, dry_run: false, debug: false
@@ -458,7 +473,7 @@ module Commands
     end.split("\n")
 
     dler = Downloader.new **{
-      out: "out", meta: "meta", done: done,
+      out: out, meta: meta, done: done,
       ydl_opts: audio ? %w( -x --audio-format mp3 ) : [],
       rclone_dest: rclone_dest,
       sorted: sorted, check_empty: check_empty, notfound_ok: notfound_ok,
