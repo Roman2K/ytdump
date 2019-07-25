@@ -328,9 +328,11 @@ class Downloader
   end
 
   RETRIABLE_YTDL_ERR = -> err do
-    Exe::ExitError === err \
-      && err.status == 1 \
-      && err.stderr =~ /Unable to extract Initial JS player/i
+    Exe::ExitError === err && err.status == 1 or break false
+    case err.stderr
+    when /<urlopen error /, /Unable to extract Initial JS player/i then true
+    else false
+    end
   end
 
   UNRETRIABLE_STDERR_RE = [
