@@ -191,7 +191,7 @@ class Downloader
           log[title: item.title, err: err].warn "failed to fix title"
         else
           fix = Item.from_json 0, JSON.parse(json)
-          log[from: item.title, to: fix.title].warn "fixing title"
+          log[fix: Utils.path_diff(item.title, fix.title)].warn "fixing title"
           item.title = fix.title
         end
       end
@@ -207,11 +207,11 @@ class Downloader
 
     ls = matcher.glob(@out)
     if !ls.empty?
-      log[loc: :out].debug "already downloaded: %p" % fns(ls)
+      log[in: :out].debug "already downloaded: %p" % fns(ls)
       ls.each do |f|
         dest = f.dirname.join "#{name}#{matcher.id_suffix f}"
         f != dest or next
-        log[from: f.basename, to: dest.basename].
+        log[rename: Utils.path_diff(f.basename, dest.basename)].
           info "renaming existing output file"
         !dest.exist? or raise "dest already exists"
         FileUtils.mv f, dest unless @dry_run
@@ -221,7 +221,7 @@ class Downloader
 
     ls = matcher.glob_arr(@done)
     if !ls.empty?
-      log[loc: :done].debug "already downloaded: %p" % fns(ls)
+      log[in: :done].debug "already downloaded: %p" % fns(ls)
       return
     end
 
