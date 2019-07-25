@@ -288,8 +288,13 @@ class Downloader
 
     log.info "successfully downloaded"
     ->{ matcher.glob(@meta) }.tap do |files|
+      fs = files[]
+      if !(empty = fs.select { |f| f.size == 0 }).empty?
+        log.error "detected empty output files: %p" % [fns(empty)]
+        return
+      end
       cat = VidCat.new basename: -> s { s.sub /\.idx(\d+|NA)$/, "" }, log: log
-      cat.cat files[].sort
+      cat.cat fs.sort
       files[].each &add_out_file
     end
   end
