@@ -15,7 +15,7 @@ class VidCatTest < Minitest::Test
     ), merge: [
       %w( b.mkv b.fr.srt b.scc ),
     ], concat: [
-      %w( b.out.mkv c.mp4 ),
+      %w( b.out.mp4 c.mp4 ),
     ], final: %w(
       a.ogg
       b.mkv
@@ -30,7 +30,7 @@ class VidCatTest < Minitest::Test
       %w( a.mkv a.fr.srt ),
       %w( b.mkv b.fr.srt ),
     ], concat: [
-      %w( a.out.mkv b.out.mkv ),
+      %w( a.out.mp4 b.out.mp4 ),
     ], final: %w(
       a.mkv
     )
@@ -50,7 +50,7 @@ class VidCatTest < Minitest::Test
     ),
       merge: [%w( a01.mp4 a01.fr.srt )],
       concat: [],
-      final: %w( a.mkv ),
+      final: %w( a.mp4 ),
       opts: {basename: -> s { s.sub /\d+$/, "" }}
 
     test_cat_out %w(

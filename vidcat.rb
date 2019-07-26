@@ -5,9 +5,7 @@ require 'utils'
 require 'shellwords'
 
 class VidCat
-  DEFAULT_TMP_SUFFIX = ".vidcat_tmp"
-
-  def initialize(basename: -> s { s }, tmp_suffix: DEFAULT_TMP_SUFFIX,
+  def initialize(basename: -> s { s }, tmp_suffix: ".vidcat_tmp",
     log: Utils::Log.new
   )
     @basename = basename
@@ -30,7 +28,9 @@ class VidCat
         vids << f
         next
       end
-      out = add_suffix f, ".mkv"
+      # Remux to MP4 instead of MKV to fix `Can't write packet with unknown
+      # timestamp` -- https://trac.ffmpeg.org/ticket/3339
+      out = add_suffix f, ".mp4"
       fs.delete out
       ffmerge fs, out
       fu :rm, fs
