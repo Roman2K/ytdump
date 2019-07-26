@@ -98,7 +98,7 @@ class SixPlay < Parser
   Ep = Struct.new :id, :title, :num, :uri, :duration do
     def playlist_item
       Item.new \
-        idx: id.to_i,
+        idx: num&.complete? ? num.s * 100 + num.e : id.to_i,
         id: id,
         url: uri.to_s,
         duration: duration,

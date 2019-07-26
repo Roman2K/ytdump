@@ -14,8 +14,9 @@ class SixPlayTest < Minitest::Test
     # season 3: 41
     # total: 49
     assert_equal 49, eps.size
-    assert_equal({4 => 8, 3 => 41}, stats(eps))
+    assert_equal({4 => 8, 3 => 41}, seasons_stats(eps))
     assert_equal 2280, eps.map(&:duration).min
+    assert_equal 408, eps.fetch(0).playlist_item.idx
 
     eps = parse_eps parser, "moundir_derchance",
       "https://www.6play.fr/moundir-et-la-plage-de-la-derniere-chance-p_14151"
@@ -27,29 +28,36 @@ class SixPlayTest < Minitest::Test
     # season 5: 60 + 1 (2/2) = 60 (missing ep 9)
     # total: 116
     assert_equal 116, eps.size
-    assert_equal({nil => 55, 6 => 1, 5 => 60}, stats(eps))
+    assert_equal({nil => 55, 6 => 1, 5 => 60}, seasons_stats(eps))
     assert_equal %w(12 2-2 12 22),
-      eps.sort_by(&:id).map(&:num).select { |n| n.e == 1 }.map(&:name)
+      eps.sort_by(&:id).map(&:num).compact.select { |n| n.e == 1 }.map(&:name)
+    assert_equal 12220049, eps.fetch(0).playlist_item.idx
+    assert_equal 560, eps.fetch(-1).playlist_item.idx
 
     eps = parse_eps parser, "ile",
       "https://www.6play.fr/l-ile-de-la-tentation-p_13757"
-    assert_equal({nil => 4}, stats(eps))
+    assert_equal({nil => 4}, seasons_stats(eps))
 
     eps = parse_eps parser, "marseillais_asiantour",
       "https://www.6play.fr/les-marseillais-asian-tour-p_13125"
-    assert_equal({nil => 61}, stats(eps))
+    assert_equal({nil => 61}, seasons_stats(eps))
 
     eps = parse_eps parser, "marseillais_australia",
       "https://www.6play.fr/les-marseillais-australia-p_8711"
-    assert_equal({nil => 61}, stats(eps))
+    assert_equal({nil => 61}, seasons_stats(eps))
 
     eps = parse_eps parser, "marseillais_restedm",
       "https://www.6play.fr/les-marseillais-vs-le-reste-du-monde-p_6092"
-    assert_equal({3 => 50}, stats(eps))
+    assert_equal({3 => 50}, seasons_stats(eps))
 
     eps = parse_eps parser, "marseillais_restedm",
       "https://www.6play.fr/les-marseillais-vs-le-reste-du-monde-p_6092"
-    assert_equal({3 => 50}, stats(eps))
+    assert_equal({3 => 50}, seasons_stats(eps))
+
+    eps = parse_eps parser, "kardashian",
+      "https://www.6play.fr/l-incroyable-famille-kardashian-p_10941"
+    assert_equal (1..12).to_a, seasons_stats(eps).keys.sort
+    assert_equal [101, 1221], eps.map { |e| e.playlist_item.idx }.minmax
   end
 
   private def parse_eps(parser, name, url, min_duration: 20 * 60)
@@ -85,9 +93,9 @@ class SixPlayTest < Minitest::Test
     assert_equal 9, eps.size
   end
 
-  private def stats(eps)
+  private def seasons_stats(eps)
     eps.inject(Hash.new 0) do |h,ep|
-      h[ep.num.s] += 1
+      h[ep.num&.s] += 1
       h
     end
   end
