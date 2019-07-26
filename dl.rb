@@ -46,8 +46,8 @@ class Downloader
     @dled = Set_ThreadSafe.new
     @out_size = 0
 
-    @log.info "out dir: %p" % fns([@out])
-    @log.info "meta dir: %p" % fns([@meta])
+    @log.info "out dir: %p" % [fn(@out)]
+    @log.info "meta dir: %p" % [fn(@meta)]
     @log.info "done: %d" % @done.size
     @log.info "ydl opts: %p" % [@ydl_opts]
     @log.info "threads: %d" % @nthreads
@@ -177,7 +177,7 @@ class Downloader
     end
 
     if @cleanup && !other.empty?
-      log.info "deleting leftover files: %p" % fns(other) do
+      log.info "deleting leftover files: %p" % [fns(other)] do
         FileUtils.rm other
       end
     end unless @dry_run
@@ -207,7 +207,7 @@ class Downloader
 
     ls = matcher.glob(@out)
     if !ls.empty?
-      log[in: :out].debug "already downloaded: %p" % fns(ls)
+      log[in: :out].debug "already downloaded: %p" % [fns(ls)]
       ls.each do |f|
         dest = f.dirname.join "#{name}#{matcher.id_suffix f}"
         f != dest or next
@@ -221,7 +221,7 @@ class Downloader
 
     ls = matcher.glob_arr(@done)
     if !ls.empty?
-      log[in: :done].debug "already downloaded: %p" % fns(ls)
+      log[in: :done].debug "already downloaded: %p" % [fns(ls)]
       return
     end
 
@@ -330,8 +330,13 @@ class Downloader
   RETRIABLE_YTDL_ERR = -> err do
     Exe::ExitError === err && err.status == 1 or break false
     case err.stderr
-    when /<urlopen error /, /Unable to extract Initial JS player/i then true
-    else false
+    when \
+      /Unable to extract Initial JS player/i,
+      /<urlopen error /,
+      /No status line received - the server has closed the connection/
+      true
+    else
+      false
     end
   end
 
