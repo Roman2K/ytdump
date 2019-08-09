@@ -276,8 +276,7 @@ class Downloader
       err.status == 1 or raise
       stderr = err.stderr.strip
       log = log[status: err.status, stderr: stderr]
-      case stderr
-      when UNRETRIABLE_STDERR_RE
+      if stderr =~ UNRETRIABLE_STDERR_RE || item.title =~ UNRETRIABLE_TITLE_RE
         log.error "unavailable, marking as skippable"
         File.write @meta.join("#{name}.skip"), stderr
       else
@@ -349,9 +348,12 @@ class Downloader
     "This video has been removed",
     "The uploader has not made this video available",
     "This video is only available to Music Premium members",
+    "Sorry about that.",
   ].yield_self { |msgs|
     /ERROR: (?:#{msgs.map { |m| Regexp.escape m } * "|"})/i
   }
+
+  UNRETRIABLE_TITLE_RE = /^\[Deleted video\]|\[Private video\]$/
 
   private def fns(ps); ps.map { |p| fn p } end
   private def fn(p); p.basename.to_s end
