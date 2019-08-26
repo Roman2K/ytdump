@@ -94,7 +94,7 @@ private
     @log["ffmerge", in: fs.size, out: out.to_s].debug "running" do
       system "ffmpeg", "-loglevel", "error", "-y",
         *fs.flat_map { |f| ["-i", f.to_s] },
-        "-c:v", "copy", "-c:a", "copy", out.to_s \
+        "-c:v", "copy", "-c:a", "libmp3lame", "-q:a", "0", out.to_s \
           or raise "ffmerge failed"
     end
   end
