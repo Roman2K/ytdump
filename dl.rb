@@ -244,10 +244,11 @@ class Downloader
       return
     end
 
+    was_skip = false
     if skip && (age = Time.now - skip.ctime) >= SKIP_RETRY_DELAY
       log[last_skip: Utils::Fmt.duration(age)].info "retrying skipped"
       skip.delete
-      skip = nil
+      was_skip, skip = skip, nil
     end
 
     if skip
@@ -277,7 +278,8 @@ class Downloader
       stderr = err.stderr.strip
       log = log[status: err.status, stderr: stderr]
       if stderr =~ UNRETRIABLE_STDERR_RE || item.title =~ UNRETRIABLE_TITLE_RE
-        log.error "unavailable, marking as skippable"
+        log.public_send was_skip ? :debug : :error,
+          "unavailable, marking as skippable"
         File.write @meta.join("#{name}.skip"), stderr
       else
         log.warn "temporary error, will retry"
@@ -340,6 +342,7 @@ class Downloader
   end
 
   UNRETRIABLE_STDERR_RE = [
+    # YouTube
     "No video formats found",
     "This video is not available",
     "This video is no longer available",
@@ -349,6 +352,8 @@ class Downloader
     "The uploader has not made this video available",
     "This video is only available to Music Premium members",
     "Sorry about that.",
+    # FranceTV
+    "Unable to extract video ID",
   ].yield_self { |msgs|
     /ERROR: (?:#{msgs.map { |m| Regexp.escape m } * "|"})/i
   }
