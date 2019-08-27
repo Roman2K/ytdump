@@ -26,23 +26,9 @@ class TF1 < Parser
         map { |el| internal_uri_from_el el }.
         slice(2..-2) || []
 
-      q = Queue.new
-      page_thrs = spawn_page_threads pages do |it|
-        q << it
-      end
-
       items = items_from_doc(doc).
-        map.with_index { |it,i| Pos.new(@page.num, i, it) }
-      collect_thr = Thread.new do
-        Thread.current.abort_on_exception = true
-        while it = q.shift
-          items << it
-        end
-      end
-
-      page_thrs.each &:join
-      q.close
-      collect_thr.join
+        map.with_index { |it,i| Pos.new(@page.num, i, it) }.
+        concat spawn_page_threads(pages).flat_map(&:value)
 
       items = items.sort.reverse.map! &:obj
       id_k = items.each_with_object(Hash.new 0) { |it,h|
@@ -72,23 +58,27 @@ class TF1 < Parser
       threads = NTHREADS.times.map do
         Thread.new do
           Thread.current.abort_on_exception = true
+          pos_items = []
           while page = q.shift
             Extractor.new(page.uri).
               items_from_html(EpsParse.request_get!(page.uri).body).
-              each.with_index { |it,i| yield Pos.new(page.num, i, it) }
+              each.with_index { |it,i| pos_items << Pos.new(page.num, i, it) }
           end
+          pos_items
         end
       end
       uris.each { |uri| q << Page.new(uri) }
       q.close
       threads << Thread.new do
         Thread.current.abort_on_exception = true
+        pos_items = []
         Page.new(uris.last).each_succ do |page|
           items = Extractor.new(page.uri).
             items_from_html(EpsParse.request_get!(page.uri).body)
           break if items.empty?
-          items.each.with_index { |it,i| yield Pos.new(page.num, i, it) }
+          items.each.with_index { |it,i| pos_items << Pos.new(page.num, i, it) }
         end
+        pos_items
       end
     end
 

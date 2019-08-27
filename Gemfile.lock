@@ -1,12 +1,12 @@
 GIT
-  remote: git://github.com/Roman2K/metacli.git
+  remote: https://github.com/Roman2K/metacli.git
   revision: 3eb064e27e1e7b2a19280199b1e76e49ccdda634
   specs:
     metacli (0.1.0)
 
 GIT
-  remote: git://github.com/Roman2K/utils-ruby.git
-  revision: 9b8b4918de0a7598bf1e9cd52838de246abf58af
+  remote: https://github.com/Roman2K/utils-ruby.git
+  revision: 59d449b37300869265b584921b660a18aafdd884
   specs:
     utils-ruby (0.1.0)
 
@@ -34,4 +34,4 @@ DEPENDENCIES
   utils-ruby!
 
 BUNDLED WITH
-   2.0.1
+   2.0.2
