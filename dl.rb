@@ -246,7 +246,12 @@ class Downloader
 
     was_skip = false
     if skip && (age = Time.now - skip.ctime) >= SKIP_RETRY_DELAY
-      log[last_skip: Utils::Fmt.duration(age)].info "retrying skipped"
+      skip_log = log[last_skip: Utils::Fmt.duration(age)]
+      if item.title =~ UNRETRIABLE_TITLE_RE
+        skip_log.debug "won't retry skipped unretriable"
+        return
+      end
+      skip_log.info "retrying skipped"
       skip.delete
       was_skip, skip = skip, nil
     end
