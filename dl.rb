@@ -44,7 +44,7 @@ class Downloader
     }
     @done = done.map { |p| Pathname p }
     @dled = Set_ThreadSafe.new
-    @out_size = 0
+    @summary = Summary.new
 
     @log.info "out dir: %p" % [fn(@out)]
     @log.info "meta dir: %p" % [fn(@meta)]
@@ -135,7 +135,23 @@ class Downloader
   def finish
     @q.close
     @threads.each &:join
-    @log.info "downloaded %s" % [Utils::Fmt.size(@out_size)]
+    @log.info "downloaded %s" % [@summary]
+  end
+
+  class Summary
+    def initialize
+      @count, @size = 0, 0
+    end
+
+    def <<(size)
+      @count += 1
+      @size += size
+      self
+    end
+
+    def to_s
+      "%d files totalling %s" % [@count, Utils::Fmt.size(@size)]
+    end
   end
 
   RETRIABLE_YTDL_PL_ERR = -> err do
@@ -229,7 +245,7 @@ class Downloader
 
     add_out_file = -> f do
       size = f.size
-      @out_size += size
+      @summary << size
       log[size: Utils::Fmt.size(size)].info "output file: %s" % [fn(f)]
       FileUtils.mv f, @out
     end
