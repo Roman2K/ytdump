@@ -35,6 +35,10 @@ module EpsParse
     dir = @cache_path or return do_request_get uri
     path = dir.join Digest::SHA1.hexdigest(uri.to_s)
     $stderr.puts "reading cached page #{uri} at #{path.basename}"
+    if ENV["CLEAR_CACHE"] == "1" && path.file?
+      $stderr.puts "deleting #{path}"
+      path.delete
+    end
     begin
       path.open('r') { |f| Marshal.load f }
     rescue Errno::ENOENT

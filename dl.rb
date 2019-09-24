@@ -373,6 +373,7 @@ class Downloader
     "The uploader has not made this video available",
     "This video is only available to Music Premium members",
     "Sorry about that.",
+    "giving up after 10 fragment retries",
     # FranceTV
     "Unable to extract video ID",
   ].yield_self { |msgs|

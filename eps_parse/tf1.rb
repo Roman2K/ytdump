@@ -22,9 +22,14 @@ class TF1 < Parser
 
     def from_html(html)
       doc = Nokogiri::HTML.parse(html)
-      pages = doc.css("nav[class^=Paging_] a").
-        map { |el| internal_uri_from_el el }.
-        slice(2..-2) || []
+      pages = doc.css("nav[class^=Paging_]:first a").
+        select { |el| el.text.strip =~ /^\d+$/ }.
+        map { |el| Page.new(internal_uri_from_el(el)) }.
+        slice(1..-1) || []
+
+      [@page, *pages].each_cons(2) do |a,b|
+        b.num == a.num+1 or raise "invalid list of pages: #{a.num} -> #{b.num}"
+      end
 
       items = items_from_doc(doc).
         map.with_index { |it,i| Pos.new(@page.num, i, it) }.
@@ -37,12 +42,18 @@ class TF1 < Parser
         %i(ep ts).find { |k| h[k] == items.size }
       } or raise "some IDs couldn't be generated"
 
-      items.map.with_index do |it, idx|
+      items.map.with_index { |it, idx|
         it.playlist_item do |pl_it|
           pl_it.id, pl_it.idx = it.ids.public_send id_k
           pl_it.idx ||= idx
         end
-      end
+      }.tap { |items|
+        items.group_by(&:id).each do |id, its|
+          its.reverse[1..-1].each_with_index do |it, idx|
+            it.id = "#{id}-#{idx+2}"
+          end
+        end
+      }
     end
 
     Pos = Struct.new :page, :index, :obj do
@@ -52,8 +63,8 @@ class TF1 < Parser
       end
     end
 
-    private def spawn_page_threads(uris)
-      return [] if uris.empty?
+    private def spawn_page_threads(pages)
+      return [] if pages.empty?
       q = Queue.new
       threads = NTHREADS.times.map do
         Thread.new do
@@ -67,12 +78,12 @@ class TF1 < Parser
           pos_items
         end
       end
-      uris.each { |uri| q << Page.new(uri) }
+      pages.each { |p| q << p }
       q.close
       threads << Thread.new do
         Thread.current.abort_on_exception = true
         pos_items = []
-        Page.new(uris.last).each_succ do |page|
+        pages.fetch(-1).each_succ do |page|
           items = Extractor.new(page.uri).
             items_from_html(EpsParse.request_get!(page.uri).body)
           break if items.empty?
@@ -107,7 +118,7 @@ class TF1 < Parser
     end
 
     def items_from_doc(doc)
-      doc.css("[class^='VideoCard_card__box']").map do |el|
+      doc.css("[class^='VideoGrid_videos__item']").map do |el|
         ep_uri = el.css("a:first").first.
           tap { |e| e or raise "link element not found" }.
           yield_self { |e| internal_uri_from_el e }

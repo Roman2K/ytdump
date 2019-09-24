@@ -56,26 +56,33 @@ class TF1Test < Minitest::Test
   def do_test_playlist_items_multipage
     items = TF1.new.playlist_items \
       "https://www.tf1.fr/tf1-series-films/sous-le-soleil/videos/replay"
-    assert_equal 192, items.size
+    assert_equal 480, items.size
 
-    items.map(&:id).grep_v(/^s\d\de\d\d$/).tap do |invalid|
+    items.map(&:id).grep_v(/^s\d\de\d\d(-\d+)?$/).tap do |invalid|
       assert_equal [], invalid
     end
+    assert_equal 0, items.group_by(&:id).count { |k,items| items.size != 1 }
+    assert_equal %w( s06e30-2 s06e30 ),
+      items.select { |it| it.idx == 630 }.map(&:id)
 
-    it = items.first
+    it = items.fetch 0
+    assert_equal \
+      "Replay - Jeudi 22/08/19 - 12:01 - Sous le soleil - S13 E40 - Trois cordes au cou",
+      it.title
+    assert_equal "s13e40", it.id
+    assert_equal 1340, it.idx
+    assert_equal 3000, it.duration
+
+    it = items.fetch -1
     assert_equal "Replay - Lundi 03/06/19 - 07:01 - Sous le soleil - S01  E01 - Plage à vendre",
       it.title
     assert_equal "s01e01", it.id
     assert_equal 101, it.idx
     assert_equal 3000, it.duration
 
-    it = items.last
-    assert_equal \
-      "Replay - Lundi 01/07/19 - 11:12 - Sous le soleil - S06 E40 - La femme interdite",
-      it.title
-    assert_equal "s06e40", it.id
-    assert_equal 640, it.idx
-    assert_equal 3060, it.duration
+    items = TF1.new.playlist_items \
+      "https://www.tf1.fr/tfx/la-villa-des-coeurs-brises/videos/replay"
+    assert_equal 341, items.size  # 17 pages * 20 eps + 1
   end
 end
 
