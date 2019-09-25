@@ -1,0 +1,15 @@
+#!/usr/bin/env sh
+set -e
+
+##
+# rclone makes a backup of rclone.conf and writes its own copy. So it must have
+# read-write permissions.
+#
+# However, in order to allow read-only bind-mount of that config file, expect it
+# to be mounted at `~/rclone.conf` and copy it to where rclone expects it to be
+# read-write.
+#
+(cd ~ \
+  && cp -a rclone.conf .config/rclone/)
+
+exec /opt/rclone "$@"

@@ -71,9 +71,8 @@ class Downloader
         loop do
           sleep 1
           stop = @threads.count(&:alive?) <= 1
-          rclone.run("move", "-v", @out, @rclone_dest).tap do |out|
-            puts out if out =~ /\S/
-          end
+          rclone.run("move", "-v", "--exclude", "*.tmp", @out, @rclone_dest).
+            tap { |out| puts out if out =~ /\S/ }
           break if stop
         end
       end
@@ -247,7 +246,10 @@ class Downloader
       size = f.size
       @summary << size
       log[size: Utils::Fmt.size(size)].info "output file: %s" % [fn(f)]
-      FileUtils.mv f, @out
+      dest = @out.join f.basename
+      tmp = dest.dirname.join "#{dest.basename}.tmp"
+      FileUtils.mv f, tmp
+      FileUtils.mv tmp, dest
     end
 
     ls = matcher.glob_arr @cache
@@ -496,10 +498,19 @@ class ItemMatcher
 end
 
 module Commands
+  ENV_PREFIX = "YTDUMP_"
+
+  def self.env(key, default=nil, &transform)
+    transform ||= -> v { v }
+    val = ENV.fetch(ENV_PREFIX + key) { return default }
+    transform[val]
+  end
+
   def self.cmd_dl(*urls,
     out: "out", meta: "meta",
     audio: false, min_duration: nil, rclone_dest: nil, nthreads: nil,
-    sorted: false, check_empty: true, notfound_ok: false, min_df: nil,
+    sorted: false, check_empty: true, notfound_ok: false,
+    min_df: env("MIN_DF", &:to_f),
     cache: nil, cleanup: true, dry_run: false, debug: false
   )
     log = Utils::Log.new(level: debug ? :debug : :info)

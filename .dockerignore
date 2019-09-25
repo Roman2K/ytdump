@@ -1,0 +1,10 @@
+/archive
+/out
+/meta
+/playlists/*/out
+/playlists/*/meta
+/playlists/*/lock
+/playlists/*/cronjob.log
+
+/Dockerfile
+/test
