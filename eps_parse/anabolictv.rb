@@ -3,6 +3,11 @@ require 'time'
 module EpsParse
 
 class AnabolicTV < Parser
+  CHECK = [
+    "https://anabolictv.com/channels/team3cc-bostin-loyd/",
+    -> n { n >= 4 },
+  ]
+
   # https://anabolictv.com/channels/team3cc-bostin-loyd
   def uri_ok?(uri)
     uri.host.sub(/^www\./, "") == "anabolictv.com" or return false

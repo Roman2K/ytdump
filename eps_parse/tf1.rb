@@ -1,6 +1,11 @@
 module EpsParse
 
 class TF1 < Parser
+  CHECK = [
+    "https://www.tf1.fr/tf1-series-films/sous-le-soleil/videos/replay",
+    480,
+  ]
+
   def min_duration; 20 * 60 end
 
   # https://www.tf1.fr/tf1/ninja-warrior/videos/replay

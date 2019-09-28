@@ -1,6 +1,11 @@
 module EpsParse
 
 class ReplayTivi < Parser
+  CHECK = [
+    "http://www.replaytivi.fr/programme/moundir-et-les-apprentis-aventuriers",
+    -> n { n >= 25 },
+  ]
+
   NTHREADS = 4
 
   def min_duration; 20 * 60 end

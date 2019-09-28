@@ -1,6 +1,11 @@
 module EpsParse
 
 class FranceTV < Parser
+  CHECK = [
+    "https://www.france.tv/france-3/questions-pour-un-champion/",
+    -> n { n >= 4 },
+  ]
+
   def min_duration; 20 * 60 end
 
   # https://www.france.tv/france-2/fort-boyard/

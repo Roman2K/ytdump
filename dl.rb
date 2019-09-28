@@ -90,8 +90,7 @@ class Downloader
       pl = File.read url
     elsif found = parse_items(url)
       parser, items = found
-      @log[parser: parser.class.name.split("::").last, items: items.size].
-        info "parser found items"
+      @log[parser: parser.name, items: items.size].info "parser found items"
       @min_duration ||= parser.min_duration
       return dl_playlist_items items
     else
@@ -547,6 +546,26 @@ module Commands
       end
     end
     dler.finish
+  end
+
+  def self.cmd_check
+    log = Utils::Log.new
+
+    thrs = EpsParse.all.each_with_object({}) { |p,h|
+      h[p] = Thread.new do
+        Thread.current.abort_on_exception = true
+        plog = log[p.name]
+        p.check(plog).tap do |res|
+          plog[res: res].info "check finished"
+        end
+      end
+    }.transform_values! &:value
+
+    thrs.sort_by { |p,| p.name }.each do |p, res|
+      puts "%-10s: %s" % [p.name, res ? "OK" : "!!"]
+    end
+
+    exit(thrs.values.all? ? 0 : 1)
   end
 end
 

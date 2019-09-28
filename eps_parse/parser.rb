@@ -22,6 +22,23 @@ class Parser
   def episodes_from_html(html, uri)
     episodes_from_doc self.class.doc(html), uri
   end
+
+  def name
+    self.class.name.split("::").last
+  end
+
+  def check(log)
+    log = log["check"]
+    if !defined?(self.class::CHECK)
+      log.warn "no ::CHECK"
+      return true
+    end
+    url, count = self.class::CHECK
+    log[url: url].info "starting"
+    found = playlist_items(url).size
+    log[found: found].info "finished"
+    count === found
+  end
 end
 
 end # EpsParse

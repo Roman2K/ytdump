@@ -3,6 +3,11 @@ require 'json'
 module EpsParse
 
 class MTV < Parser
+  CHECK = [
+    "http://www.mtv.com/shows/jersey-shore-family-vacation/episode-guide",
+    -> n { n >= 6 },
+  ]
+
   def uri_ok?(uri)
     uri.host.sub(/^www\./, "") == "mtv.com" or return false
     cs = uri.path.split("/")

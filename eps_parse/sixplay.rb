@@ -1,6 +1,11 @@
 module EpsParse
 
 class SixPlay < Parser
+  CHECK = [
+    "https://www.6play.fr/les-reines-du-shopping-p_2712",
+    -> n { n >= 100 },
+  ]
+
   def min_duration; 20 * 60 end
 
   def uri_ok?(uri)
