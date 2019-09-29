@@ -556,7 +556,7 @@ module Commands
         Thread.current.abort_on_exception = true
         plog = log[p.name]
         p.check(plog).tap do |res|
-          plog[res: res].info "check finished"
+          plog[res: res].info "checked"
         end
       end
     }.transform_values! &:value

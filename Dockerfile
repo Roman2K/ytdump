@@ -44,4 +44,4 @@ RUN cd \
   && chmod 700 .config
 
 WORKDIR /opt/ytdump
-ENTRYPOINT ["./docker/dl_playlist"]
+ENTRYPOINT ["./docker/entrypoint"]
