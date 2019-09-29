@@ -1,4 +1,4 @@
-export http_proxy="http://localhost:23128"
+export http_proxy="http://wis_squid:23128"
 
 exec ../../dl \
   'https://www.france.tv/france-2/fort-boyard/' \
