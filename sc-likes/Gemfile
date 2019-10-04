@@ -1,0 +1,6 @@
+source 'https://rubygems.org'
+
+gem 'pry'
+gem 'minitest'
+gem 'soundcloud'
+gem 'utils-ruby', github: 'Roman2K/utils-ruby'

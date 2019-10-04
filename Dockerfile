@@ -15,6 +15,7 @@ RUN cd /tmp \
 # bundle install
 COPY . /ytdump
 RUN cd /ytdump && bundle
+RUN cd /ytdump/sc-likes && bundle
 
 # --- Runtime image
 FROM ruby:2.5.5-alpine3.10
@@ -25,7 +26,7 @@ COPY --from=builder /ytdump/docker/rclone /usr/bin/rclone
 COPY --from=builder /usr/local/bundle /usr/local/bundle
 
 RUN apk --update upgrade \
-  && apk add --no-cache ca-certificates bash python3 ffmpeg
+  && apk add --no-cache ca-certificates bash python3 ffmpeg jq
 RUN pip3 install youtube-dl
 
 RUN addgroup -g 1000 -S ytdump \
@@ -35,8 +36,6 @@ RUN addgroup -g 1000 -S ytdump \
 RUN mkdir /meta \
   && chmod 700 /meta \
   && chown ytdump: /meta
-
-VOLUME /meta
 
 USER ytdump
 RUN cd \

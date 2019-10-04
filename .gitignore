@@ -5,3 +5,5 @@
 /playlists/*/meta
 /playlists/*/lock
 /playlists/*/cronjob.log
+
+/sc-likes/credentials.yml

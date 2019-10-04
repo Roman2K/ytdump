@@ -1,7 +1,9 @@
 LONG_DURATION=420000
 
+root=`dirname "$0"`/../..
+
 likes() {
-  (cd code/sc-likes > /dev/null && bundle exec ruby main.rb)
+  (cd "$root"/sc-likes > /dev/null && bundle exec ruby main.rb)
 }
 
 likes_of_duration() {
