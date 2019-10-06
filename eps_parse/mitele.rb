@@ -21,7 +21,7 @@ class Mitele < Parser
   def episodes_from_doc(doc, uri)
     doc.css("script[type='text/javascript']").
       to_a.grep(/\bcontainer_mtweb\s*=/) { $' }.
-      first.tap { |s| s or raise "metadata not found" }.
+      first.tap { |s| s or return [] }.
       yield_self { |s| JSON.parse s }.
       fetch("container").fetch("tabs").
       find { |t| t.fetch("filter") == "_pt_programa" }.
