@@ -15,13 +15,21 @@ class MTV < Parser
       && cs.size == 4 && uri.query.nil? \
   end
 
-  def episodes_from_doc(doc, uri)
-    feed_uri = doc.
-      css("[data-tffeed]:first").first&.[](:"data-tffeed").
-      tap { |u| u or raise "feed element not found" }.
-      yield_self { |u| URI u }
+  protected def html_uri(uri)
+    URI.parse "http://www.mtv.com/feeds/triforce/manifest/v8" \
+      "?url=#{URI.escape uri.to_s}"
+  end
 
-    fetch_eps feed_uri
+  def episodes_from_html(json, uri)
+    feed_url = JSON.parse(json).
+      fetch("manifest").fetch("zones").values.
+      max_by { |z| z.fetch("priority").to_i }.
+      tap { |z| z or raise "no zones" }.
+      fetch("feed")
+
+    fetch_eps URI(feed_url).tap { |u|
+      u.query = "allEpisodes=1&allSeasonsSelected=1"
+    }
   end
 
   private def fetch_eps(uri)

@@ -11,11 +11,12 @@ class Parser
   end
 
   def min_duration; end
+  protected def html_uri(uri); uri end
 
   def playlist_items(url)
     uri = URI url
     uri_ok? uri or return
-    html = EpsParse.request_get!(uri).body
+    html = EpsParse.request_get!(html_uri uri).body
     episodes_from_html html, uri
   end
 

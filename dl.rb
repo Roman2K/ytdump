@@ -377,6 +377,8 @@ class Downloader
     "giving up after 10 fragment retries",
     # FranceTV
     "Unable to extract video ID",
+    # MTV
+    "Unable to download XML: HTTP Error 500",
   ].yield_self { |msgs|
     /ERROR: (?:#{msgs.map { |m| Regexp.escape m } * "|"})/i
   }
