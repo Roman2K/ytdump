@@ -1,4 +1,4 @@
-export http_proxy="http://wis_squid:23128"
+export http_proxy="http://wis-squid:23128"
 
 exec ../../dl \
   'https://www.youtube.com/playlist?list=PL9H7R_7aUXm_yLkvjplsVdlUlBqrEfICG' \
