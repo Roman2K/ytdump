@@ -5,7 +5,7 @@ module EpsParse
 class MTV < Parser
   CHECK = [
     "http://www.mtv.com/shows/jersey-shore-family-vacation/episode-guide",
-    -> n { n >= 6 },
+    -> n { n >= 55 },
   ]
 
   def uri_ok?(uri)
