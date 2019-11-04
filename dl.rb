@@ -6,23 +6,26 @@ require 'utils'
 require_relative 'item'
 require_relative 'eps_parse'
 require_relative 'vidcat'
+require_relative 'playlist'
 
 class Downloader
   NTHREADS = 4
 
-  def initialize(out:, meta:, done: [],
-    ydl_opts: [], min_duration: nil, rclone_dest: nil, nthreads: NTHREADS,
-    sorted: false, check_empty: true, notfound_ok: false, min_df: nil,
-    cache: nil, cleanup: true, dry_run: false, log: Utils::Log.new
+  def initialize(out:, meta:, done: [], cache: nil, log: Utils::Log.new,
+    cleanup: true,
+    dry_run: false,
+    ydl_opts: [],
+    min_duration: nil,
+    rclone_dest: nil,
+    nthreads: NTHREADS,
+    sorted: false,
+    check_empty: true,
+    notfound_ok: false,
+    retry_skipped: false,
+    min_df: nil
   )
     @ydl = Exe.new "youtube-dl", log["youtube-dl"]
-    @cleanup, @dry_run, @log = cleanup, dry_run, log
-
-    @ydl_opts, @min_duration, @rclone_dest, @nthreads =
-      ydl_opts, min_duration, rclone_dest, nthreads
-    @sorted, @check_empty, @notfound_ok, @min_df =
-      sorted, check_empty, notfound_ok, min_df
-    @nthreads = 1 if @dry_run
+    @log = log
 
     @cache_mv = false
     @cache = if cache
@@ -43,16 +46,17 @@ class Downloader
       end
     }
     @done = done.map { |p| Pathname p }
+
+    %i[ cleanup dry_run ydl_opts min_duration rclone_dest nthreads sorted
+        check_empty notfound_ok retry_skipped min_df].each \
+    do |ivar|
+      instance_variable_set "@#{ivar}", eval(ivar.to_s)
+    end
+    @nthreads = 1 if @dry_run
+    log_ivars
+
     @dled = Set_ThreadSafe.new
     @summary = Summary.new
-
-    @log.info "out dir: %p" % [fn(@out)]
-    @log.info "meta dir: %p" % [fn(@meta)]
-    @log.info "done: %d" % @done.size
-    @log.info "ydl opts: %p" % [@ydl_opts]
-    @log.info "threads: %d" % @nthreads
-    @log.info "min df: %s" % @min_df.yield_self { |n| n ? fmt_df(n) : "-" }
-    @log.info "cleanup: %p" % @cleanup
 
     @q = Queue.new
     @threads = @nthreads.times.map do
@@ -76,6 +80,25 @@ class Downloader
           break if stop
         end
       end
+    end
+  end
+
+  private def log_ivars
+    instance_variables.each do |ivar|
+      case ivar
+      when :@ydl, :@log then next
+      end
+      val = instance_variable_get ivar
+      val = if Pathname === val
+        fn(val)
+      elsif /_df$/ === ivar && val
+        fmt_df(val)
+      elsif %i[@done @cache].include? ivar
+        val.size
+      else
+        val.inspect
+      end
+      @log.info "%s: %s" % [ivar.to_s.sub(/^@/, ""), val]
     end
   end
 
@@ -262,7 +285,9 @@ class Downloader
     end
 
     was_skip = false
-    if skip && (age = Time.now - skip.ctime) >= SKIP_RETRY_DELAY
+    if skip \
+      && ((age = Time.now - skip.ctime) >= SKIP_RETRY_DELAY || @retry_skipped)
+    then
       skip_log = log[last_skip: Utils::Fmt.duration(age)]
       if item.title =~ UNRETRIABLE_TITLE_RE
         skip_log.debug "won't retry skipped unretriable"
@@ -507,47 +532,40 @@ module Commands
     transform[val]
   end
 
-  def self.cmd_dl(*urls,
-    out: "out", meta: "meta",
-    audio: false, min_duration: nil, rclone_dest: nil, nthreads: nil,
-    sorted: false, check_empty: true, notfound_ok: false,
-    min_df: env("MIN_DF", &:to_f),
-    cache: nil, cleanup: true, dry_run: false, debug: false
+  def self.cmd_list
+    pls = Playlist.load $stdin
+    pls.each do |pl|
+      puts pl.name
+    end
+  end
+
+  def self.cmd_dl(*names, out: "out", meta: "meta", cache: nil, debug: false, 
+    min_df: env("MIN_DF", &:to_f), **opts
   )
+    pls = Playlist.load($stdin).each_with_object({}) { |pl,h| h[pl.name] = pl }
+    names = pls.keys if names.empty?
     log = Utils::Log.new(level: debug ? :debug : :info)
+    rclone = Exe.new "rclone", log["rclone"]
 
-    done = if rclone_dest
-      rcl = Exe.new "rclone", log["rclone"]
-      rcl.run "-v", "lsf", rclone_dest
-    elsif !$stdin.tty?
-      $stdin.read
-    else
-      ""
-    end.split("\n")
-
-    dler = Downloader.new **{
-      out: out, meta: meta, done: done,
-      ydl_opts: audio ? %w( -x --audio-format mp3 ) : [],
-      rclone_dest: rclone_dest,
-      sorted: sorted, check_empty: check_empty, notfound_ok: notfound_ok,
-      cache: cache, cleanup: cleanup, dry_run: dry_run, log: log,
-    }.tap { |h|
-      h.update({
-        min_duration: min_duration&.to_i,
-        nthreads: nthreads&.to_i,
-        min_df: min_df&.to_f,
-      }.delete_if { |k,v| v.nil? })
-    }
-
-    urls.each do |url|
-      case url
-      when /^\[/
-        dler.dl_playlist_json url
-      else
-        dler.dl_playlist url
+    names.each do |name|
+      pl = pls.fetch name
+      dler = Downloader.new **\
+        {out: out, meta: meta, cache: cache, log: log, min_df: min_df}.
+          merge(done: pl.done(rclone)).
+          merge(pl.opts).
+          merge(opts)
+      pl.setup_env do
+        pl.urls.each do |url|
+          case url
+          when /^\[/
+            dler.dl_playlist_json url
+          else
+            dler.dl_playlist url
+          end
+        end
+        dler.finish
       end
     end
-    dler.finish
   end
 
   def self.cmd_check

@@ -1,6 +1,9 @@
+#!/usr/bin/env bash
+set -eo pipefail
+
 LONG_DURATION=420000
 
-root=`dirname "$0"`/../..
+root=`dirname "$0"`/..
 
 likes() {
   (cd "$root"/sc-likes > /dev/null && bundle exec ruby main.rb)
@@ -21,3 +24,5 @@ likes_short() {
 likes_long() {
   likes_of_duration ">= $LONG_DURATION"
 }
+
+likes_$1
