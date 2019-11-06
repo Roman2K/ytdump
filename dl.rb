@@ -47,19 +47,18 @@ class Downloader
     }
     @done = done.map { |p| Pathname p }
 
-    %i[ cleanup dry_run ydl_opts min_duration rclone_dest nthreads sorted
-        check_empty notfound_ok retry_skipped min_df].each \
+    %i[ cleanup dry_run ydl_opts min_duration rclone_dest sorted check_empty
+        notfound_ok retry_skipped min_df ].each \
     do |ivar|
       instance_variable_set "@#{ivar}", eval(ivar.to_s)
     end
-    @nthreads = 1 if @dry_run
+    nthreads = 1 if @dry_run
     log_ivars
 
     @dled = Set_ThreadSafe.new
     @summary = Summary.new
-
     @q = Queue.new
-    @threads = @nthreads.times.map do
+    @threads = nthreads.times.map do
       Thread.new do
         Thread.current.abort_on_exception = true
         while item = @q.shift
@@ -67,6 +66,7 @@ class Downloader
         end
       end
     end
+    @log.info "started %d threads" % [@threads.size]
 
     if @rclone_dest
       rclone = Exe.new "rclone", @log["rclone"]
@@ -89,15 +89,13 @@ class Downloader
       when :@ydl, :@log then next
       end
       val = instance_variable_get ivar
-      val = if Pathname === val
-        fn(val)
-      elsif /_df$/ === ivar && val
-        fmt_df(val)
-      elsif %i[@done @cache].include? ivar
-        val.size
-      else
-        val.inspect
-      end
+      val = 
+        case
+        when Pathname === val then fn(val)
+        when /_df$/ === ivar && val then fmt_df(val)
+        when %i[@done @cache].include?(ivar) then val.size
+        else val.inspect
+        end
       @log.info "%s: %s" % [ivar.to_s.sub(/^@/, ""), val]
     end
   end
@@ -404,6 +402,8 @@ class Downloader
     "Unable to extract video ID",
     # MTV
     "Unable to download XML: HTTP Error 500",
+    # SoundCloud
+    "unable to download video data: HTTP Error 401: Unauthorized",
   ].yield_self { |msgs|
     /ERROR: (?:#{msgs.map { |m| Regexp.escape m } * "|"})/i
   }
@@ -533,8 +533,7 @@ module Commands
   end
 
   def self.cmd_list
-    pls = Playlist.load $stdin
-    pls.each do |pl|
+    Playlist.load($stdin).each do |pl|
       puts pl.name
     end
   end

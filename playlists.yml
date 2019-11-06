@@ -262,3 +262,45 @@ playlists:
   oklm_video:
     urls: *oklm_urls
     rclone_dest: drive:media/yt/oklm
+  cestmonchoix:
+    url: https://www.youtube.com/channel/UCnWgyiVKDPbd-6mgistpeDg/videos
+    rclone_dest: drive:media/yt/
+  casediscute:
+    url: https://www.youtube.com/playlist?list=PLsMwqm1AFBBaDdCHIjbXVsguvZqcyLtSk
+    rclone_dest: drive:media/yt/
+  vismavie:
+    url: https://www.youtube.com/channel/UCZKbCzKcKiuw4jwDbuUhLIA/videos
+    rclone_dest: drive:media/yt/
+  touteunehistoire:
+    url: https://www.youtube.com/user/touteunehistoiref2/videos
+    rclone_dest: drive:media/yt/
+  lavie:
+    url: https://www.youtube.com/channel/UCckixnVbCfqvqz37XF8j6rw/videos
+    proxy: fr
+    rclone_dest: drive:media/yt/
+  parents:
+    url: https://www.youtube.com/channel/UCV4uoWB7m5Dl4VoUDn4GlXw/videos
+    rclone_dest: drive:media/yt/
+  cacommenceajd:
+    url: https://www.youtube.com/playlist?list=PLq24dd9Wr7jJPvgfTvbFDx2fnAJ7SF-fp
+    rclone_dest: drive:media/yt/
+  wocomo:
+    url: https://www.youtube.com/playlist?list=PLWVVAnwn1SjB4aQpNpMrd29yUrn2arT2a
+    proxy: fr
+    rclone_dest: drive:media/yt/
+  tellementvrai:
+    url: https://www.youtube.com/channel/UCpM7UcYLgJHNovsT699XFUg/videos
+    proxy: fr
+    rclone_dest: drive:media/yt/
+  docusociete:
+    url: https://www.youtube.com/channel/UCYFI5PGuw_34XaA3SGDkQOQ/videos
+    rclone_dest: drive:media/yt/
+  toutabascule:
+    url: https://www.youtube.com/channel/UCM-jnQFQ840OqbILltkEIFA/videos
+    rclone_dest: drive:media/yt/
+  compldenquete:
+    url: https://www.youtube.com/channel/UCPplJEsqnAH_8s8qvyI3BEw/videos
+    rclone_dest: drive:media/yt/
+  imineo:
+    url: https://www.youtube.com/user/imineo/videos
+    rclone_dest: drive:media/yt/

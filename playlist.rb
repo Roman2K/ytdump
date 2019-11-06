@@ -25,7 +25,12 @@ class Playlist
 
   def done(rclone)
     dest = opts[:rclone_dest] or return []
-    rclone.run("-v", "lsf", dest).split("\n")
+    begin
+      rclone.run("-v", "lsf", dest).split("\n")
+    rescue Exe::ExitError => err
+      raise unless err.status == 3 && err.stderr =~ /\bdirectory not found\b/
+      []
+    end
   end
 
   private def after_filter
@@ -46,7 +51,7 @@ class Playlist
       @opts[:ydl_opts] ||= []
       @opts[:ydl_opts] += %w[-x --audio-format mp3] 
     end
-    @opts[:rclone_dest] += name if @opts[:rclone_dest].end_with? "/"
+    @opts[:rclone_dest] += name if @opts[:rclone_dest]&.end_with? "/"
     @proxy = @opts.delete :proxy
     @urls = [*@opts.delete(:url), *@opts.delete(:urls)]
     @opts.freeze
