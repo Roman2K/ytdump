@@ -139,7 +139,13 @@ playlists:
     url: https://www.youtube.com/user/mattrach/videos
     rclone_dest: drive:media/yt/mattrach
   meillpatissier:
+    url: https://www.6play.fr/le-meilleur-patissier-p_1807
+    rclone_dest: drive:media/replay/
+  meillpatissier_pros:
     url: https://www.6play.fr/le-meilleur-patissier-les-professionnels-p_6762
+    rclone_dest: drive:media/replay/
+  meillpatissier_fourneaux:
+    url: https://www.6play.fr/le-meilleur-patissier-a-vos-fourneaux-p_15009
     rclone_dest: drive:media/replay/
   mixcloud:
     url: https://www.mixcloud.com/Roman2K/favorites/
@@ -303,4 +309,7 @@ playlists:
     rclone_dest: drive:media/yt/
   imineo:
     url: https://www.youtube.com/user/imineo/videos
+    rclone_dest: drive:media/yt/
+  striptease:
+    url: https://www.youtube.com/channel/UCTljLU4Tb2jcW9n23APDwZg/videos
     rclone_dest: drive:media/yt/

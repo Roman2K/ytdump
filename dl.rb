@@ -24,7 +24,7 @@ class Downloader
     retry_skipped: false,
     min_df: nil
   )
-    @ydl = Exe.new "youtube-dl", log["youtube-dl"]
+    @ydl = Exe.new "youtube-dl", *ydl_opts, log: log["youtube-dl"]
     @log = log
 
     @cache_mv = false
@@ -47,8 +47,8 @@ class Downloader
     }
     @done = done.map { |p| Pathname p }
 
-    %i[ cleanup dry_run ydl_opts min_duration rclone_dest sorted check_empty
-        notfound_ok retry_skipped min_df ].each \
+    %i[ cleanup dry_run min_duration rclone_dest sorted check_empty notfound_ok
+        retry_skipped min_df ].each \
     do |ivar|
       instance_variable_set "@#{ivar}", eval(ivar.to_s)
     end
@@ -69,7 +69,7 @@ class Downloader
     @log.info "started %d threads" % [@threads.size]
 
     if @rclone_dest
-      rclone = Exe.new "rclone", @log["rclone"]
+      rclone = Exe.new "rclone", log: @log["rclone"]
       @threads << Thread.new do
         Thread.current.abort_on_exception = true
         loop do
@@ -85,13 +85,14 @@ class Downloader
 
   private def log_ivars
     instance_variables.each do |ivar|
-      case ivar
-      when :@ydl, :@log then next
-      end
       val = instance_variable_get ivar
+      case val
+      when Utils::Log then next
+      end
       val = 
         case
         when Pathname === val then fn(val)
+        when Exe === val then val.cmd
         when /_df$/ === ivar && val then fmt_df(val)
         when %i[@done @cache].include?(ivar) then val.size
         else val.inspect
@@ -180,8 +181,6 @@ class Downloader
   end
 
   private def get_playlist(*urls, full: !!@min_duration)
-    File.read "debug"
-  rescue Errno::ENOENT
     Utils.retry 3, RETRIABLE_YTDL_PL_ERR, wait: ->{ 1+rand } do
       @log.info("getting playlist") do
         @ydl.run *["-j", *("--flat-playlist" unless full), *urls]
@@ -302,8 +301,7 @@ class Downloader
     end
 
     args = [
-      "-q", "--all-subs", *@ydl_opts, item.url,
-      "-o", @meta.join(
+      "-q", "--all-subs", item.url, "-o", @meta.join(
         "#{name.to_s.gsub '%', '%%'}.idx%(playlist_index)s.%(ext)s"
       ).to_s,
     ]
@@ -427,11 +425,9 @@ class Downloader
         min: fmt_df(@min_df),
         wait: Utils::Fmt.duration(wait),
       ]
-      if wait < DF_SHORT_WAIT_MAX \
-        && (nentries = @out.entries.size-2) > 0 && @rclone_dest
-      then
+      if wait < DF_SHORT_WAIT_MAX && @rclone_dest
         w = DF_SHORT_WAIT
-        mnt_log[nentries: nentries].
+        mnt_log[nentries: @out.entries.size-2].
           warn "waiting %s for rclone to free up disk space" % [
             Utils::Fmt.duration(w)
           ]
@@ -455,18 +451,20 @@ class Downloader
 end
 
 class Exe
-  def initialize(name, log=Utils::Log.new(prefix: name))
-    @name = name
+  def initialize(*cmd, log: Utils::Log.new(prefix: name))
+    @cmd = cmd
     @log = log
   end
 
+  attr_reader :cmd
+
   def run(*args)
-    args.map! &:to_s
-    out, err, st = Open3.capture3 @name, *args
-    @log.debug "running %p %p" % [@name, args]
+    cmd = @cmd + args.map(&:to_s)
+    out, err, st = Open3.capture3 *cmd
+    @log.debug "running %p" % [cmd]
     if !st.success?
       @log.debug "failed: %p" % st
-      raise ExitError.new [@name, *args], st.exitstatus, err
+      raise ExitError.new cmd, st.exitstatus, err
     end
     @log.debug "success: %p" % st
     out
@@ -539,12 +537,21 @@ module Commands
   end
 
   def self.cmd_dl(*names, out: "out", meta: "meta", cache: nil, debug: false, 
-    min_df: env("MIN_DF", &:to_f), **opts
+    min_df: env("MIN_DF", &:to_f), proxy: nil, **opts
   )
     pls = Playlist.load($stdin).each_with_object({}) { |pl,h| h[pl.name] = pl }
     names = pls.keys if names.empty?
     log = Utils::Log.new(level: debug ? :debug : :info)
-    rclone = Exe.new "rclone", log["rclone"]
+    rclone = Exe.new "rclone", log: log["rclone"]
+
+    { min_duration: :to_i,
+      nthreads: :to_i,
+      min_df: :to_f }.each \
+    do |k, cast|
+      val = opts[k] or next
+      opts[k] = cast.to_proc[val]
+    end
+    opts[:ydl_opts] = ["--proxy=#{proxy}"] if proxy
 
     names.each do |name|
       pl = pls.fetch name
