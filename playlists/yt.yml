@@ -1,0 +1,169 @@
+---
+proxies:
+  fr: http://wis-squid:23128
+playlists:
+  ##
+  # Music
+  #
+  electronic:
+    url: https://www.youtube.com/playlist?list=PLl-okm7qF_1kC-krVdXCqatOSmB01AEvG
+    rclone_dest: drive:media/music/electronic/yt
+    audio: true
+  mattrach:
+    url: https://www.youtube.com/user/mattrach/videos
+    rclone_dest: drive:media/music/
+    audio: true
+  mattrach_video:
+    url: https://www.youtube.com/user/mattrach/videos
+    rclone_dest: drive:media/yt/mattrach
+  music:
+    url: https://www.youtube.com/playlist?list=PL2D3CDEF2A87496F6
+    rclone_dest: drive:media/music/yt
+    audio: true
+  music_long:
+    url: https://www.youtube.com/playlist?list=PLl-okm7qF_1m0ZMpDiZDZbHRbRJuFOySG
+    rclone_dest: drive:media/music/long/yt
+    audio: true
+  sickick:
+    url: https://www.youtube.com/user/SickickMusic/videos
+    rclone_dest: drive:media/music/
+    audio: true
+  sickick_video:
+    url: https://www.youtube.com/user/SickickMusic/videos
+    rclone_dest: drive:media/yt/sickick
+  _oklm_urls: &oklm_urls
+    # Couvre Feu
+    - 'https://www.youtube.com/watch?v=DWc6WtGv4j8&list=PLFAkcMgcYwyN8W94_wFnNjMKwu3ADE-M_'
+    # Freestyle Live
+    - 'https://www.youtube.com/watch?v=DWc6WtGv4j8&list=PLFAkcMgcYwyMXXy9CY-FehP6IqVBSgUL1'
+    # OKLM Freestyle
+    - 'https://www.youtube.com/playlist?list=PLFAkcMgcYwyP1ciBo1is3tn-E10N3qYLn'
+  oklm:
+    urls: *oklm_urls
+    rclone_dest: drive:media/music/oklm
+    audio: true
+  oklm_video:
+    urls: *oklm_urls
+    rclone_dest: drive:media/yt/oklm
+
+  ##
+  # Misc
+  #
+  benjroyer:
+    url: https://www.youtube.com/user/bEnJroYeR
+    rclone_dest: drive:media/yt/
+  bostin:
+    url: https://www.youtube.com/user/bostin69/videos
+    notfound_ok: true
+    rclone_dest: drive:media/yt/
+  casey:
+    url: https://www.youtube.com/user/caseyneistat
+    rclone_dest: drive:media/yt/
+  crowder:
+    url: https://www.youtube.com/channel/UCIveFvW-ARp_B_RckhweNJw
+    rclone_dest: drive:media/yt/
+  favorites:
+    url: https://www.youtube.com/playlist?list=FLBO0BVmvznFmczvRVZ5in6Q
+    rclone_dest: drive:media/yt/fav_dl
+  furry:
+    url: https://www.youtube.com/channel/UCl-eyk19DEhWzmFhiSdQZuw
+    rclone_dest: drive:media/yt/
+  geohot:
+    url: https://www.youtube.com/channel/UCwgKmJM4ZJQRJ-U5NjvR2dg/videos
+    rclone_dest: drive:media/yt/
+  gmk:
+    url: https://www.youtube.com/channel/UCWPOLkftHreB1p8ospsiApw
+    rclone_dest: drive:media/yt/
+  infrabren:
+    url: https://www.youtube.com/channel/UCXyyGn0d8wcyO3VG4EajlYw
+    rclone_dest: drive:media/yt/
+  akram:
+    url: https://www.youtube.com/channel/UCyRnVNtJYhAFZP1xOTPAL4Q
+    rclone_dest: drive:media/yt/
+  alphadelta06:
+    url: https://www.youtube.com/user/Alphadelta06
+    rclone_dest: drive:media/yt/
+  keremahero:
+    url: https://www.youtube.com/channel/UCQ3XqqhiObd9kanoTvejSPA
+    rclone_dest: drive:media/yt/
+  lindsayshepherd:
+    url: https://www.youtube.com/channel/UCTjxmzChimJa3X_rAgLAnxg
+    rclone_dest: drive:media/yt/
+  nelk:
+    url: https://www.youtube.com/channel/UCkhxWF5CTMUgxneqAFP96LQ
+    rclone_dest: drive:media/yt/
+  nou:
+    url: https://www.youtube.com/channel/UCM1c1okZ-7cPV7BEZ-pzUGg
+    rclone_dest: drive:media/yt/
+  red9:
+    url: https://www.youtube.com/channel/UC1UPZpzlIMFEA989iqPpZVQ
+    rclone_dest: drive:media/yt/
+  stevewilldoit:
+    url: https://www.youtube.com/channel/UC55JghDUfUatuLc1wp4uGoA
+    rclone_dest: drive:media/yt/
+    check_empty: false
+  sylas:
+    url: https://www.youtube.com/channel/UCS6Zhl4QO8_AXEnx1VAhhEw
+    rclone_dest: drive:media/yt/
+  sylas_public:
+    url: https://www.youtube.com/playlist?list=PLdt2iZ1iMxCA7UMv1Rv6WW2oTHQQ3ggnP
+    rclone_dest: drive:media/yt/
+
+  ##
+  # TV
+  #
+  anges:
+    url: https://www.youtube.com/channel/UC_ATXX0ACFwsGvJsFJBoLMQ
+    proxy: fr
+    rclone_dest: drive:media/replay/
+  sosfamille:
+    urls:
+    - https://www.youtube.com/playlist?list=PL9H7R_7aUXm_yLkvjplsVdlUlBqrEfICG
+    - https://www.youtube.com/playlist?list=PL9H7R_7aUXm9W1_nJPg276JJQH8we8jt_
+    proxy: fr
+    rclone_dest: drive:media/replay/
+  cestmonchoix:
+    url: https://www.youtube.com/channel/UCnWgyiVKDPbd-6mgistpeDg/videos
+    rclone_dest: drive:media/yt/
+  casediscute:
+    url: https://www.youtube.com/playlist?list=PLsMwqm1AFBBaDdCHIjbXVsguvZqcyLtSk
+    rclone_dest: drive:media/yt/
+  vismavie:
+    url: https://www.youtube.com/channel/UCZKbCzKcKiuw4jwDbuUhLIA/videos
+    rclone_dest: drive:media/yt/
+  touteunehistoire:
+    url: https://www.youtube.com/user/touteunehistoiref2/videos
+    rclone_dest: drive:media/yt/
+  lavie:
+    url: https://www.youtube.com/channel/UCckixnVbCfqvqz37XF8j6rw/videos
+    proxy: fr
+    rclone_dest: drive:media/yt/
+  parents:
+    url: https://www.youtube.com/channel/UCV4uoWB7m5Dl4VoUDn4GlXw/videos
+    rclone_dest: drive:media/yt/
+  cacommenceajd:
+    url: https://www.youtube.com/playlist?list=PLq24dd9Wr7jJPvgfTvbFDx2fnAJ7SF-fp
+    rclone_dest: drive:media/yt/
+  wocomo:
+    url: https://www.youtube.com/playlist?list=PLWVVAnwn1SjB4aQpNpMrd29yUrn2arT2a
+    proxy: fr
+    rclone_dest: drive:media/yt/
+  tellementvrai:
+    url: https://www.youtube.com/channel/UCpM7UcYLgJHNovsT699XFUg/videos
+    proxy: fr
+    rclone_dest: drive:media/yt/
+  docusociete:
+    url: https://www.youtube.com/channel/UCYFI5PGuw_34XaA3SGDkQOQ/videos
+    rclone_dest: drive:media/yt/
+  toutabascule:
+    url: https://www.youtube.com/channel/UCM-jnQFQ840OqbILltkEIFA/videos
+    rclone_dest: drive:media/yt/
+  compldenquete:
+    url: https://www.youtube.com/channel/UCPplJEsqnAH_8s8qvyI3BEw/videos
+    rclone_dest: drive:media/yt/
+  imineo:
+    url: https://www.youtube.com/user/imineo/videos
+    rclone_dest: drive:media/yt/
+  striptease:
+    url: https://www.youtube.com/channel/UCTljLU4Tb2jcW9n23APDwZg/videos
+    rclone_dest: drive:media/yt/

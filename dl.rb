@@ -24,8 +24,8 @@ class Downloader
     retry_skipped: false,
     min_df: nil
   )
-    @ydl = Exe.new "youtube-dl", *ydl_opts, log: log["youtube-dl"]
     @log = log
+    @ydl = Exe.new "youtube-dl", *ydl_opts, log: @log["youtube-dl"]
 
     @cache_mv = false
     @cache = if cache
@@ -86,11 +86,9 @@ class Downloader
   private def log_ivars
     instance_variables.each do |ivar|
       val = instance_variable_get ivar
-      case val
-      when Utils::Log then next
-      end
       val = 
         case
+        when Utils::Log === val then next
         when Pathname === val then fn(val)
         when Exe === val then val.cmd
         when /_df$/ === ivar && val then fmt_df(val)
@@ -531,7 +529,8 @@ module Commands
   end
 
   def self.cmd_list
-    Playlist.load($stdin).each do |pl|
+    log = Utils::Log.new
+    Playlist.load($stdin, log: log).each do |pl|
       puts pl.name
     end
   end
@@ -539,9 +538,10 @@ module Commands
   def self.cmd_dl(*names, out: "out", meta: "meta", cache: nil, debug: false, 
     min_df: env("MIN_DF", &:to_f), proxy: nil, **opts
   )
-    pls = Playlist.load($stdin).each_with_object({}) { |pl,h| h[pl.name] = pl }
-    names = pls.keys if names.empty?
     log = Utils::Log.new(level: debug ? :debug : :info)
+    pls = Playlist.load($stdin, default_proxy: proxy, log: log).
+      each_with_object({}) { |pl,h| h[pl.name] = pl }
+    names = pls.keys if names.empty?
     rclone = Exe.new "rclone", log: log["rclone"]
 
     { min_duration: :to_i,
@@ -551,7 +551,9 @@ module Commands
       val = opts[k] or next
       opts[k] = cast.to_proc[val]
     end
-    opts[:ydl_opts] = ["--proxy=#{proxy}"] if proxy
+    opts[:ydl_opts] = [].tap do |opts|
+      # opts << "--proxy=#{proxy}" if proxy
+    end
 
     names.each do |name|
       pl = pls.fetch name

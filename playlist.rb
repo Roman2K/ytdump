@@ -1,21 +1,24 @@
 require 'yaml'
 
 class Playlist
-  def self.load(io)
+  def self.load(io, log:, default_proxy: nil)
     info = YAML.load io
     proxies = info.delete("proxies") || {}
     pls = info.delete("playlists") || {}
     info.keys.empty? or raise "extra keys: %p" % [infos.keys]
     pls.delete_if { |k,| k.start_with? "_" } # YAML backreferences
     pls.map do |name, info|
-      info["proxy"] &&= proxies.fetch(info["proxy"]) { info["proxy"] }
-      new name, info.transform_keys(&:to_sym)
+      if proxy = info["proxy"] || default_proxy
+        info["proxy"] = proxies.fetch(proxy) { proxy }
+      end
+      new name, info.transform_keys(&:to_sym), log: log
     end
   end
 
-  def initialize(name, opts)
+  def initialize(name, opts, log:)
     @name = name
     @opts = opts.dup
+    @log = log
   end
 
   attr_reader :name
@@ -69,6 +72,7 @@ class Playlist
 
   def setup_env
     @proxy or return yield
+    @log[proxy: @proxy].info "setting HTTP proxy"
     keys = %w[http_proxy https_proxy]
     before = keys.map { |k| ENV[k] }
     keys.each { |k| ENV[k] = @proxy }

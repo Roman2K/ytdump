@@ -1,3 +1,9 @@
 #!/usr/bin/env bash
 
-exec bundle exec ruby dl.rb "$@" < playlists.yml
+pl=playlists/$1
+if [[ -f "$pl" ]]; then
+  shift
+  exec < "$pl"
+fi
+
+exec bundle exec ruby dl.rb "$@"

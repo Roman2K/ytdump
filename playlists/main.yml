@@ -1,0 +1,164 @@
+---
+proxies:
+  fr: http://wis-squid:23128
+playlists:
+  10couples:
+    url: https://www.tf1.fr/tfx/10-couples-parfaits/videos/replay
+    rclone_dest: drive:media/replay/
+    check_empty: false
+  4marriages:
+    url: https://www.tf1.fr/tf1/4-mariages-pour-une-lune-de-miel/videos/replay
+    rclone_dest: drive:media/replay/
+    check_empty: false
+  90min:
+    url: https://www.tf1.fr/tmc/90-enquetes/videos/replay
+    rclone_dest: drive:media/replay/
+    check_empty: false
+  amourpre:
+    url: https://www.6play.fr/l-amour-est-dans-le-pre-p_857
+    rclone_dest: drive:media/replay/
+  babyboom:
+    url: https://www.tf1.fr/tf1/baby-boom/videos/replay
+    rclone_dest: drive:media/replay/
+    check_empty: false
+  bostin_anabtv:
+    url: https://anabolictv.com/channels/team3cc-bostin-loyd
+    rclone_dest: drive:media/yt/
+  boyard:
+    url: https://www.france.tv/france-2/fort-boyard/
+    proxy: fr
+    rclone_dest: drive:media/replay/
+  carnetsjulie:
+    url: https://www.france.tv/france-3/carnets-de-julie/
+    proxy: fr
+    rclone_dest: drive:media/replay/
+  cauchemar:
+    url: https://www.6play.fr/cauchemar-en-cuisine-avec-philippe-etchebest-p_841
+    rclone_dest: drive:media/replay/
+  diner:
+    url: https://www.6play.fr/un-diner-presque-parfait-p_820
+    rclone_dest: drive:media/replay/
+  dinerex:
+    url: https://www.6play.fr/diner-avec-mon-ex-p_14765
+    min_duration: 540
+    rclone_dest: drive:media/replay/
+  firstdates:
+    url: https://www.mitele.es/programas-tv/first-dates/0000000024966/
+    rclone_dest: drive:media/replay/
+  ile:
+    url: https://www.6play.fr/l-ile-de-la-tentation-p_13757
+    rclone_dest: drive:media/replay/
+  jersey:
+    url: http://www.mtv.com/shows/jersey-shore-family-vacation/episode-guide
+    proxy: fr
+    rclone_dest: drive:media/replay/
+  jesuisuneceleb:
+    url: https://www.tf1.fr/tf1/je-suis-une-celebrite-sortez-moi-de-la/videos/replay
+    rclone_dest: drive:media/replay/
+    check_empty: false
+  kardashian:
+    url: https://www.6play.fr/l-incroyable-famille-kardashian-p_10941
+    proxy: fr
+    rclone_dest: drive:media/replay/
+    check_empty: false
+  kohlanta:
+    url: https://www.tf1.fr/tf1/koh-lanta/videos/replay
+    rclone_dest: drive:media/replay/
+    check_empty: false
+  maisonav:
+    url: https://www.6play.fr/maison-a-vendre-p_874
+    rclone_dest: drive:media/replay/
+  mamans:
+    url: https://www.6play.fr/les-mamans-p_9669
+    rclone_dest: drive:media/replay/
+  marseillais_asiantour:
+    url: https://www.6play.fr/les-marseillais-asian-tour-p_13125
+    rclone_dest: drive:media/replay/
+  marseillais_australia:
+    url: https://www.6play.fr/les-marseillais-australia-p_8711
+    rclone_dest: drive:media/replay/
+  marseillais_restedm:
+    url: https://www.6play.fr/les-marseillais-vs-le-reste-du-monde-p_6092
+    rclone_dest: drive:media/replay/
+  marseillais_southafrica:
+    url: https://www.6play.fr/les-marseillais-south-africa-p_5646
+    rclone_dest: drive:media/replay/
+  meillpatissier:
+    url: https://www.6play.fr/le-meilleur-patissier-p_1807
+    rclone_dest: drive:media/replay/
+  meillpatissier_pros:
+    url: https://www.6play.fr/le-meilleur-patissier-les-professionnels-p_6762
+    rclone_dest: drive:media/replay/
+  meillpatissier_fourneaux:
+    url: https://www.6play.fr/le-meilleur-patissier-a-vos-fourneaux-p_15009
+    rclone_dest: drive:media/replay/
+  mixcloud:
+    url: https://www.mixcloud.com/Roman2K/favorites/
+    rclone_dest: drive:media/music/
+    audio: true
+    check_empty: false
+  moundir:
+    url: https://www.6play.fr/moundir-et-les-apprentis-aventuriers-p_5848
+    rclone_dest: drive:media/replay/
+  ninja_fr:
+    url: https://www.tf1.fr/tf1/ninja-warrior/videos/replay
+    rclone_dest: drive:media/replay/
+    check_empty: false
+  norbert:
+    url: https://www.6play.fr/norbert-commis-d-office-p_4668
+    rclone_dest: drive:media/replay/
+  nanny:
+    url: https://www.tf1.fr/tfx/super-nanny/videos/replay
+    rclone_dest: drive:media/replay/
+    check_empty: false
+  princes:
+    url: https://www.6play.fr/les-princes-et-les-princesses-de-lamour-p_3442
+    rclone_dest: drive:media/replay/
+  rechappart:
+    url: https://www.6play.fr/recherche-appartement-ou-maison-p_918
+    rclone_dest: drive:media/replay/
+  reinesshopping:
+    url: https://www.6play.fr/les-reines-du-shopping-p_2712
+    rclone_dest: drive:media/replay/
+  sc_eargasm:
+    url: https://soundcloud.com/roman2k/sets/ultimate-eargasm
+    rclone_dest: drive:media/music/soundcloud/eargasm
+    audio: true
+  sc_repost:
+    url: https://soundcloud.com/roman2k/reposts
+    rclone_dest: drive:media/music/soundcloud/repost
+    audio: true
+  souslesoleil:
+    url: https://www.tf1.fr/tf1-series-films/sous-le-soleil/videos/replay
+    rclone_dest: drive:media/replay/
+  thevoice:
+    url: https://www.tf1.fr/tf1/the-voice/videos/replay
+    rclone_dest: drive:media/replay/
+    check_empty: false
+  topchef:
+    url: https://www.6play.fr/objectif-top-chef-p_4454
+    rclone_dest: drive:media/replay/
+  venacenar:
+    url: https://www.mitele.es/programas-tv/ven-a-cenar-conmigo/1505720681723/
+    rclone_dest: drive:media/replay/
+    check_empty: false
+  villa:
+    url: https://www.tf1.fr/tfx/la-villa-des-coeurs-brises/videos/replay
+    rclone_dest: drive:media/replay/
+    check_empty: false
+  zoneinterdite:
+    url: https://www.6play.fr/zone-interdite-p_845
+    rclone_dest: drive:media/replay/
+  sc_likes:
+    urls:
+      exe: ["tools/sc-likes", "short"]
+    rclone_dest: drive:media/music/soundcloud/likes
+    audio: true
+  sc_likes_long:
+    urls:
+      exe: ["tools/sc-likes", "long"]
+    rclone_dest: drive:media/music/soundcloud/likes_long
+    audio: true
+  scenesmenage:
+    url: https://www.6play.fr/scenes-de-menages-p_829
+    rclone_dest: drive:media/replay/
