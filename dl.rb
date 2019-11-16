@@ -394,6 +394,7 @@ class Downloader
     "This video is only available to Music Premium members",
     "Sorry about that.",
     "giving up after 10 fragment retries",
+    "Content Warning",
     # FranceTV
     "Unable to extract video ID",
     # MTV

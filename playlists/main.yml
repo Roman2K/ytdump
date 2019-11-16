@@ -92,6 +92,13 @@ playlists:
   meillpatissier_fourneaux:
     url: https://www.6play.fr/le-meilleur-patissier-a-vos-fourneaux-p_15009
     rclone_dest: drive:media/replay/
+  meillpatissier_celebs:
+    url: https://www.6play.fr/le-meilleur-patissier-chefs-and-celebrites-p_6824
+    rclone_dest: drive:media/replay/
+  meillpatissier_enroute:
+    url: https://www.6play.fr/en-route-pour-le-meilleur-patissier-p_15245
+    rclone_dest: drive:media/replay/
+    min_duration: 540
   mixcloud:
     url: https://www.mixcloud.com/Roman2K/favorites/
     rclone_dest: drive:media/music/
