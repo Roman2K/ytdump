@@ -552,9 +552,6 @@ module Commands
       val = opts[k] or next
       opts[k] = cast.to_proc[val]
     end
-    opts[:ydl_opts] = [].tap do |opts|
-      # opts << "--proxy=#{proxy}" if proxy
-    end
 
     names.each do |name|
       pl = pls.fetch name
