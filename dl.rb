@@ -57,6 +57,7 @@ class Downloader
 
     @dled = Set_ThreadSafe.new
     @summary = Summary.new
+    @stop = Var_ThreadSafe.new false
     @q = Queue.new
     @threads = nthreads.times.map do
       Thread.new do
@@ -179,9 +180,17 @@ class Downloader
   end
 
   private def get_playlist(*urls, full: !!@min_duration)
-    Utils.retry 3, RETRIABLE_YTDL_PL_ERR, wait: ->{ 1+rand } do
-      @log.info("getting playlist") do
-        @ydl.run *["-j", *("--flat-playlist" unless full), *urls]
+    pl_path = "pl-#{Digest::SHA256.hexdigest(urls * "|")}.json"
+    @log[pl_path: pl_path].debug "attempting to read cached playlist"
+    begin
+      File.read(pl_path).tap do
+        @log.info "read cached playlist"
+      end
+    rescue Errno::ENOENT
+      Utils.retry 3, RETRIABLE_YTDL_PL_ERR, wait: ->{ 1+rand } do
+        @log.info("getting playlist") do
+          @ydl.run *["-j", *("--flat-playlist" unless full), *urls]
+        end
       end
     end
   end
@@ -198,6 +207,11 @@ class Downloader
       return
     end
     @dled << item.id
+
+    if @stop.get
+      log.debug "stopped, skipping"
+      return
+    end
 
     matcher = ItemMatcher.new item.id
 
@@ -318,7 +332,11 @@ class Downloader
       err.status == 1 or raise
       stderr = err.stderr.strip
       log = log[status: err.status, stderr: stderr]
-      if stderr =~ UNRETRIABLE_STDERR_RE || item.title =~ UNRETRIABLE_TITLE_RE
+      case
+      when stderr =~ THROTTLE_STDERR_RE
+        log.warn "throttled, stopping"
+        @stop.set true
+      when stderr =~ UNRETRIABLE_STDERR_RE || item.title =~ UNRETRIABLE_TITLE_RE
         log.public_send was_skip ? :debug : :error,
           "unavailable, marking as skippable"
         File.write @meta.join("#{name}.skip"), stderr
@@ -368,6 +386,9 @@ class Downloader
       yield dest
     end
   end
+
+  THROTTLE_STDERR_RE =
+    /unable to download video info webpage: HTTP Error 429: Too Many Request/i
 
   RETRIABLE_YTDL_ERR = -> err do
     Exe::ExitError === err && err.status == 1 or break false
@@ -481,6 +502,16 @@ class Exe
       "`#{@cmd * " "}` exit #{@status}: #{@stderr}"
     end
   end
+end
+
+class Var_ThreadSafe
+  def initialize(val)
+    @val = val
+    @mu = Mutex.new
+  end
+
+  def set(val); @mu.synchronize { @val = val } end
+  def get; @mu.synchronize { @val } end
 end
 
 class Set_ThreadSafe
