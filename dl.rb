@@ -224,7 +224,7 @@ class Downloader
 
   DF_BLOCK_SIZE = 'M'
   DF_SHORT_WAIT, DF_SHORT_WAIT_MAX = 10, 5*60
-  SKIP_RETRY_DELAY = 7*24*3600
+  SKIP_RETRY_DELAY = 4*24*3600
 
   def dl(item)
     log = @log[item.id]
