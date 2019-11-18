@@ -6,7 +6,7 @@ module EpsParse
 class Mitele < Parser
   CHECK = [
     "https://www.mitele.es/programas-tv/first-dates/0000000024966/",
-    -> n { n >= 19 },
+    -> n { n >= 18 },
   ]
 
   def min_duration; 20 * 60 end

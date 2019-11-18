@@ -612,7 +612,7 @@ module Commands
       h[p] = Thread.new do
         Thread.current.abort_on_exception = true
         plog = log[p.name]
-        p.check(plog).tap do |res|
+        p.check(plog["check"]).tap do |res|
           plog[res: res].info "checked"
         end
       end

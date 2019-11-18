@@ -29,7 +29,6 @@ class Parser
   end
 
   def check(log)
-    log = log["check"]
     if !defined?(self.class::CHECK)
       log.warn "no ::CHECK"
       return true
