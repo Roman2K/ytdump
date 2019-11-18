@@ -117,6 +117,9 @@ class Downloader
     else
       pl = begin
         get_playlist url
+      rescue ThrottleError
+        @log[err: $!].warn "throttled, aborting"
+        return
       rescue Exe::ExitError => err
         if err.status == 1 && err.stderr =~ /404: Not Found/i && @notfound_ok
           @log.info "playlist not found but tolerated by setting, aborting"
@@ -187,12 +190,36 @@ class Downloader
         @log.info "read cached playlist"
       end
     rescue Errno::ENOENT
-      Utils.retry 3, RETRIABLE_YTDL_PL_ERR, wait: ->{ 1+rand } do
-        @log.info("getting playlist") do
-          @ydl.run *["-j", *("--flat-playlist" unless full), *urls]
-        end
+      do_get_playlist(urls, full)
+    end
+  end
+
+  private def do_get_playlist(urls, full)
+    Utils.retry 3, RETRIABLE_YTDL_PL_ERR, wait: ->{ 1+rand } do
+      @log.info("getting playlist") do
+        @ydl.run *["-j", *("--flat-playlist" unless full), *urls]
       end
     end
+  rescue Exe::ExitError => err
+    if err.status == 1 && err.stderr =~ THROTTLE_STDERR_RE
+      raise ThrottleError.new("getting playlist", err)
+    end
+    raise
+  end
+
+  class ThrottleError < StandardError
+    def initialize(msg, exiterr)
+      super()
+      @msg, @exiterr = msg, exiterr
+    end
+
+    def to_s
+      "Got throttled (#{@msg}): #{@exiterr}"
+    end
+  end
+
+  def self.logfmt_output(s)
+    s.strip.gsub(/^/, "…")[1..-1]
   end
 
   DF_BLOCK_SIZE = 'M'
@@ -331,7 +358,7 @@ class Downloader
     rescue Exe::ExitError => err
       err.status == 1 or raise
       stderr = err.stderr.strip
-      log = log[status: err.status, stderr: stderr]
+      log = log[stderr: self.class.logfmt_output(stderr)]
       case
       when stderr =~ THROTTLE_STDERR_RE
         log.warn "throttled, stopping"
@@ -387,8 +414,7 @@ class Downloader
     end
   end
 
-  THROTTLE_STDERR_RE =
-    /unable to download video info webpage: HTTP Error 429: Too Many Request/i
+  THROTTLE_STDERR_RE = /HTTP Error 429: Too Many Request/i
 
   RETRIABLE_YTDL_ERR = -> err do
     Exe::ExitError === err && err.status == 1 or break false
@@ -499,7 +525,7 @@ class Exe
     attr_reader :cmd, :status, :stderr
 
     def to_s
-      "`#{@cmd * " "}` exit #{@status}: #{@stderr}"
+      "`#{@cmd * " "}` exit #{@status}: #{Downloader.logfmt_output @stderr}"
     end
   end
 end
