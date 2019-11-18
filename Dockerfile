@@ -26,8 +26,10 @@ COPY --from=builder /ytdump/docker/rclone /usr/bin/rclone
 COPY --from=builder /usr/local/bundle /usr/local/bundle
 
 RUN apk --update upgrade \
-  && apk add --no-cache ca-certificates bash python3 ffmpeg jq
-RUN pip3 install youtube-dl
+  && apk add --no-cache ca-certificates bash python3 ffmpeg jq \
+  && apk add --no-cache --virtual tmp git 
+RUN pip3 install git+https://github.com/ytdl-org/youtube-dl
+RUN apk del tmp
 
 RUN addgroup -g 1000 -S ytdump \
   && adduser -u 1000 -S ytdump -G ytdump \

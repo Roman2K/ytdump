@@ -5,6 +5,9 @@
 /playlists/*/meta
 /playlists/*/lock
 /playlists/*/cronjob.log
+/pl-*.json
+
+/sc-likes/credentials.yml
 
 /Dockerfile
 /test
