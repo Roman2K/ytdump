@@ -161,9 +161,6 @@ playlists:
   compldenquete:
     url: https://www.youtube.com/channel/UCPplJEsqnAH_8s8qvyI3BEw/videos
     rclone_dest: drive:media/yt/
-  imineo:
-    url: https://www.youtube.com/user/imineo/videos
-    rclone_dest: drive:media/yt/
   striptease:
     url: https://www.youtube.com/channel/UCTljLU4Tb2jcW9n23APDwZg/videos
     rclone_dest: drive:media/yt/
