@@ -68,6 +68,12 @@ playlists:
   furry:
     url: https://www.youtube.com/channel/UCl-eyk19DEhWzmFhiSdQZuw
     rclone_dest: drive:media/yt/
+  valleycw:
+    url: https://www.youtube.com/channel/UC9-ADXdNUsYfJApzi4Trpbw/videos
+    rclone_dest: drive:media/yt/
+  nightwatch:
+    url: https://www.youtube.com/channel/UCNjCAK_DAf0sbH_xpQn2OaA
+    rclone_dest: drive:media/yt/
   geohot:
     url: https://www.youtube.com/channel/UCwgKmJM4ZJQRJ-U5NjvR2dg/videos
     rclone_dest: drive:media/yt/
