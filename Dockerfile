@@ -1,6 +1,6 @@
 # --- Build image
 FROM ruby:2.5.5-alpine3.10 as builder
-ARG rclone_version=1.49.3
+ARG rclone_version=1.50.2
 
 # bundle install deps
 RUN apk add --update ca-certificates git build-base openssl-dev

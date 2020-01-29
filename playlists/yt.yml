@@ -68,6 +68,9 @@ playlists:
   furry:
     url: https://www.youtube.com/channel/UCl-eyk19DEhWzmFhiSdQZuw
     rclone_dest: drive:media/yt/
+  fzanews:
+    url: https://www.youtube.com/channel/UCa-rCMtKqgx_Q9UyQvpCF7g
+    rclone_dest: drive:media/yt/
   valleycw:
     url: https://www.youtube.com/channel/UC9-ADXdNUsYfJApzi4Trpbw/videos
     rclone_dest: drive:media/yt/
