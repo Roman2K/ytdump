@@ -13,8 +13,8 @@ class Parser
   def min_duration; end
   protected def html_uri(uri); uri end
 
-  def playlist_items(url)
-    uri = URI url
+  def playlist_items(uri)
+    uri = URI uri
     uri_ok? uri or return
     html = EpsParse.request_get!(html_uri uri).body
     episodes_from_html html, uri
@@ -35,7 +35,17 @@ class Parser
     end
     url, count = self.class::CHECK
     log[url: url].info "starting"
-    found = playlist_items(url).size
+    items = begin
+      playlist_items(url)
+    rescue => err
+      log[err: err].error "exception in playlist_items()"
+      return false
+    end
+    unless items
+      log.error "unsupported URL"
+      return false
+    end
+    found = items.size
     log[found: found].info "finished"
     count === found
   end

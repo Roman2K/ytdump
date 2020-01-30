@@ -8,28 +8,46 @@ class MiteleTest < Minitest::Test
   def test_episodes_from_html
     parser = Mitele.new
 
-    eps = parse_eps parser, "venacenar",
+    assert parser.uri_ok?(URI(
+      "https://www.mitele.es/programas-tv/ven-a-cenar-conmigo/"
+    ))
+    refute parser.uri_ok?(URI(
       "https://www.mitele.es/programas-tv/ven-a-cenar-conmigo/1505720681723/"
-    assert_equal 83, eps.size
+    ))
+
+    eps = parse_eps parser, "venacenar",
+      "https://www.mitele.es/programas-tv/ven-a-cenar-conmigo/"
+    assert_equal 3, eps.size
 
     ep = eps.fetch 0
-    assert_equal "5c9a0e4eb95c9bcd698b45ac", ep.id
-    assert_equal 300, ep.idx
+    assert_equal "MDSEPS20200102_0032", ep.id
+    assert_equal 47, ep.idx
     assert_equal \
-      "https://www.mitele.es/programas-tv/ven-a-cenar-conmigo/5c9a0e4eb95c9bcd698b45ac/player/",
+      "https://www.mitele.es/programas-tv/ven-a-cenar-conmigo/temporada-4/especiales/topacio-fresh-gourmet-kike-sanfrancisco-mariajose-cantudo-40_1008218575032/player/",
       ep.url
     assert_equal \
-      "27-mar-2019 (mié) - Celebramos 300 programas con poderío",
+      "02-ene-2019 (mié) - Programa 47 - Una final muy 'Fresh'",
       ep.title
-    assert_equal 2503, ep.duration
+    assert_equal 4199, ep.duration
 
-    ep = eps.find { |e| e.idx == 169 } or raise "ep 169 not found"
-    assert_equal "16-may-2018 (mié) - Juanjo, ¿juego limpio?", ep.title
+    ep = eps.find { |e| e.idx == 46 } or raise "ep 46 not found"
+    assert_equal \
+      "27-dic-2019 (vie) - Programa 46 - María José Cantudo desnuda su alma",
+      ep.title
 
     ep = eps.fetch -1
-    assert_equal "5aaf9ccab95c9b77358b484f", ep.id
-    assert_equal 131, ep.idx
-    assert_equal "19-mar-2018 (lun) - Un fanático de las patatas bravas", ep.title
+    assert_equal "MDSEPS20200107_0027", ep.id
+    assert_equal 39, ep.idx
+    assert_equal \
+      "10-sep-2019 (mar) - Programa 39 - Un menú de 'influencer'",
+      ep.title
+
+    eps = parse_eps parser, "firstdates",
+      "https://www.mitele.es/programas-tv/first-dates/"
+    assert_equal 24, eps.size
+
+    assert_equal 1066, eps.fetch(0).idx
+    assert_equal 1035, eps.fetch(-1).idx
   end
 
   private def parse_eps(parser, name, url)

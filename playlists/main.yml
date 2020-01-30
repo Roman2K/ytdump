@@ -43,7 +43,7 @@ playlists:
     min_duration: 540
     rclone_dest: drive:media/replay/
   firstdates:
-    url: https://www.mitele.es/programas-tv/first-dates/0000000024966/
+    url: https://www.mitele.es/programas-tv/first-dates/
     rclone_dest: drive:media/replay/
   ile:
     url: https://www.6play.fr/l-ile-de-la-tentation-p_13757
@@ -146,9 +146,8 @@ playlists:
     url: https://www.6play.fr/objectif-top-chef-p_4454
     rclone_dest: drive:media/replay/
   venacenar:
-    url: https://www.mitele.es/programas-tv/ven-a-cenar-conmigo/1505720681723/
+    url: https://www.mitele.es/programas-tv/ven-a-cenar-conmigo/
     rclone_dest: drive:media/replay/
-    check_empty: false
   villa:
     url: https://www.tf1.fr/tfx/la-villa-des-coeurs-brises/videos/replay
     rclone_dest: drive:media/replay/

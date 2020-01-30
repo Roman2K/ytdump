@@ -5,7 +5,7 @@ module EpsParse
 
 class Mitele < Parser
   CHECK = [
-    "https://www.mitele.es/programas-tv/first-dates/0000000024966/",
+    "https://www.mitele.es/programas-tv/first-dates/",
     -> n { n >= 18 },
   ]
 
@@ -15,7 +15,7 @@ class Mitele < Parser
   def uri_ok?(uri)
     uri.host.sub(/^www\./, "") == "mitele.es" or return false
     cs = uri.path.split("/")
-    cs[0,2] == ["", "programas-tv"] && cs.size == 4
+    cs[0,2] == ["", "programas-tv"] && cs.size == 3
   end
 
   def episodes_from_doc(doc, uri)
@@ -24,17 +24,27 @@ class Mitele < Parser
       first.tap { |s| s or return [] }.
       yield_self { |s| JSON.parse s }.
       fetch("container").fetch("tabs").
-      find { |t| t.fetch("filter") == "_pt_programa" }.
-      tap { |t| t or raise "tab data not found" }.
-      fetch("contents").
-      flat_map { |tab| tab.fetch("children").map { |ep|
-        Item.new \
-          id: ep.fetch("id"),
-          idx: ep.fetch("info").fetch("episode_number"),
-          title: "%s - %s" % [spanish_date(get_date(ep)), ep.fetch("title")],
-          url: uri.dup.tap { |u| u.path = ep.fetch("link").fetch("href") }.to_s,
-          duration: ep.fetch("info").fetch("duration")
-      } }
+      select { |tab|
+        %w[automatic-list navigation].include?(tab.fetch("type")) \
+          && tab["contents"]
+      }.tap { |ts|
+        !ts.empty? or raise "tab data not found"
+      }.flat_map { |tab|
+        eps = tab.fetch("contents")
+        eps = eps.flat_map { |el| el.fetch("children") } \
+          while eps[0]&.key? "children"
+        eps.map { |ep|
+          Item.new \
+            id: ep.fetch("id"),
+            idx: ep.fetch("info").fetch("episode_number"),
+            title: \
+              [ spanish_date(get_date(ep)),
+                ep.fetch("title"),
+                ep.fetch("subtitle") ].join(" - "),
+            url: uri.dup.tap { |u| u.path = ep.fetch("link").fetch("href") }.to_s,
+            duration: ep.fetch("info").fetch("duration")
+        }
+      }
   end
 
   ES_FMT = "%02d-%s-%04d (%s)".freeze
