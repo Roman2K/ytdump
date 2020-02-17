@@ -29,6 +29,16 @@ class ReplayTiviTest < Minitest::Test
     assert_equal "12381579", item.id
     assert_equal 12381579, item.idx
     assert_equal 2820, item.duration
+
+    items = parser.playlist_items \
+      "http://www.replaytivi.fr/programme/les-princes-et-les-princesses-de-lamour"
+    assert_equal 6, items.size
+    assert_equal "S07E55", items.first&.title
+
+    items = parser.playlist_items \
+      "http://www.replaytivi.fr/programme/enquete-exclusive"
+    assert_equal "Sorcellerie New Age : les nouveaux gourous de l'Amérique",
+      items.first&.title
   end
 end
 

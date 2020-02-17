@@ -2,8 +2,8 @@ module EpsParse
 
 class ReplayTivi < Parser
   CHECK = [
-    "http://www.replaytivi.fr/programme/moundir-et-les-apprentis-aventuriers",
-    -> n { n >= 25 },
+    "http://www.replaytivi.fr/programme/les-reines-du-shopping",
+    -> n { n >= 4 },
   ]
 
   NTHREADS = 4
@@ -23,10 +23,10 @@ class ReplayTivi < Parser
           end
         },
         item: Item.new(
-          title: (a.css("img[alt]").first&.[]("alt") \
-            =~ /Saison\s+(\d+)\s.*[EÉ]pisode\s+(\d+)/i \
-            and "S%02dE%02d" % [$1,$2] \
-            or raise "missing season+ep number in thumbnail"),
+          title: (a.css("img[alt]").first&.[]("alt").yield_self { |title|
+            title =~ /Saison\s+(\d+)\s.*[EÉ]pisode\s+(\d+)/i \
+            ? "S%02dE%02d" % [$1,$2] \
+            : title } or raise "missing title"),
           duration: (a.css(".icon-video").text[/(\d+)\s+min/i, 1] \
             or raise "missing duration").to_i * 60
         )

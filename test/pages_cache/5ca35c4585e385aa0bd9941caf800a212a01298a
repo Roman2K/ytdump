@@ -1,0 +1,465 @@
+o:Net::HTTPOK:@http_version"1.1:
+@code"200:@message"OK:@header{"	date[""Sun, 16 Feb 2020 20:10:28 GMT"content-type["text/html; charset=utf-8"transfer-encoding["chunked"connection["keep-alive"	vary["Accept-Encoding"x-powered-by["PHP/5.5.38"server["o2switch-PowerBoost-v3:
+@body"oY<!doctype html>
+<!--[if lte IE 6]> <html class="no-js ie6 ie67 ie678" lang="fr"> <![endif]-->
+<!--[if IE 7]> <html class="no-js ie7 ie67 ie678" lang="fr"> <![endif]-->
+<!--[if IE 8]> <html class="no-js ie8 ie678" lang="fr"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="fr"> <!--<![endif]-->
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=10">
+	<title>Replay Enquête exclusive - Cachemire : la guerre sur le toit du monde du 31 mars 2019 sur M6</title>
+	<meta name="viewport" content="initial-scale=1.0">
+	<meta name="robots" content="index,follow,noarchive" />
+	<!--[if lt IE 9]><script src="/js/html5shiv.js"></script><![endif]-->
+	<link rel="stylesheet" href="/css/knacss.css" media="all">
+	<link rel="stylesheet" href="/css/r/style.css" media="all">
+	<link rel="canonical" href="http://www.replaytivi.fr/replay/enqute-exclusive-287458">
+    <link href='http://fonts.googleapis.com/css?family=Play' rel='stylesheet' type='text/css'>
+	<link href="/css/mgmenu.css" rel="stylesheet" type="text/css">
+
+	<link rel="shortcut icon" type="image/png" href="/img/design/favicon.png" />
+	<link rel="alternate" type="application/rss+xml" title="ReplayTivi, les derniers replays" href="http://feeds.feedburner.com/ReplayTivi" />
+
+	<script async src="/js/cmp.js"></script>
+
+		<!-- fb -->
+	<meta property="og:title" content="Replay de Enquête exclusive : Cachemire : la guerre sur le toit du monde du 31 mars 2019, sur M6"/>
+	<meta property="og:url" content="http://www.replaytivi.fr/replay/enqute-exclusive-287458"/>
+	<meta property="og:description" content="Vous avez manqué Enquête exclusive, diffusé le 31/03/2019 sur M6 ? Pas de panique voici le replay dispo sur 6 Play M6."/>
+	<meta property="og:image" content="http://www.replaytivi.fr/assets/epi/336/2019/04/01/e287458.jpg"/>
+
+	<!-- twitter -->
+	<meta name="twitter:card" content="summary"/>
+	<meta name="twitter:site" content="@Replay_Tivi"/>
+	<meta name="twitter:creator" content="@Replay_Tivi"/>
+	<meta name="twitter:title" content="Replay de Enquête exclusive : Cachemire : la guerre sur le toit du monde du 31 mars 2019, sur M6"/>
+	<meta name="twitter:url" content="http://www.replaytivi.fr/replay/enqute-exclusive-287458"/>
+	<meta name="twitter:description" content="Vous avez manqué Enquête exclusive, diffusé le 31/03/2019 sur M6 ? Pas de panique voici le replay dispo sur 6 Play M6."/>
+	<meta name="twitter:image" content="http://www.replaytivi.fr/assets/epi/336/2019/04/01/e287458.jpg"/>
+
+	<!-- Google+ -->
+	<meta itemprop="name" content="Replay de Enquête exclusive : Cachemire : la guerre sur le toit du monde du 31 mars 2019, sur M6"/>
+	<meta itemprop="description" content="Vous avez manqué Enquête exclusive, diffusé le 31/03/2019 sur M6 ? Pas de panique voici le replay dispo sur 6 Play M6."/>
+	<meta itemprop="image" content="http://www.replaytivi.fr/assets/epi/336/2019/04/01/e287458.jpg"/>
+
+
+	
+
+</head>
+<body class="mw1140p center">
+	<header>
+
+		<div id="banniere">
+			<a href="/">ReplayTivi</a>
+			<div id="15894-1">
+				<script src="//ads.themoneytizer.com/s/gen.js?type=1"></script>
+				<script src="//ads.themoneytizer.com/s/requestform.js?siteId=15894&formatId=1" ></script>
+			</div>
+			<div style="clear: both;"></div>
+		</div>
+
+		<nav id="mgmenu1" role="navigation" class="mgmenu_container">
+			<ul class="mgmenu">
+				<li class="mgmenu_button">Menu</li>
+
+ 				<li><a href="/" class="icomenu" title="Accueil"><span class="icon_home icons_menu"></span></a></li>
+
+				<li><span>CHAINES</span>
+  					<div class="dropdown_container dropdown_fullwidth">
+						<div class="autogrid mls">
+							<!-- cache 2020-02-16 17:54:27 -->
+				 <div class=""><a title="MyTF1" href="/chaine/tf1"><span class="tf1-30 sprite30"></span></a></div>				 <div class=""><a title="Pluzz France 2" href="/chaine/france-2"><span class="france2-30 sprite30"></span></a></div>				 <div class=""><a title="Pluzz France 3" href="/chaine/france-3"><span class="france3-30 sprite30"></span></a></div>				 <div class=""><a title="Canal Plus" href="/chaine/canalplus"><span class="canalplus-30 sprite30"></span></a></div>				 <div class=""><a title="Pluzz France 5" href="/chaine/france-5"><span class="france5-30 sprite30"></span></a></div>				 <div class=""><a title="6 Play M6" href="/chaine/m6"><span class="m6-30 sprite30"></span></a></div>				 <div class=""><a title="C8 Replay" href="/chaine/c8"><span class="c8-30 sprite30"></span></a></div>				 <div class=""><a title="6Play W9" href="/chaine/w9"><span class="w9-30 sprite30"></span></a></div>				 <div class=""><a title="TMC Replay" href="/chaine/tmc"><span class="tmc-30 sprite30"></span></a></div>				 <div class=""><a title="TFX Replay" href="/chaine/tfx"><span class="nt1-30 sprite30"></span></a></div>				 <div class=""><a title="NRJ 12 Replay" href="/chaine/nrj12"><span class="nrj12-30 sprite30"></span></a></div>				 <div class=""><a title="Pluzz France 4" href="/chaine/france-4"><span class="france4-30 sprite30"></span></a></div>				 <div class=""><a title="Pluzz France Ô" href="/chaine/france-o"><span class="franceo-30 sprite30"></span></a></div>				 <div class=""><a title="6Play 6TER" href="/chaine/6ter"><span class="sixter-30 sprite30"></span></a></div>				 <div class=""><a title="NRJ PLay / Chérie 25" href="/chaine/cherie25"><span class="cherie25-30 sprite30"></span></a></div>				 <div class=""><a title="TF1 Séries Films Replay" href="/chaine/tf1-series-films"><span class="hd1-30 sprite30"></span></a></div>				 <div class=""><a title="CStar Replay" href="/chaine/cstar"><span class="cstar-30 sprite30"></span></a></div>				 <div class=""><a title="" href="/chaine/"><span class="-30 sprite30"></span></a></div>				 <div class=""><a title="" href="/chaine/"><span class="-30 sprite30"></span></a></div>
+						</div>
+	                </div>
+	            </li>
+
+
+<!--
+				<li class="right_item"><a class="icomenu"><span class="icon_search icons_menu"></span></a></li>
+-->
+			</ul>
+		</nav>
+
+	</header>
+
+	<div id="container">
+
+<div class="pas">
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- Replaytivi responsive -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-8818569466588281"
+     data-ad-slot="6162706676"
+     data-ad-format="auto"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+</div>
+
+
+<nav class="mls">
+	<div class="breadcrumb" itemscope itemtype="http://data-vocabulary.org/Breadcrumb">
+		<a itemprop="url" title="Retour &agrave; la page d'accueil" href="/"><span itemprop="title">Accueil</span></a>
+> <a itemprop="url" href="http://www.replaytivi.fr/chaine/m6"><span itemprop="title">Replay 6 Play M6</span></a>
+> <a itemprop="url" href="http://www.replaytivi.fr/programme/enquete-exclusive"><span itemprop="title">Enquête exclusive</span></a>	</div>
+</nav>
+
+<div class="grid">
+	<div class="grid2-1">
+		<section>
+			
+	<article class="mls mrs">
+			<h1>Enquête exclusive : Cachemire : la guerre sur le toit du monde</h1>
+
+			<div class="line mbm">
+				<div  class="text18"><blockquote>C'est la guerre la plus haute du monde. À 4 000 mètres d'altitude, au pied de la chaîne de l'Himalaya, l'Inde et le Pakistan se disputent le Cachemire, un bout de terre stratégique coupé en deux. D'un côté, l'Azad Kashmir, contrôlé par le Pakistan ; de l'autre, le Jammu-et-Cachemire, contrôlé par l'Inde. Un conflit qui dure depuis 1947, juste après l'indépendance, entre les frères ennemis hindous et musulmans. Plus de 70 ans de guerre et depuis ces dernières semaines, de nouvelles flambées de violences. Le 14 février, 41 militaires indiens ont été tués lors d'un attentat revendiqué par un groupe islamiste pakistanais, suivi quelques jours plus tard par des bombardements de l'armée indienne sur le territoire pakistanais. 
+
+Pour comprendre les enjeux de cette guerre qui a déjà fait des centaines de milliers de morts et de déplacés, les équipes d'Enquête Exclusive se sont rendues au Cachemire. D'abord côté indien, à Srinagar, la capitale historique interdite aux journalistes où, chaque semaine, les manifestants (à majorité musulmane) s'opposent violemment aux forces armées indiennes. Puis côté pakistanais, sur le long de la frontière, la fameuse « line of control » qui sépare les deux pays : 500 kilomètres d'un double rang de barbelés hauts de quatre mètres, avec champ de mines antipersonnel au beau milieu. De part et d'autre de la ligne de séparation, les deux armées se provoquent et s'affrontent ouvertement, n'hésitant pas à ouvrir le feu. Les populations locales et les habitants des villages aux alentours vivent l'enfer. 
+
+Entre armées nationales, groupes séparatistes indiens, groupes de moudjahidines et terroristes pakistanais, un document rare et inédit sur un pays magnifique, situé sur les contreforts majestueux de l'Himalaya, devenu pourtant l'un des endroits les plus instables et les plus dangereux de la planète.</blockquote><p>Les rediff sur internet sont limitées dans le temps. <strong><a href="/programme/enquete-exclusive">Enquête exclusive</a> Cachemire : la guerre sur le toit du monde</strong> vient d'être diffusé  sur la chaine M6, le dimanche 31 mars 2019. La vidéo  est dispo pendant encore quelques heures sur 6 Play M6, n'hésitez pas !.</p></div>
+			</div>
+
+							<div class="w728p">
+					<div class="autogrid2">
+						<div class="w336p mbm txtleft">
+							<div class="h4-like strong">Infos 6 Play M6 rediffusion</div>
+							<div style="height: 90px;">
+								<ul>
+									<li><b>Programme</b> : <a href="/programme/enquete-exclusive">Enquête exclusive</a></li>
+									<li><b>Episode</b> : Cachemire : la guerre sur le toit du monde</li>
+									<li><b>Dernière diffusion</b> : le 31 mars 2019</li>
+									<li style=""><b>Heure de début</b> : 23h10</li>
+									<li><b>Durée :</b> 79 min</li>
+								</ul>
+							</div>
+						</div>
+
+						<div class="w336p mbm txtleft">
+							<div class="h4-like strong">Partager cette vidéo</div>
+							<div style="height: 90px;">
+								<div class="social-banner clearfix">
+	<div class="txt tot_share"></div>
+	<a target="_blank" rel="nofollow" class="sprite fb_share" href="https://www.facebook.com/sharer.php?u=http://www.replaytivi.fr/replay/enqute-exclusive-287458&t=Vous avez manqué Enquête exclusive, diffusé le 31/03/2019 sur M6 ? Pas de panique voici le replay dispo sur 6 Play M6." onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=500,width=700');return false;"></a>
+	<a target="_blank" rel="nofollow" class="sprite tw_share" href="https://twitter.com/share?url=http://www.replaytivi.fr/replay/enqute-exclusive-287458&text=Vous avez manqué Enquête exclusive, diffusé le 31/03/2019 sur M6 ? Pas de panique voici le replay dispo sur 6 Play M6.&via=Replay_Tivi" onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=400,width=700');return false;"></a>
+	<a target="_blank" rel="nofollow" class="sprite gg_share" href="https://plus.google.com/share?url=http://www.replaytivi.fr/replay/enqute-exclusive-287458&hl=fr" onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=450,width=650');return false;"></a>
+</div>
+
+
+							</div>
+						</div>
+
+						<div class="w336p w336h mbm">
+<div class="txtcenter">PUB</div>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- 336x280 RTV -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:336px;height:280px"
+     data-ad-client="ca-pub-8818569466588281"
+     data-ad-slot="9783728278"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+						</div>
+
+						<div class="w336p mbm txtcenter">
+							<div class="txtcenter"><br/></div>
+							<div class="vignette336">
+                                <a class="trkrpl" id="888-287458" target="_blank" rel="nofollow" href="http://www.6play.fr/enquete-exclusive-p_831/cachemire-la-guerre-sur-le-toit-du-monde-c_12322701" title="accédez au replay de Enquête exclusive"><img alt="Enquête exclusive" src="/assets/epi/336/2019/04/01/e287458.jpg" /><div class="play"></div></a>
+                            </div>
+						</div>
+					</div>
+				</div>
+
+			<div class="headingS">
+	 <div class="date">Autres vidéos en replay pour Enquête exclusive</div>
+</div>
+<div class="grid">
+	<div class="autogrid4">
+		<div class="thumbnail">
+	<a href="/replay/enqute-exclusive-313260">
+		<div style="position:relative;">
+			<span class="icon-video"><span>80 mins</span></span>
+			<img src="/assets/epi/160/2020/02/10/e313260.jpg" alt="Sorcellerie New Age : les nouveaux gourous de l'Amérique" style="position:relative;z-index:1; margin: auto;" />
+		</div>
+		<span>Sorcellerie New Age : les nouveaux gourous de l'Amérique</span>
+	</a>
+</div><div class="thumbnail">
+	<a href="/replay/enqute-exclusive-303328">
+		<div style="position:relative;">
+			<span class="icon-video"><span>70 mins</span></span>
+			<img src="/assets/img/default160.png" alt="« God bless America » : le pouvoir de la religion aux États-Unis" style="position:relative;z-index:1; margin: auto;" />
+		</div>
+		<span>« God bless America » : le pouvoir de la religion aux États-Unis</span>
+	</a>
+</div><div class="thumbnail">
+	<a href="/replay/enqute-exclusive-291396">
+		<div style="position:relative;">
+			<span class="icon-video"><span>78 mins</span></span>
+			<img src="/assets/img/default160.png" alt="Traque en eaux profondes à bord d'un sous-marin nucléaire français" style="position:relative;z-index:1; margin: auto;" />
+		</div>
+		<span>Traque en eaux profondes à bord d'un sous-marin nucléaire français</span>
+	</a>
+</div><div class="thumbnail">
+	<a href="/replay/enqute-exclusive-288855">
+		<div style="position:relative;">
+			<span class="icon-video"><span>60 mins</span></span>
+			<img src="/assets/img/default160.png" alt="FRI : au cœur de la nouvelle unité de police anti-drogue" style="position:relative;z-index:1; margin: auto;" />
+		</div>
+		<span>FRI : au cœur de la nouvelle unité de police anti-drogue</span>
+	</a>
+</div>
+	</div>
+</div><div class="headingS">
+	 <div class="date">Programmes du même genre que <em>Enquête exclusive</em></div>
+</div>
+<div class="grid">
+	<div class="autogrid4">
+		<div class="thumbnail">
+	<a href="http://www.replaytivi.fr/programme/envoye-special">
+		<div style="position:relative;">
+			<img src="/assets/prg/160/1/179.jpg" alt="Envoyé spécial" style="position:relative;z-index:1; margin: auto;" />
+		</div>
+		<b>Envoyé spécial</b>
+	</a>
+</div><div class="thumbnail">
+	<a href="http://www.replaytivi.fr/programme/66-minutes">
+		<div style="position:relative;">
+			<img src="/assets/prg/160/4/p886.jpg" alt="66 Minutes" style="position:relative;z-index:1; margin: auto;" />
+		</div>
+		<b>66 Minutes</b>
+	</a>
+</div><div class="thumbnail">
+	<a href="http://www.replaytivi.fr/programme/zone-interdite">
+		<div style="position:relative;">
+			<img src="/assets/prg/160/4/p892.jpg" alt="Zone interdite" style="position:relative;z-index:1; margin: auto;" />
+		</div>
+		<b>Zone interdite</b>
+	</a>
+</div><div class="thumbnail">
+	<a href="http://www.replaytivi.fr/programme/reportages">
+		<div style="position:relative;">
+			<img src="/assets/prg/160/5/p1081.jpg" alt="Reportages" style="position:relative;z-index:1; margin: auto;" />
+		</div>
+		<b>Reportages</b>
+	</a>
+</div><div class="thumbnail">
+	<a href="http://www.replaytivi.fr/programme/sept-huit">
+		<div style="position:relative;">
+			<img src="/assets/prg/160/5/p1104.jpg" alt="Sept à Huit" style="position:relative;z-index:1; margin: auto;" />
+		</div>
+		<b>Sept à Huit</b>
+	</a>
+</div>
+	</div>
+</div>
+
+	</article>
+			<img src="/stats/888/287458" />
+		</section>
+		<div>
+			<aside>
+	<div class="heading mls mrs">
+		 <div>TOP PROGRAMMES M6</div>
+	</div>
+
+	<div class="autogrid sid_top10 mls mrs">
+		<!-- cache 2020-02-16 18:46:12 -->
+<div class="mbs center">
+	<a href="/programme/maris-au-premier-regard" title="Mariés au premier regard">
+		<img src="/assets/prg/160/25/p6111.jpg" alt="Mariés au premier regard" />
+	</a>
+</div>
+<div class="mbs center">
+	<a href="/programme/incroyables-transformations" title="Incroyables transformations">
+		<img src="/assets/prg/160/36/p8945.jpg" alt="Incroyables transformations" />
+	</a>
+</div>
+<div class="mbs center">
+	<a href="/programme/hawaii-5-0" title="Hawaii 5-0">
+		<img src="/assets/prg/160/6/p1287.jpg" alt="Hawaii 5-0" />
+	</a>
+</div>
+<div class="mbs center">
+	<a href="/programme/objectif-top-chef" title="Objectif Top Chef">
+		<img src="/assets/prg/160/6/p1308.jpg" alt="Objectif Top Chef" />
+	</a>
+</div>
+<div class="mbs center">
+	<a href="/programme/qui-veut-tre-mon-associ" title="Qui veut être mon associé ?">
+		<img src="/assets/prg/160/38/p9288.jpg" alt="Qui veut être mon associé ?" />
+	</a>
+</div>
+<div class="mbs center">
+	<a href="/programme/fbi" title="FBI">
+		<img src="/assets/prg/160/38/p9282.jpg" alt="FBI" />
+	</a>
+</div>
+<div class="mbs center">
+	<a href="/programme/ncis" title="N.C.I.S">
+		<img src="/assets/prg/160/5/p1140.jpg" alt="N.C.I.S" />
+	</a>
+</div>
+<div class="mbs center">
+	<a href="/programme/66-minutes" title="66 Minutes">
+		<img src="/assets/prg/160/4/p886.jpg" alt="66 Minutes" />
+	</a>
+</div>
+<div class="mbs center">
+	<a href="/programme/objectif-10-ans-de-moins" title="Objectif : 10 ans de moins">
+		<img src="/assets/prg/160/37/p9133.jpg" alt="Objectif : 10 ans de moins" />
+	</a>
+</div>
+<div class="mbs center">
+	<a href="/programme/enquete-exclusive" title="Enquête exclusive">
+		<img src="/assets/prg/160/4/p888.jpg" alt="Enquête exclusive" />
+	</a>
+</div>
+<div class="mbs center">
+	<a href="/programme/maison-a-vendre" title="Maison à vendre">
+		<img src="/assets/prg/160/4/p901.jpg" alt="Maison à vendre" />
+	</a>
+</div>
+<div class="mbs center">
+	<a href="/programme/scenes-de-menages" title="Scènes de ménages">
+		<img src="/assets/prg/160/4/p887.jpg" alt="Scènes de ménages" />
+	</a>
+</div>
+	</div>
+
+	<div style="width:300px; margin:auto;"">
+		<div id="15894-3">
+			<script src="//ads.themoneytizer.com/s/gen.js?type=3"></script>
+			<script src="//ads.themoneytizer.com/s/requestform.js?siteId=15894&formatId=3" ></script>
+		</div>
+	</div>
+
+	<div class="heading mls mrs">
+		 <div>TOP REPLAY M6</div>
+	</div>
+
+	<div class="autogrid sid_top10 mls mrs">
+		<!-- cache 2020-02-16 18:46:12 -->
+<div class="mbs center">
+	<a href="/replay/maris-au-premier-regard-313521" title="Mariés au premier regard - Épisode 6 - Saison 4">
+		<img src="/assets/epi/160/2020/02/10/e313521.jpg" alt="Mariés au premier regard" />
+	</a>
+</div>
+<div class="mbs center">
+	<a href="/replay/maris-au-premier-regard-311342" title="Mariés au premier regard - Épisode 4 - Saison 4">
+		<img src="/assets/epi/160/2020/01/27/e311342.jpg" alt="Mariés au premier regard" />
+	</a>
+</div>
+<div class="mbs center">
+	<a href="/replay/maris-au-premier-regard-312121" title="Mariés au premier regard - Épisode 5 - Saison 4">
+		<img src="/assets/epi/160/2020/02/04/e312121.jpg" alt="Mariés au premier regard" />
+	</a>
+</div>
+<div class="mbs center">
+	<a href="/replay/maris-au-premier-regard-310720" title="Mariés au premier regard - Épisode 3 / Saison 4">
+		<img src="/assets/epi/160/2020/01/20/e310720.jpg" alt="Mariés au premier regard" />
+	</a>
+</div>
+<div class="mbs center">
+	<a href="/replay/maris-au-premier-regard-309685" title="Mariés au premier regard - Épisode 1 - Saison 4">
+		<img src="/assets/epi/160/2020/01/06/e309685.jpg" alt="Mariés au premier regard" />
+	</a>
+</div>
+<div class="mbs center">
+	<a href="/replay/maris-au-premier-regard-310174" title="Mariés au premier regard - Épisode 2 - Saison 4">
+		<img src="/assets/epi/160/2020/01/13/e310174.jpg" alt="Mariés au premier regard" />
+	</a>
+</div>
+<div class="mbs center">
+	<a href="/replay/objectif-top-chef-309429" title="Objectif Top Chef - Semaine 10 : final...">
+		<img src="/assets/epi/160/2020/01/03/e309429.jpg" alt="Objectif Top Chef" />
+	</a>
+</div>
+<div class="mbs center">
+	<a href="/replay/hawaii-5-0-313079" title="Hawaii 5-0 - Saison 9 épisode 19">
+		<img src="/assets/epi/160/2020/02/08/e313079.jpg" alt="Hawaii 5-0" />
+	</a>
+</div>
+	</div>
+
+</aside>		</div>
+	</div>
+
+</div>
+
+		</div>
+
+		<footer class="pas autogrid">
+        	<div>
+				2020 &copy; <a href="http://www.replaytivi.fr">ReplayTivi</a>
+				<br/>
+				11.062 sec
+			</div>
+			<div>
+				<div id="15894-28"><script src="//ads.themoneytizer.com/s/gen.js?type=28"></script><script src="//ads.themoneytizer.com/s/requestform.js?siteId=15894&formatId=28" ></script></div>
+			</div>
+        	<div>
+	            <a href="https://twitter.com/Replay_Tivi" title="Replay Tivi sur Twitter" target="_blank"><img src="/assets/img/social/twitter_icon.png" alt="twitter-icon" /></a>
+	            <a href="https://www.facebook.com/ReplayTivi" title="Replay Tivi sur Facebook" target="_blank"><img src="/assets/img/social/facebook_icon.png" alt="facebook-icon" /></a>
+        	</div>
+		</footer>
+
+	</div>
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-63473-12', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<script src="/js/all.js"></script>
+
+	<script src="/js/menu/mgmenu_plugins.js"></script>
+	<script src="/js/menu/mgmenu.js"></script>
+	<script>
+	$(document).ready(function($){
+	    $('#mgmenu1').universalMegaMenu({
+	        menu_effect: 'hover_fade',
+	        menu_speed_show: 300,
+	        menu_speed_hide: 200,
+	        menu_speed_delay: 200,
+	        menu_click_outside: true,
+	        menubar_trigger : false,
+	        menubar_hide : false,
+	        menu_responsive: true
+	    });
+	    megaMenuContactForm();
+	});
+	</script>
+
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({
+          google_ad_client: "ca-pub-8818569466588281",
+          enable_page_level_ads: true
+     });
+</script>
+
+
+<div id="15894-15"><script src="//ads.themoneytizer.com/s/gen.js?type=15"></script><script src="//ads.themoneytizer.com/s/requestform.js?siteId=15894&formatId=15" ></script></div>
+<script type="text/javascript" src="https://sac.ayads.co/sublime/8375"></script>
+
+</body>
+</html>
+:
+@readT:	@urio:URI::HTTP:@schemeI"	http:ET:
+@user0:@password0:
+@hostI"www.replaytivi.fr;T:
+@portiU:
+@pathI"$/replay/enqute-exclusive-287458;T:@query0:@opaque0:@fragment0:@parsero:URI::RFC3986_Parser:@regexp{:SCHEMEI/!\A[A-Za-z][A-Za-z0-9+\-.]*\z ;F:USERINFOI/'\A(?:%\h\h|[!$&-.0-;=A-Z_a-z~])*\z ;F:	HOSTI/h\A(?:(?<IP-literal>\[(?:(?<IPv6address>(?:\h{1,4}:){6}(?<ls32>\h{1,4}:\h{1,4}|(?<IPv4address>(?<dec-octet>[1-9]\d|1\d{2}|2[0-4]\d|25[0-5]|\d)\.\g<dec-octet>\.\g<dec-octet>\.\g<dec-octet>))|::(?:\h{1,4}:){5}\g<ls32>|\h{,4}::(?:\h{1,4}:){4}\g<ls32>|(?:(?:\h{1,4}:)?\h{1,4})?::(?:\h{1,4}:){3}\g<ls32>|(?:(?:\h{1,4}:){,2}\h{1,4})?::(?:\h{1,4}:){2}\g<ls32>|(?:(?:\h{1,4}:){,3}\h{1,4})?::\h{1,4}:\g<ls32>|(?:(?:\h{1,4}:){,4}\h{1,4})?::\g<ls32>|(?:(?:\h{1,4}:){,5}\h{1,4})?::\h{1,4}|(?:(?:\h{1,4}:){,6}\h{1,4})?::)|(?<IPvFuture>v\h+\.[!$&-.0-;=A-Z_a-z~]+))\])|\g<IPv4address>|(?<reg-name>(?:%\h\h|[!$&-.0-9;=A-Z_a-z~])*))\z ;F:ABS_PATHI/L\A/(?:%\h\h|[!$&-.0-;=@-Z_a-z~])*(?:/(?:%\h\h|[!$&-.0-;=@-Z_a-z~])*)*\z ;F:REL_PATHI/K\A(?:%\h\h|[!$&-.0-;=@-Z_a-z~])+(?:/(?:%\h\h|[!$&-.0-;=@-Z_a-z~])*)*\z ;F:
+QUERYI/)\A(?:%\h\h|[!$&-.0-;=@-Z_a-z~/?])*\z ;F:FRAGMENTI/)\A(?:%\h\h|[!$&-.0-;=@-Z_a-z~/?])*\z ;F:OPAQUEI/\A(?:[^/].*)?\z ;F:	PORTI/4\A[\x09\x0a\x0c\x0d ]*\d*[\x09\x0a\x0c\x0d ]*\z ;F:@decode_contentT:@socket0:@body_existT
