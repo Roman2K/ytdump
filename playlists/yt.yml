@@ -117,6 +117,9 @@ playlists:
   sylas_public:
     url: https://www.youtube.com/playlist?list=PLdt2iZ1iMxCA7UMv1Rv6WW2oTHQQ3ggnP
     rclone_dest: drive:media/yt/
+  richpiana:
+    url: https://www.youtube.com/channel/UCJHroOyfde4rZLTL2Zmk1UQ
+    rclone_dest: drive:media/yt/
 
   ##
   # TV
