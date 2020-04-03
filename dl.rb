@@ -11,7 +11,7 @@ require_relative 'playlist'
 class Downloader
   NTHREADS = 4
 
-  def initialize(out:, meta:, done: [], cache: nil, log: Utils::Log.new,
+  def initialize(out:, meta:, done: [], cache: nil, log:,
     cleanup: true,
     dry_run: false,
     ydl_opts: [],
@@ -224,7 +224,7 @@ class Downloader
 
   DF_BLOCK_SIZE = 'M'
   DF_SHORT_WAIT, DF_SHORT_WAIT_MAX = 10, 5*60
-  SKIP_RETRY_DELAY = 4*24*3600
+  SKIP_RETRY_DELAY = 7*24*3600
 
   def dl(item)
     log = @log[item.id]
@@ -306,7 +306,11 @@ class Downloader
       log[size: Utils::Fmt.size(size)].info "output file: %s" % [fn(f)]
       dest = @out.join f.basename
       tmp = dest.dirname.join "#{dest.basename}.tmp"
-      FileUtils.mv f, tmp
+      # Move the .tmp to the final directory without letting rclone try to copy
+      # it while the move is in process (*.tmp excluded from its glob):
+      FileUtils.mv f, tmp 
+      # Only then, rename atomically to the final filename, ready to be copied
+      # by rclone:
       FileUtils.mv tmp, dest
     end
 
@@ -438,6 +442,7 @@ class Downloader
     "This video contains content",
     "This video has been removed",
     "The uploader has not made this video available",
+    "This video is unavailable on this device",
     "This video is only available to Music Premium members",
     "Sorry about that.",
     "giving up after 10 fragment retries",
@@ -449,7 +454,7 @@ class Downloader
     # SoundCloud
     "unable to download video data: HTTP Error 401: Unauthorized",
   ].yield_self { |msgs|
-    /ERROR: (?:#{msgs.map { |m| Regexp.escape m } * "|"})/i
+    /ERROR:.*\b(?:#{msgs.map { |m| Regexp.escape m } * "|"})/i
   }
 
   UNRETRIABLE_TITLE_RE = /^\[Deleted video\]|\[Private video\]$/

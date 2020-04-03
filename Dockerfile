@@ -13,36 +13,39 @@ RUN cd /tmp \
   && mv rclone-*/rclone /
 
 # bundle install
-COPY . /ytdump
-RUN cd /ytdump && bundle
-RUN cd /ytdump/sc-likes && bundle
+WORKDIR /tmp/bundle-ytdump
+COPY Gemfile* ./
+RUN bundle
+WORKDIR /tmp/bundle-sc-likes
+COPY sc-likes/Gemfile* ./
+RUN bundle
 
 # --- Runtime image
 FROM ruby:2.5.5-alpine3.10
+WORKDIR /app
 
 COPY --from=builder /rclone /opt/rclone
-COPY --from=builder /ytdump /opt/ytdump
-COPY --from=builder /ytdump/docker/rclone /usr/bin/rclone
 COPY --from=builder /usr/local/bundle /usr/local/bundle
-
 RUN apk --update upgrade \
   && apk add --no-cache ca-certificates bash python3 ffmpeg jq \
   && apk add --no-cache --virtual tmp git 
 RUN pip3 install git+https://github.com/ytdl-org/youtube-dl
 RUN apk del tmp
 
-RUN addgroup -g 1000 -S ytdump \
-  && adduser -u 1000 -S ytdump -G ytdump \
-  && chown -R ytdump: /opt/ytdump
+COPY . .
+COPY docker/rclone /usr/bin/rclone
+
+RUN addgroup -g 1000 -S app \
+  && adduser -u 1000 -S app -G app \
+  && chown -R app: .
 
 RUN mkdir /meta \
   && chmod 700 /meta \
-  && chown ytdump: /meta
+  && chown app: /meta
 
-USER ytdump
+USER app
 RUN cd \
   && mkdir -p .config/rclone \
   && chmod 700 .config
 
-WORKDIR /opt/ytdump
 ENTRYPOINT ["./docker/entrypoint"]

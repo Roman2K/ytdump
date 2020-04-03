@@ -62,7 +62,7 @@ class Playlist
 
   FILTERS = {
     "exe" => -> cmd {
-      Bundler.with_clean_env do
+      Bundler.with_original_env do
         IO.popen(cmd, 'r', &:read).tap do
           $?.success? or raise "command failed: %p" % [cmd]
         end
