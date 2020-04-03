@@ -44,10 +44,12 @@ class MiteleTest < Minitest::Test
 
     eps = parse_eps parser, "firstdates",
       "https://www.mitele.es/programas-tv/first-dates/"
-    assert_equal 24, eps.size
+    assert_equal 13, eps.size
 
-    assert_equal 1066, eps.fetch(0).idx
-    assert_equal 1035, eps.fetch(-1).idx
+    assert_equal 1104, eps.fetch(0).idx
+    assert_equal "https://www.mitele.es/programas-tv/first-dates/temporada-3/programa-1104-40_1008353575016/player/",
+      eps.fetch(0).url
+    assert_equal 1092, eps.fetch(-1).idx
   end
 
   private def parse_eps(parser, name, url)

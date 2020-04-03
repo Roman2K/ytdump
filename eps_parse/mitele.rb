@@ -6,7 +6,7 @@ module EpsParse
 class Mitele < Parser
   CHECK = [
     "https://www.mitele.es/programas-tv/first-dates/",
-    -> n { n >= 18 },
+    -> n { n >= 10 },
   ]
 
   def min_duration; 20 * 60 end
@@ -41,7 +41,10 @@ class Mitele < Parser
               [ spanish_date(get_date(ep)),
                 ep.fetch("title"),
                 ep.fetch("subtitle") ].join(" - "),
-            url: uri.dup.tap { |u| u.path = ep.fetch("link").fetch("href") }.to_s,
+            url: \
+              uri.dup.tap { |u|
+                u.path = ep.fetch("images").fetch("thumbnail").fetch("href")
+              }.to_s,
             duration: ep.fetch("info").fetch("duration")
         }
       }
