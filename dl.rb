@@ -270,7 +270,7 @@ class Downloader
       end
       ("%05d - %s%s - %s" % [
         item.idx,
-        item.title,
+        item.title[0,100],
         item.duration.yield_self { |d|
           d ? " (%s)" % Utils::Fmt.duration(d) : ""
         },
