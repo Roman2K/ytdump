@@ -31,6 +31,20 @@ playlists:
   sickick_video:
     url: https://www.youtube.com/user/SickickMusic/videos
     rclone_dest: drive:media/yt/sickick
+  deadi:
+    url: https://www.youtube.com/channel/UC2tUA07b_vQiQ91GPoIA43g
+    rclone_dest: drive:media/music/
+    audio: true
+  deadi_video:
+    url: https://www.youtube.com/channel/UC2tUA07b_vQiQ91GPoIA43g
+    rclone_dest: drive:media/yt/deadi
+  hayce:
+    url: https://www.youtube.com/user/haycelemsiofficiel
+    rclone_dest: drive:media/music/
+    audio: true
+  hayce_video:
+    url: https://www.youtube.com/user/haycelemsiofficiel
+    rclone_dest: drive:media/yt/hayce
   _oklm_urls: &oklm_urls
     # Couvre Feu
     - 'https://www.youtube.com/watch?v=DWc6WtGv4j8&list=PLFAkcMgcYwyN8W94_wFnNjMKwu3ADE-M_'

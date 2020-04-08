@@ -447,6 +447,7 @@ class Downloader
     "Sorry about that.",
     "giving up after 10 fragment retries",
     "Content Warning",
+    "unable to download video data: HTTP Error 403: Forbidden",
     # FranceTV
     "Unable to extract video ID",
     # MTV
