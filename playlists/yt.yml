@@ -31,6 +31,13 @@ playlists:
   sickick_video:
     url: https://www.youtube.com/user/SickickMusic/videos
     rclone_dest: drive:media/yt/sickick
+  neonvines:
+    url: https://www.youtube.com/user/jackiebuonomusic/videos
+    rclone_dest: drive:media/music/
+    audio: true
+  neonvines_video:
+    url: https://www.youtube.com/user/jackiebuonomusic/videos
+    rclone_dest: drive:media/yt/neonvines
   deadi:
     url: https://www.youtube.com/channel/UC2tUA07b_vQiQ91GPoIA43g
     rclone_dest: drive:media/music/
