@@ -24,6 +24,10 @@ playlists:
     url: https://www.youtube.com/playlist?list=PLl-okm7qF_1m0ZMpDiZDZbHRbRJuFOySG
     rclone_dest: drive:media/music/long/yt
     audio: true
+  music_zen:
+    url: https://www.youtube.com/playlist?list=PLl-okm7qF_1ng6MlLJ4FiZ3KO1Zfp1yi9
+    rclone_dest: drive:media/music/zen
+    audio: true
   sickick:
     url: https://www.youtube.com/user/SickickMusic/videos
     rclone_dest: drive:media/music/
