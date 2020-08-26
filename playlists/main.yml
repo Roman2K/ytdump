@@ -1,6 +1,5 @@
 ---
-proxies:
-  fr: http://wis-squid:23128
+proxies: {}
 playlists:
   10couples:
     url: https://www.tf1.fr/tfx/10-couples-parfaits/videos/replay
@@ -26,11 +25,9 @@ playlists:
     rclone_dest: drive:media/yt/
   boyard:
     url: https://www.france.tv/france-2/fort-boyard/
-    proxy: fr
     rclone_dest: drive:media/replay/
   carnetsjulie:
     url: https://www.france.tv/france-3/carnets-de-julie/
-    proxy: fr
     rclone_dest: drive:media/replay/
   # cauchemar:
   #   url: https://www.6play.fr/cauchemar-en-cuisine-avec-philippe-etchebest-p_841
@@ -50,7 +47,6 @@ playlists:
   #   rclone_dest: drive:media/replay/
   jersey:
     url: http://www.mtv.com/shows/jersey-shore-family-vacation/episode-guide
-    proxy: fr
     rclone_dest: drive:media/replay/
   jesuisuneceleb:
     url: https://www.tf1.fr/tf1/je-suis-une-celebrite-sortez-moi-de-la/videos/replay
@@ -58,7 +54,6 @@ playlists:
     check_empty: false
   # kardashian:
   #   url: https://www.6play.fr/l-incroyable-famille-kardashian-p_10941
-  #   proxy: fr
   #   rclone_dest: drive:media/replay/
   #   check_empty: false
   kohlanta:

@@ -1,6 +1,5 @@
 ---
-proxies:
-  fr: http://wis-squid:23128
+proxies: {}
 playlists:
   ##
   # Music
@@ -42,6 +41,20 @@ playlists:
   neonvines_video:
     url: https://www.youtube.com/user/jackiebuonomusic/videos
     rclone_dest: drive:media/yt/neonvines
+  ladystyle:
+    url: https://www.youtube.com/channel/UC8rG6WvR1SZLkSTjIJe3f-g
+    rclone_dest: drive:media/music/
+    audio: true
+  ladystyle_video:
+    url: https://www.youtube.com/channel/UC8rG6WvR1SZLkSTjIJe3f-g
+    rclone_dest: drive:media/yt/ladystyle
+  harrymack:
+    url: https://www.youtube.com/channel/UC59ZRYCHev_IqjUhremZ8Tg
+    rclone_dest: drive:media/music/
+    audio: true
+  harrymack_video:
+    url: https://www.youtube.com/channel/UC59ZRYCHev_IqjUhremZ8Tg
+    rclone_dest: drive:media/yt/harrymack
   deadi:
     url: https://www.youtube.com/channel/UC2tUA07b_vQiQ91GPoIA43g
     rclone_dest: drive:media/music/
@@ -151,13 +164,11 @@ playlists:
   #
   anges:
     url: https://www.youtube.com/channel/UC_ATXX0ACFwsGvJsFJBoLMQ
-    proxy: fr
     rclone_dest: drive:media/replay/
   sosfamille:
     urls:
     - https://www.youtube.com/playlist?list=PL9H7R_7aUXm_yLkvjplsVdlUlBqrEfICG
     - https://www.youtube.com/playlist?list=PL9H7R_7aUXm9W1_nJPg276JJQH8we8jt_
-    proxy: fr
     rclone_dest: drive:media/replay/
   cestmonchoix:
     url: https://www.youtube.com/channel/UCnWgyiVKDPbd-6mgistpeDg/videos
@@ -173,7 +184,6 @@ playlists:
     rclone_dest: drive:media/yt/
   lavie:
     url: https://www.youtube.com/channel/UCckixnVbCfqvqz37XF8j6rw/videos
-    proxy: fr
     rclone_dest: drive:media/yt/
   parents:
     url: https://www.youtube.com/channel/UCV4uoWB7m5Dl4VoUDn4GlXw/videos
@@ -183,11 +193,9 @@ playlists:
     rclone_dest: drive:media/yt/
   wocomo:
     url: https://www.youtube.com/playlist?list=PLWVVAnwn1SjB4aQpNpMrd29yUrn2arT2a
-    proxy: fr
     rclone_dest: drive:media/yt/
   tellementvrai:
     url: https://www.youtube.com/channel/UCpM7UcYLgJHNovsT699XFUg/videos
-    proxy: fr
     rclone_dest: drive:media/yt/
   docusociete:
     url: https://www.youtube.com/channel/UCYFI5PGuw_34XaA3SGDkQOQ/videos
