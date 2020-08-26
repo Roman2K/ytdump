@@ -448,6 +448,7 @@ class Downloader
     "giving up after 10 fragment retries",
     "Content Warning",
     "unable to download video data: HTTP Error 403: Forbidden",
+    "Unable to extract video data",
     # FranceTV
     "Unable to extract video ID",
     # MTV
@@ -639,19 +640,20 @@ module Commands
 
   def self.cmd_check
     log = Utils::Log.new
+    fmt_res = -> res { res ? "OK" : "!!" }
 
     thrs = EpsParse.all.each_with_object({}) { |p,h|
       h[p] = Thread.new do
         Thread.current.abort_on_exception = true
         plog = log[p.name]
         p.check(plog["check"]).tap do |res|
-          plog[res: res].info "checked"
+          plog[res: fmt_res[res]].info "checked"
         end
       end
     }.transform_values! &:value
 
     thrs.sort_by { |p,| p.name }.each do |p, res|
-      puts "%-10s: %s" % [p.name, res ? "OK" : "!!"]
+      puts "%-10s: %s" % [p.name, fmt_res[res]]
     end
 
     exit(thrs.values.all? ? 0 : 1)

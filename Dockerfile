@@ -1,6 +1,5 @@
 # --- Build image
 FROM ruby:2.5.5-alpine3.10 as builder
-ARG rclone_version=1.50.2
 
 # bundle install deps
 RUN apk add --update ca-certificates git build-base openssl-dev
@@ -8,7 +7,7 @@ RUN gem install bundler -v '>= 2'
 
 # rclone
 RUN cd /tmp \
-  && wget https://github.com/rclone/rclone/releases/download/v${rclone_version}/rclone-v${rclone_version}-linux-amd64.zip \
+  && wget https://github.com/rclone/rclone/releases/download/v1.52.3/rclone-v1.52.3-linux-amd64.zip \
   && unzip rclone-*.zip \
   && mv rclone-*/rclone /
 
