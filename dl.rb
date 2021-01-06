@@ -326,7 +326,7 @@ class Downloader
 
     was_skip = false
     if skip \
-      && ((age = Time.now - skip.ctime) >= SKIP_RETRY_DELAY || @retry_skipped)
+      && ((age = Time.now - skip.ctime) >= skip_retry_delay || @retry_skipped)
     then
       skip_log = log[last_skip: Utils::Fmt.duration(age)]
       if item.title =~ UNRETRIABLE_TITLE_RE
@@ -388,6 +388,10 @@ class Downloader
       cat.cat fs.sort
       files[].each &add_out_file
     end
+  end
+
+  private def skip_retry_delay
+    SKIP_RETRY_DELAY * (1 + rand(21) / 100.0 * (rand > 0.5 ? -1 : 1))
   end
 
   class CachedStringer
