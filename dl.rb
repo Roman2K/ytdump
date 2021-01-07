@@ -195,6 +195,17 @@ class Downloader
   end
 
   private def do_get_playlist(urls, full)
+    urls = urls.map do |u|
+      u = URI u
+      orig = u.dup
+      if u.host.to_s.split(".").last(2) == %w[youtube com] \
+        && u.path =~ %r[/channel/]
+      then
+        u.path += "/videos" 
+      end
+      @log[orig: orig, fixed: u].info "fixed URL" if u != orig
+      u.to_s
+    end
     Utils.retry 3, RETRIABLE_YTDL_PL_ERR, wait: ->{ 1+rand } do
       @log.info("getting playlist") do
         @ydl.run *["-j", *("--flat-playlist" unless full), *urls]
@@ -280,7 +291,7 @@ class Downloader
 
     ls = matcher.glob(@out)
     if !ls.empty?
-      log[in: :out].debug "already downloaded: %p" % [fns(ls)]
+      log[match: :out].debug "already downloaded: %p" % [fns(ls)]
       ls.each do |f|
         dest = f.dirname.join "#{name}#{matcher.id_suffix f}"
         f != dest or next
@@ -294,7 +305,7 @@ class Downloader
 
     ls = matcher.glob_arr(@done)
     if !ls.empty?
-      log[in: :done].debug "already downloaded: %p" % [fns(ls)]
+      log[match: :done].debug "already downloaded: %p" % [fns(ls)]
       return
     end
 
