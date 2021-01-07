@@ -7,7 +7,7 @@ RUN gem install bundler -v '>= 2'
 
 # rclone
 RUN cd /tmp \
-  && wget https://github.com/rclone/rclone/releases/download/v1.52.3/rclone-v1.52.3-linux-amd64.zip \
+  && wget https://github.com/rclone/rclone/releases/download/v1.53.3/rclone-v1.53.3-linux-amd64.zip \
   && unzip rclone-*.zip \
   && mv rclone-*/rclone /
 

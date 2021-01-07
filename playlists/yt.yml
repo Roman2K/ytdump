@@ -148,7 +148,6 @@ playlists:
   stevewilldoit:
     url: https://www.youtube.com/channel/UC55JghDUfUatuLc1wp4uGoA
     rclone_dest: drive:media/yt/
-    check_empty: false
   sylas:
     url: https://www.youtube.com/channel/UCS6Zhl4QO8_AXEnx1VAhhEw
     rclone_dest: drive:media/yt/
@@ -164,11 +163,6 @@ playlists:
   #
   anges:
     url: https://www.youtube.com/channel/UC_ATXX0ACFwsGvJsFJBoLMQ
-    rclone_dest: drive:media/replay/
-  sosfamille:
-    urls:
-    - https://www.youtube.com/playlist?list=PL9H7R_7aUXm_yLkvjplsVdlUlBqrEfICG
-    - https://www.youtube.com/playlist?list=PL9H7R_7aUXm9W1_nJPg276JJQH8we8jt_
     rclone_dest: drive:media/replay/
   cestmonchoix:
     url: https://www.youtube.com/channel/UCnWgyiVKDPbd-6mgistpeDg/videos
@@ -195,8 +189,11 @@ playlists:
     url: https://www.youtube.com/playlist?list=PLWVVAnwn1SjB4aQpNpMrd29yUrn2arT2a
     rclone_dest: drive:media/yt/
   tellementvrai:
-    url: https://www.youtube.com/channel/UCpM7UcYLgJHNovsT699XFUg/videos
+    urls:
+      - https://www.youtube.com/channel/UCpM7UcYLgJHNovsT699XFUg/videos
+      - https://www.youtube.com/playlist?list=PLT3nGl2f1MT7sV9Eucl-mdzm0lCiAXh32
     rclone_dest: drive:media/yt/
+    check_empty: false
   docusociete:
     url: https://www.youtube.com/channel/UCYFI5PGuw_34XaA3SGDkQOQ/videos
     rclone_dest: drive:media/yt/

@@ -199,7 +199,7 @@ class Downloader
       u = URI u
       orig = u.dup
       if u.host.to_s.split(".").last(2) == %w[youtube com] \
-        && u.path =~ %r[/channel/]
+        && u.path =~ %r[/channel/] && !$'.include?("/")
       then
         u.path += "/videos" 
       end
@@ -225,7 +225,7 @@ class Downloader
     end
 
     def to_s
-      "Got throttled (#{@msg}): #{@exiterr}"
+      "got throttled (#{@msg}): #{@exiterr}"
     end
   end
 
