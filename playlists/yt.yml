@@ -87,6 +87,9 @@ playlists:
   ##
   # Misc
   #
+  jpsears:
+    url: https://www.youtube.com/channel/UCwUizOU8pPWXdXNniXypQEQ
+    rclone_dest: drive:media/yt/
   benjroyer:
     url: https://www.youtube.com/user/bEnJroYeR
     rclone_dest: drive:media/yt/
