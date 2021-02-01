@@ -118,6 +118,9 @@ playlists:
   nightwatch:
     url: https://www.youtube.com/channel/UCNjCAK_DAf0sbH_xpQn2OaA
     rclone_dest: drive:media/yt/
+  bayareatransparency:
+    url: https://www.youtube.com/channel/UC2ihfkymxFFFrfc0kTy7q3w
+    rclone_dest: drive:media/yt/
   geohot:
     url: https://www.youtube.com/channel/UCwgKmJM4ZJQRJ-U5NjvR2dg/videos
     rclone_dest: drive:media/yt/
