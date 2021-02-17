@@ -3,6 +3,7 @@ require 'open3'
 require 'fileutils'
 require 'pathname'
 require 'utils'
+require 'set'
 require_relative 'item'
 require_relative 'eps_parse'
 require_relative 'vidcat'
@@ -101,9 +102,15 @@ class Downloader
   end
 
   private def parse_items(url)
-    EpsParse.all.lazy.
-      map { |p| [p, p.playlist_items(url)] }.
-      find { |p,a| a }
+    EpsParse.all.each do |p|
+      items = begin
+        p.playlist_items url
+      rescue EpsParse::InvalidURIError
+        next
+      end
+      return p, items
+    end
+    nil
   end
 
   def dl_playlist(url)

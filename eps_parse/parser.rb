@@ -3,6 +3,8 @@ require_relative '../item'
 
 module EpsParse
 
+class InvalidURIError < StandardError; end
+
 class Parser
   Item = ::Item
 
@@ -15,7 +17,7 @@ class Parser
 
   def playlist_items(uri)
     uri = URI uri
-    uri_ok? uri or return
+    uri_ok? uri or raise InvalidURIError
     html = EpsParse.request_get!(html_uri uri).body
     episodes_from_html html, uri
   end

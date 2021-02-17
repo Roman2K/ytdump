@@ -1,5 +1,6 @@
 ---
-proxies: {}
+proxies:
+  es: http://hetax.srv:3128
 playlists:
   10couples:
     url: https://www.tf1.fr/tfx/10-couples-parfaits/videos/replay
@@ -147,6 +148,10 @@ playlists:
     url: https://www.tf1.fr/tfx/la-villa-des-coeurs-brises/videos/replay
     rclone_dest: drive:media/replay/
     check_empty: false
+  isla:
+    url: https://www.telecinco.es/la-isla-de-las-tentaciones/a-la-carta/
+    proxy: es
+    rclone_dest: drive:media/replay/
   zoneinterdite:
     url: https://www.6play.fr/zone-interdite-p_845
     rclone_dest: drive:media/replay/
