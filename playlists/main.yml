@@ -152,6 +152,10 @@ playlists:
     url: https://www.telecinco.es/la-isla-de-las-tentaciones/a-la-carta/
     proxy: es
     rclone_dest: drive:media/replay/
+  supervivientes:
+    url: https://www.telecinco.es/supervivientes/a-la-carta/
+    proxy: es
+    rclone_dest: drive:media/replay/
   zoneinterdite:
     url: https://www.6play.fr/zone-interdite-p_845
     rclone_dest: drive:media/replay/

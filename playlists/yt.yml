@@ -62,6 +62,10 @@ playlists:
   deadi_video:
     url: https://www.youtube.com/channel/UC2tUA07b_vQiQ91GPoIA43g
     rclone_dest: drive:media/yt/deadi
+  seho:
+    url: https://www.youtube.com/channel/UCLrrT0VbMkFg5nt-Rs_RNTQ
+    rclone_dest: drive:media/music/
+    audio: true
   hayce:
     url: https://www.youtube.com/user/haycelemsiofficiel
     rclone_dest: drive:media/music/
@@ -144,6 +148,9 @@ playlists:
     rclone_dest: drive:media/yt/
   nelk:
     url: https://www.youtube.com/channel/UCkhxWF5CTMUgxneqAFP96LQ
+    rclone_dest: drive:media/yt/
+  fullsend:
+    url: https://www.youtube.com/channel/UCNbphYSpy5vF1sGHB-RSmlQ
     rclone_dest: drive:media/yt/
   nou:
     url: https://www.youtube.com/channel/UCM1c1okZ-7cPV7BEZ-pzUGg
