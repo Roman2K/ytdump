@@ -2,7 +2,7 @@
 FROM ruby:2.7.2-alpine3.13 as builder
 
 # bundle install deps
-RUN apk add --update ca-certificates git build-base openssl-dev
+RUN apk add --update ca-certificates git build-base openssl-dev shared-mime-info
 RUN gem install bundler -v '>= 2'
 
 # rclone
