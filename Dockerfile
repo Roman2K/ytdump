@@ -6,7 +6,7 @@ RUN apk add --update ca-certificates git build-base openssl-dev shared-mime-info
 RUN gem install bundler -v '>= 2'
 
 # rclone
-ARG rclone_ver=1.54.0
+ARG rclone_ver=1.55.1
 RUN cd /tmp \
   && wget https://github.com/rclone/rclone/releases/download/v${rclone_ver}/rclone-v${rclone_ver}-linux-amd64.zip \
   && unzip rclone-*.zip \
