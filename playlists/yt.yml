@@ -91,6 +91,9 @@ playlists:
   ##
   # Misc
   #
+  veritas:
+    url: https://www.youtube.com/channel/UCL9PlYkRD3Q-RZca6CCnPKw
+    rclone_dest: drive:media/yt/
   jpsears:
     url: https://www.youtube.com/channel/UCwUizOU8pPWXdXNniXypQEQ
     rclone_dest: drive:media/yt/
