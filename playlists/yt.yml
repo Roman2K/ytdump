@@ -91,6 +91,9 @@ playlists:
   ##
   # Misc
   #
+  fphilippot:
+    url: https://www.youtube.com/channel/UClaa_CwoQEmSo9Mb_M1f91g
+    rclone_dest: drive:media/yt/
   veritas:
     url: https://www.youtube.com/channel/UCL9PlYkRD3Q-RZca6CCnPKw
     rclone_dest: drive:media/yt/
