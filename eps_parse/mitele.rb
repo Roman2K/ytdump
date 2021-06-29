@@ -21,14 +21,12 @@ class Mitele < Parser
   def episodes_from_doc(doc, uri)
     doc.css("script[type='text/javascript']").
       to_a.grep(/\bcontainer_mtweb\s*=/) { $' }.
-      first.tap { |s| s or return [] }.
+      first.tap { |s| s or raise "mtweb data not found" }.
       yield_self { |s| JSON.parse s }.
       fetch("container").fetch("tabs").
       select { |tab|
         %w[automatic-list navigation].include?(tab.fetch("type")) \
           && tab["contents"]
-      }.tap { |ts|
-        !ts.empty? or raise "tab data not found"
       }.flat_map { |tab|
         eps = tab.fetch("contents")
         eps = eps.flat_map { |el| el.fetch("children") } \

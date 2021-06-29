@@ -50,6 +50,10 @@ class MiteleTest < Minitest::Test
     assert_equal "https://www.mitele.es/programas-tv/first-dates/temporada-3/programa-1104-40_1008353575016/player/",
       eps.fetch(0).url
     assert_equal 1092, eps.fetch(-1).idx
+
+    eps = parse_eps parser, "venacenar_empty",
+      "https://www.mitele.es/programas-tv/ven-a-cenar-conmigo/"
+    assert_equal 0, eps.size
   end
 
   private def parse_eps(parser, name, url)
