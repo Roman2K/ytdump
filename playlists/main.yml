@@ -44,6 +44,10 @@ playlists:
     url: https://www.mitele.es/programas-tv/first-dates/
     rclone_dest: drive:media/replay/
     proxy: es
+  solosola:
+    url: https://www.mitele.es/programas-tv/solo-sola/
+    rclone_dest: drive:media/replay/
+    proxy: es
   ile:
     url: https://www.6play.fr/l-ile-de-la-tentation-p_13757
     rclone_dest: drive:media/replay/

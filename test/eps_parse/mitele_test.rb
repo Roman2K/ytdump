@@ -46,9 +46,12 @@ class MiteleTest < Minitest::Test
       "https://www.mitele.es/programas-tv/first-dates/"
     assert_equal 13, eps.size
 
-    assert_equal 1104, eps.fetch(0).idx
+    ep = eps.fetch 0
+    assert_equal 1104, ep.idx
     assert_equal "https://www.mitele.es/programas-tv/first-dates/temporada-3/programa-1104-40_1008353575016/player/",
-      eps.fetch(0).url
+      ep.url
+    assert_equal "02-abr-2020 (jue) - Temporada 3 - Una urbanita en las afueras - Programa 1.104",
+      ep.title
     assert_equal 1092, eps.fetch(-1).idx
 
     eps = parse_eps parser, "venacenar_empty",

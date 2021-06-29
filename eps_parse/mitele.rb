@@ -28,15 +28,28 @@ class Mitele < Parser
         %w[automatic-list navigation].include?(tab.fetch("type")) \
           && tab["contents"]
       }.flat_map { |tab|
-        eps = tab.fetch("contents")
-        eps = eps.flat_map { |el| el.fetch("children") } \
-          while eps[0]&.key? "children"
+        eps = [].tap do |arr|
+          add_children = -> els, titles=[] do
+            els.each do |el|
+              if el.key? "children"
+                add_children.(el.fetch("children"), [
+                  *titles,
+                  el.fetch("title"),
+                ])
+              else
+                arr << el.merge("_parent_titles" => titles)
+              end
+            end
+          end
+          add_children.(tab.fetch("contents"))
+        end
         eps.map { |ep|
           Item.new \
             id: ep.fetch("id"),
             idx: ep.fetch("info").fetch("episode_number"),
             title: \
               [ spanish_date(get_date(ep)),
+                *ep.fetch("_parent_titles"),
                 ep.fetch("title"),
                 ep.fetch("subtitle") ].join(" - "),
             url: \
