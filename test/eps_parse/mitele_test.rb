@@ -57,6 +57,20 @@ class MiteleTest < Minitest::Test
     eps = parse_eps parser, "venacenar_empty",
       "https://www.mitele.es/programas-tv/ven-a-cenar-conmigo/"
     assert_equal 0, eps.size
+
+    eps = parse_eps parser, "solosola",
+      "https://www.mitele.es/programas-tv/solo-sola/"
+    assert_equal 591, eps.size
+    assert_equal 591, eps.map(&:title).uniq.size
+
+    ep = eps.fetch 0
+    assert_equal "MDSEPS20210629_0004", ep.id
+    assert_equal 172, ep.idx
+    assert_equal "29-jun-2021 (mar) - Danna y Albert - Danna y Albert... dicen la verdad - ¡Toca mojarse!",
+      ep.title
+
+    ep = eps.fetch -1
+    assert_equal "MDSEPS20210608_0021", ep.id
   end
 
   private def parse_eps(parser, name, url)

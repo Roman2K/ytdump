@@ -29,21 +29,32 @@ class Mitele < Parser
           && tab["contents"]
       }.flat_map { |tab|
         eps = [].tap do |arr|
+          seasons_done = Set.new
           add_children = -> els, titles=[] do
             els.each do |el|
+              add_grand_children = -> els do
+                add_children.(els, [*titles, el.fetch("title")])
+              end
               if el.key? "children"
-                add_children.(el.fetch("children"), [
-                  *titles,
-                  el.fetch("title"),
-                ])
+                add_grand_children.(el.fetch("children"))
               else
-                arr << el.merge("_parent_titles" => titles)
+                case el.fetch("info").fetch("type") 
+                when 'episode'
+                  arr << el.merge("_parent_titles" => titles)
+                when 'season'
+                  id = el.fetch("id")
+                  next if seasons_done.include? id
+                  seasons_done << id
+                  add_grand_children.(get_season_eps(el))
+                else
+                  raise "unhandled episode type"
+                end
               end
             end
           end
           add_children.(tab.fetch("contents"))
         end
-        eps.map { |ep|
+        eps.map do |ep|
           Item.new \
             id: ep.fetch("id"),
             idx: ep.fetch("info").fetch("episode_number"),
@@ -57,8 +68,27 @@ class Mitele < Parser
                 u.path = ep.fetch("images").fetch("thumbnail").fetch("href")
               }.to_s,
             duration: ep.fetch("info").fetch("duration")
-        }
+        end
       }
+  end
+
+  module URIEncode
+    URL_RE = Regexp.union %w[ . - ]
+    def self.encode(s)
+      URI.encode_www_form_component(s)
+    end
+    def self.encode_url(s)
+      encode(s).gsub(URL_RE) { '%%%X' % $&.ord }
+    end
+  end
+
+  private def get_season_eps(el)
+    url = el.fetch("link").fetch("href")
+    url = "www.mitele.es#{url}"
+    url = "/tabs/mtweb?url=#{URIEncode.encode_url url}&tabId=34124.0"
+    url = "https://mab.mediaset.es/1.0.0/get?oid=bitban" \
+      "&eid=#{URIEncode.encode url}"
+    JSON.parse(EpsParse.request_get!(URI url).body).fetch "contents"
   end
 
   ES_FMT = "%02d-%s-%04d (%s)".freeze
