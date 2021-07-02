@@ -11,7 +11,7 @@ class TF1 < Parser
   # https://www.tf1.fr/tf1/ninja-warrior/videos/replay
   def uri_ok?(uri)
     uri.host.sub(/^www\./, "") == "tf1.fr" \
-      && uri.path.split("/")[-2..-1] == %w( videos replay )
+      && uri.path.split("/")[-2..-1] == %w[videos replay]
   end
 
   def episodes_from_html(html, uri)
@@ -25,35 +25,36 @@ class TF1 < Parser
       @page = Page.new uri
     end
 
+    private def other_pages(doc)
+      last = doc.css("nav[class^=Paging_]:first a").
+        select { |el| el.text.strip =~ /^\d+$/ }.
+        map { |el| Page.new internal_uri_from_el(el) }.
+        sort.last or return []
+      (@page.succ .. last).to_a
+    end
+
     def from_html(html)
       doc = Nokogiri::HTML.parse(html)
-      pages = doc.css("nav[class^=Paging_]:first a").
-        select { |el| el.text.strip =~ /^\d+$/ }.
-        map { |el| Page.new(internal_uri_from_el(el)) }.
-        slice(1..-1) || []
-
-      [@page, *pages].each_cons(2) do |a,b|
-        b.num == a.num+1 or raise "invalid list of pages: #{a.num} -> #{b.num}"
-      end
+      pages = other_pages(doc)
 
       items = items_from_doc(doc).
         map.with_index { |it,i| Pos.new(@page.num, i, it) }.
-        concat spawn_page_threads(pages).flat_map(&:value)
+        concat(spawn_page_threads(pages).flat_map &:value).
+        sort.map &:obj
 
-      items = items.sort.reverse.map! &:obj
       id_k = items.each_with_object(Hash.new 0) { |it,h|
         it.ids.to_h.each { |k,v| h[k] += 1 if v }
       }.yield_self { |h|
-        %i(ep ts).find { |k| h[k] == items.size }
+        %i[ep ts].find { |k| h[k] == items.size }
       } or raise "some IDs couldn't be generated"
 
       items.map.with_index { |it, idx|
-        it.playlist_item do |pl_it|
+        it.make_playlist_item do |pl_it|
           pl_it.id, pl_it.idx = it.ids.public_send id_k
           pl_it.idx ||= idx
         end
       }.tap { |items|
-        items.group_by(&:id).each do |id, its|
+        items.sort_by(&:idx).group_by(&:id).each do |id, its|
           its.reverse[1..-1].each_with_index do |it, idx|
             it.id = "#{id}-#{idx+2}"
           end
@@ -114,8 +115,9 @@ class TF1 < Parser
       end
 
       def succ; self + 1 end
-      def <=>(x); self.class === x and num <=> x.num end
       def each_succ; cur = self; loop { yield (cur = cur.succ) } end
+      def <=>(x); self.class === x and num <=> x.num end
+      include Comparable
     end
 
     def items_from_html(html)
@@ -148,7 +150,7 @@ class TF1 < Parser
         @ids ||= EpIDs.new uri, title
       end
 
-      def playlist_item
+      def make_playlist_item
         Item.new(
           url: uri.to_s,
           duration: duration,

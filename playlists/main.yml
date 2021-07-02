@@ -1,19 +1,23 @@
 ---
 proxies:
   es: http://hetax.srv:3128
+  fr: http://hetax.srv:3129
 playlists:
   10couples:
     url: https://www.tf1.fr/tfx/10-couples-parfaits/videos/replay
     rclone_dest: drive:media/replay/
     check_empty: false
+    proxy: fr
   4marriages:
     url: https://www.tf1.fr/tf1/4-mariages-pour-une-lune-de-miel/videos/replay
     rclone_dest: drive:media/replay/
     check_empty: false
+    proxy: fr
   90min:
     url: https://www.tf1.fr/tmc/90-enquetes/videos/replay
     rclone_dest: drive:media/replay/
     check_empty: false
+    proxy: fr
   amourpre:
     url: https://www.6play.fr/l-amour-est-dans-le-pre-p_857
     rclone_dest: drive:media/replay/
@@ -21,6 +25,7 @@ playlists:
     url: https://www.tf1.fr/tf1/baby-boom/videos/replay
     rclone_dest: drive:media/replay/
     check_empty: false
+    proxy: fr
   bostin_anabtv:
     url: https://anabolictv.com/channels/team3cc-bostin-loyd
     rclone_dest: drive:media/yt/
@@ -58,6 +63,7 @@ playlists:
     url: https://www.tf1.fr/tf1/je-suis-une-celebrite-sortez-moi-de-la/videos/replay
     rclone_dest: drive:media/replay/
     check_empty: false
+    proxy: fr
   kardashian:
     url: https://www.6play.fr/l-incroyable-famille-kardashian-p_10941
     rclone_dest: drive:media/replay/
@@ -66,6 +72,7 @@ playlists:
     url: https://www.tf1.fr/tf1/koh-lanta/videos/replay
     rclone_dest: drive:media/replay/
     check_empty: false
+    proxy: fr
   maisonav:
     url: https://www.6play.fr/maison-a-vendre-p_874
     rclone_dest: drive:media/replay/
@@ -112,6 +119,7 @@ playlists:
     url: https://www.tf1.fr/tf1/ninja-warrior/videos/replay
     rclone_dest: drive:media/replay/
     check_empty: false
+    proxy: fr
   norbert:
     url: https://www.6play.fr/norbert-commis-d-office-p_4668
     rclone_dest: drive:media/replay/
@@ -119,6 +127,7 @@ playlists:
     url: https://www.tf1.fr/tfx/super-nanny/videos/replay
     rclone_dest: drive:media/replay/
     check_empty: false
+    proxy: fr
   princes:
     url: https://www.6play.fr/les-princes-et-les-princesses-de-lamour-p_3442
     rclone_dest: drive:media/replay/
@@ -139,10 +148,12 @@ playlists:
   souslesoleil:
     url: https://www.tf1.fr/tf1-series-films/sous-le-soleil/videos/replay
     rclone_dest: drive:media/replay/
+    proxy: fr
   thevoice:
     url: https://www.tf1.fr/tf1/the-voice/videos/replay
     rclone_dest: drive:media/replay/
     check_empty: false
+    proxy: fr
   topchef:
     url: https://www.6play.fr/objectif-top-chef-p_4454
     rclone_dest: drive:media/replay/
@@ -155,6 +166,7 @@ playlists:
     url: https://www.tf1.fr/tfx/la-villa-des-coeurs-brises/videos/replay
     rclone_dest: drive:media/replay/
     check_empty: false
+    proxy: fr
   isla:
     url: https://www.telecinco.es/la-isla-de-las-tentaciones/a-la-carta/
     proxy: es

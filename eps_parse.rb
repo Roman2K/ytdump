@@ -33,13 +33,15 @@ module EpsParse
     def request_get(uri)
       dir = @cache_path or return do_request_get uri
       path = dir.join Digest::SHA1.hexdigest(uri.to_s)
-      $stderr.puts "reading cached page #{uri} at #{path.basename}"
       if ENV["CLEAR_CACHE"] == "1" && path.file?
         $stderr.puts "deleting #{path}"
         path.delete
       end
       begin
-        path.open('r') { |f| Marshal.load f }
+        path.open('r') do |f|
+          $stderr.puts "reading cached page #{uri} at #{path.basename}"
+          Marshal.load f
+        end
       rescue Errno::ENOENT
         $stderr.puts "cache MISS"
         do_request_get(uri).tap do |resp|
