@@ -14,18 +14,18 @@ class FranceTV < Parser
   end
 
   def episodes_from_doc(doc, uri)
-    doc.css(".c-program__head-slider .c-card-video__textarea").map do |el|
-      ep_uri = el.css("a:first").first&.[](:href).
-        tap { |path| path or raise "episode link not found" }.
-        yield_self { |path| uri.dup.tap { |u| u.path = path } }
+    doc.css("a.c-card-video").map do |el|
+      ep_uri = el[:href].
+        tap { _1 or raise "link has no URL" }.
+        then { |path| uri.dup.tap { |u| u.path = path } }
       id = ep_uri.path.split("/").fetch(-1)[%r{(\d+)-}, 1] \
         or raise "ID not found in URL"
 
       Item.new \
         idx: id.to_i,
         id: id,
-        title: el.css(".c-card-video__description").first.
-          tap { |s| s or raise "title not found" }.
+        title: el.css(".c-card-video__textarea-subtitle").first.
+          tap { _1 or raise "subtitle not found" }.
           text.strip,
         duration: el.css(".c-metadata-list").first&.text \
           &.[](/(\d+) min\b/, 1).

@@ -8,26 +8,22 @@ class FranceTVTest < Minitest::Test
   def test_episodes_from_html
     parser = FranceTV.new
 
-    eps = parse_eps parser, "boyard",
-      "https://www.france.tv/france-2/fort-boyard/"
+    eps = parse_eps parser, "qpour1champ",
+      "https://www.france.tv/france-3/questions-pour-un-champion/"
 
     assert_equal 5, eps.size
 
     ep = eps.fetch 0
-    assert_equal "1030773", ep.id
-    assert_equal 1030773, ep.idx
+    assert_equal "2555851", ep.id
+    assert_equal 2555851, ep.idx
     assert_equal \
-      "https://www.france.tv/france-2/fort-boyard/fort-boyard-saison-30/1030773-fort-boyard.html",
+      "https://www.france.tv/france-3/questions-pour-un-champion/2555851-emission-du-vendredi-2-juillet-2021.html",
       ep.url
-    assert_equal "Épisode du samedi 20 juillet 2019", ep.title
-    assert_equal 132*60, ep.duration
+    assert_equal "Émission du vendredi 2 juillet 2021", ep.title
+    assert_equal 43*60, ep.duration
 
-    ep = eps.fetch 4
-    assert_equal "1011691", ep.id
-    assert_equal 1011691, ep.idx
-    assert_equal \
-      "https://www.france.tv/france-2/fort-boyard/1011691-fort-boyard.html",
-      ep.url
+    ep = eps.fetch -1
+    assert_equal "2547445", ep.id
   end
 
   private def parse_eps(parser, name, url)
