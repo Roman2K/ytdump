@@ -63,8 +63,8 @@ class Downloader
     @threads = nthreads.times.map do
       Thread.new do
         Thread.current.abort_on_exception = true
-        while item = @q.shift
-          dl item
+        while job = @q.shift
+          dl job.fetch(:item), proxy: job.fetch(:proxy)
         end
       end
     end
@@ -113,14 +113,17 @@ class Downloader
     nil
   end
 
-  def dl_playlist(url)
+  def dl_playlist(url, proxy: nil)
     if File.file? url
       pl = File.read url
     elsif found = parse_items(url)
       parser, items = found
       @log[parser: parser.name, items: items.size].info "parser found items"
       @min_duration ||= parser.min_duration
-      return dl_playlist_items items
+      return dl_playlist_items items, proxy: proxy&.(parser).tap { |url|
+        @log[parser: parser.name, proxy: url].
+          info "setting parser-specific proxy" if url
+      }
     else
       pl = begin
         get_playlist url
@@ -147,7 +150,7 @@ class Downloader
     dl_playlist_items items
   end
 
-  def dl_playlist_items(items)
+  def dl_playlist_items(items, proxy: nil)
     raise "empty playlist" if @check_empty && items.empty?
     if min = @min_duration
       @log[items: items.size].
@@ -158,7 +161,7 @@ class Downloader
       end
     end
     @log.info "enqueueing %d playlist items" % items.size
-    items.sort_by(&:idx).each { |i| @q << i }
+    items.sort_by(&:idx).each { |i| @q << {item: i, proxy: proxy} }
   end
 
   def finish
@@ -244,7 +247,7 @@ class Downloader
   DF_SHORT_WAIT, DF_SHORT_WAIT_MAX = 10, 5*60
   SKIP_RETRY_DELAY = 7*24*3600
 
-  def dl(item)
+  def dl(item, proxy: nil)
     log = @log[item.id]
 
     if @dled.include? item.id
@@ -366,6 +369,7 @@ class Downloader
         "#{name.to_s.gsub '%', '%%'}.idx%(playlist_index)s.%(ext)s"
       ).to_s,
     ]
+    args << "--proxy" << proxy if proxy
 
     log.info "downloading %s" % name
     if @dry_run
@@ -652,7 +656,7 @@ module Commands
           when /^\[/
             dler.dl_playlist_json url
           else
-            dler.dl_playlist url
+            dler.dl_playlist url, proxy: -> parser { pl.proxy_conf.url parser }
           end
         end
         dler.finish

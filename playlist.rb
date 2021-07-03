@@ -4,27 +4,28 @@ class Playlist
   def self.load(io, log:, default_proxy: nil)
     info = YAML.load io
     proxies = info.delete("proxies") || {}
+    proxy_rules = info.delete("proxy_rules") || {}
     pls = info.delete("playlists") || {}
-    info.keys.empty? or raise "extra keys: %p" % [infos.keys]
+    info.empty? or raise "extra keys: %p" % [infos.keys]
     pls.delete_if { |k,| k.start_with? "_" } # YAML backreferences
-    pls.map do |name, info|
-      if proxy = info["proxy"] || default_proxy
-        info["proxy"] = proxies.fetch(proxy) { proxy }
-      end
-      new name, info.transform_keys(&:to_sym), log: log
+    pls.map do |name, opts|
+      proxy_conf = ProxyConf.new proxy_rules, proxies,
+        default: opts.delete("proxy") || default_proxy
+      new name, opts.transform_keys(&:to_sym), proxy_conf: proxy_conf, log: log
     end
   end
 
-  def initialize(name, opts, log:)
+  def initialize(name, opts, proxy_conf:, log:)
     @name = name
     @opts = opts.dup
+    @proxy_conf = proxy_conf
     @log = log
   end
 
   attr_reader :name
+  attr_reader :proxy_conf
   def opts; after_filter { @opts } end
   def urls; after_filter { @urls } end
-  def proxy; after_filter { @proxy } end
 
   def done(rclone)
     dest = opts[:rclone_dest] or return []
@@ -55,7 +56,6 @@ class Playlist
       @opts[:ydl_opts] += %w[-x --audio-format mp3] 
     end
     @opts[:rclone_dest] += name if @opts[:rclone_dest]&.end_with? "/"
-    @proxy = @opts.delete :proxy
     @urls = [*@opts.delete(:url), *@opts.delete(:urls)]
     @opts.freeze
   end
@@ -71,15 +71,31 @@ class Playlist
   }.freeze
 
   def setup_env
-    @proxy or return yield
-    @log[proxy: @proxy].info "setting HTTP proxy"
+    url = @proxy_conf.url or return yield
+    @log[proxy: url].info "setting HTTP proxy"
     keys = %w[http_proxy https_proxy]
     before = keys.map { |k| ENV[k] }
-    keys.each { |k| ENV[k] = @proxy }
+    keys.each { |k| ENV[k] = url }
     begin
       yield
     ensure
       keys.zip(before) { |k,old| ENV[k] = old }
+    end
+  end
+
+  class ProxyConf
+    def initialize(rules, proxies, default: nil)
+      @rules = rules
+      @proxies = proxies
+      @default = default
+      unless (extra = @rules.keys - EpsParse.all.map(&:name)).empty?
+        raise "unknown parser in proxy rules: #{extra.inspect}"
+      end
+    end
+
+    def url(parser=nil)
+      key = (@rules[parser.name] if parser) || @default
+      @proxies.fetch(key) { key }
     end
   end
 end
