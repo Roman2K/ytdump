@@ -14,7 +14,7 @@ class FranceTV < Parser
   end
 
   def episodes_from_doc(doc, uri)
-    doc.css("a.c-card-video").map do |el|
+    doc.css("#replay_slider a.c-card-video").map do |el|
       ep_uri = el[:href].
         tap { _1 or raise "link has no URL" }.
         then { |path| uri.dup.tap { |u| u.path = path } }

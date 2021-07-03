@@ -24,6 +24,10 @@ class FranceTVTest < Minitest::Test
 
     ep = eps.fetch -1
     assert_equal "2547445", ep.id
+
+    eps = parse_eps parser, "julie",
+      "https://www.france.tv/france-3/carnets-de-julie/"
+    assert_equal 2, eps.size
   end
 
   private def parse_eps(parser, name, url)
