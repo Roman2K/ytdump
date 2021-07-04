@@ -8,10 +8,11 @@ class InvalidURIError < StandardError; end
 class Parser
   Item = ::Item
 
-  def self.doc(html)
-    Nokogiri::HTML.parse html
+  def initialize
+    @log = Utils::Log.new prefix: name
   end
 
+  def self.doc(html); Nokogiri::HTML.parse html end
   def min_duration; end
   protected def html_uri(uri); uri end
 

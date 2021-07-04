@@ -4,66 +4,135 @@ module EpsParse
 
 class MTV < Parser
   CHECK = [
-    "http://www.mtv.com/shows/jersey-shore-family-vacation/episode-guide",
-    -> n { n >= 55 },
+    "https://www.mtv.com/shows/jersey-shore-family-vacation",
+    -> n { n >= 10 },
   ]
 
   def uri_ok?(uri)
-    uri.host.sub(/^www\./, "") == "mtv.com" or return false
-    cs = uri.path.split("/")
-    cs[0,2] == ["", "shows"] && cs.last == "episode-guide" \
-      && cs.size == 4 && uri.query.nil? \
+    uri.scheme == 'https' \
+      && uri.host.sub(/^www\./, "") == "mtv.com" \
+      && (cs = uri.path.split("/")).size == 3 \
+      && cs[0,2] == ["", "shows"] \
+      && uri.query.nil?
   end
 
-  protected def html_uri(uri)
-    URI.parse "http://www.mtv.com/feeds/triforce/manifest/v8" \
-      "?url=#{URI.escape uri.to_s}"
-  end
+  def episodes_from_doc(doc, uri)
+    PageData.new(doc, uri, log: @log["PageData"]).enum_for(:each_item).map { |i|
+      i.fetch("meta").fetch("header").fetch("title").fetch("text") \
+        =~ /S(\d+)\b.*E(\d+)/ or raise "season+ep number not found"
+      snum, epnum = $1.to_i, $2.to_i
 
-  def episodes_from_html(json, uri)
-    feed_url = JSON.parse(json).
-      fetch("manifest").fetch("zones").values.
-      max_by { |z| z.fetch("priority").to_i }.
-      tap { |z| z or raise "no zones" }.
-      fetch("feed")
+      i.fetch("meta").fetch("date") =~ %r{^(\d{1,2})/(\d{1,2})/(\d{4})$} \
+        or raise "invalid date format"
+      date = Time.new $3, $1, $2
 
-    fetch_eps URI(feed_url).tap { |u|
-      u.query = "allEpisodes=1&allSeasonsSelected=1"
+      Item.new \
+        id: i.fetch("id"),
+        idx: snum * 100 + epnum,
+        url: uri.dup.tap { |u|
+          u.path = i.fetch("url").
+            tap { _1.start_with? "/" or raise "invalid URL path" }
+        }.to_s,
+        duration: i.fetch("media").fetch("duration").split(":").reverse.
+          then { |ss,mm,hh,*rest|
+            rest.empty? or raise "invalid duration format"
+            ss.to_i + mm.to_i * 60 + hh.to_i * 3600
+          },
+        title: "%s - Season %d, Ep %d - %s" % [
+          date.strftime("%Y-%m-%d"),
+          snum, epnum,
+          i.fetch("meta").fetch("subHeader"),
+        ]
     }
   end
 
-  private def fetch_eps(uri)
-    items = []
-    loop do
-      res = JSON.parse EpsParse.request_get!(uri).body
-      res.fetch("status").fetch("text") == "OK" \
-        or raise "unexpected result status"
-      res = res.fetch "result"
-      res.fetch("data").fetch("items").each do |i|
-        next if i["isAd"]
-        date = Time.at(i.fetch("airDate").to_i)
-        items << Item.new(
-          idx: i.fetch("season").fetch("episodeNumber").to_i,
-          id: i.fetch("id"),
-          title: [
-            date.strftime("%Y-%m-%d"), i.fetch("number"), i.fetch("title")
-          ].join(" - "),
-          duration: i.fetch("duration"),
-          url: i.fetch("canonicalURL")
-        )
-      end
-      if s = res["nextPageURL"]
-        uri = URI s
-      else
-        params = Hash[URI.decode_www_form uri.query || ""]
-        season = params["season"] and season > "1" or break
-        params["season"] = (season.to_i - 1).to_s
-        params["pageNumber"] = "1"
-        prev = uri
-        uri = uri.dup.tap { |u| u.query = URI.encode_www_form params }
+  class PageData
+    def initialize(doc, uri, log:)
+      @uri = uri
+      @log = log
+      @items, @more_url, @next_season = extract_items doc
+    end
+
+    def each_item
+      each_own_item { yield _1 }
+      pd = self
+      while sz = pd.next_season
+        slog = @log[season: sz.fetch("label")]
+        uri = make_uri sz.fetch "url"
+        slog[url: uri.path].info "fetching next season"
+        pd = PageData.new \
+          EpsParse::Parser.doc(EpsParse.request_get!(uri).body),
+          uri,
+          log: slog
+        pd.each_own_item { yield _1 }
       end
     end
-    items
+
+    attr_reader :next_season
+    protected :next_season
+
+    protected def each_own_item
+      @log[count: @items.size].info "yielding preloaded items"
+      @items.each { yield _1 }
+
+      more_url = @more_url
+      while more_url
+        more_url.include?("/episode/") or raise "invalid episodes URL path"
+        data = JSON.parse EpsParse.request_get!(make_uri more_url).body
+        items = data.fetch "items"
+        @log[count: items.size].info "loaded more items"
+        has_episodes = false
+        items.each do |it|
+          it.fetch("itemType") == "episode" or next
+          has_episodes = true
+          yield it
+        end
+        more_url = (data["loadMore"]&.fetch("url") if has_episodes)
+      end
+    end
+
+    private def make_uri(path)
+      path.start_with?("/") or raise "invalid URL path"
+      u = @uri.dup
+      u.path, u.query = path.split '?', 2
+      u
+    end
+
+    private def extract_items(doc)
+      d = doc.css("script").inject(nil) { |_,el|
+        if el.text =~ /\bwindow\.__DATA__\s*=\s*(.+);/
+          break JSON.parse $1
+        end
+      } or raise "missing page data"
+
+      d = d.fetch("children").find { _1.fetch("type") == "MainContainer" } \
+        or return "missing MainContainer"
+
+      next_season = d.fetch("children").inject(nil) { |_,h|
+        h.fetch("type") == "SeasonSelector" or next
+        props = h.fetch "props"
+        break props.fetch("items")[props.fetch("selectedIndex") + 1]
+      }
+
+      guide_found = false
+      items, more_url = d.fetch("children").inject(nil) { |_,h|
+        h.fetch("type") == "LineList" or next
+        props = h.fetch("props")
+        if props.fetch("type") == "video-guide"
+          ok = props.fetch("isEpisodes")
+          guide_found = true
+        end
+        ok or next
+        break \
+          props.fetch("items"),
+          props["loadMore"]&.fetch("url")
+      }
+
+      guide_found or raise "missing episodes list"
+      [ items || [], 
+        more_url,
+        next_season ]
+    end
   end
 end
 

@@ -56,7 +56,10 @@ playlists:
     url: https://www.6play.fr/l-ile-de-la-tentation-p_13757
     rclone_dest: drive:media/replay/
   jersey:
-    url: http://www.mtv.com/shows/jersey-shore-family-vacation/episode-guide
+    url: https://www.mtv.com/shows/jersey-shore-family-vacation
+    rclone_dest: drive:media/replay/
+  hills:
+    url: https://www.mtv.com/shows/the-hills-new-beginnings
     rclone_dest: drive:media/replay/
   jesuisuneceleb:
     url: https://www.tf1.fr/tf1/je-suis-une-celebrite-sortez-moi-de-la/videos/replay
