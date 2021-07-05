@@ -86,6 +86,20 @@ class VidCatTest < Minitest::Test
       final: %w( a.ogg b.scc )
   end
 
+  def test_cat_namefix
+    test_cat_out [
+      'a.mkv',
+      'x... y.mkv',
+      'x... y.srt',
+    ], merge: [
+      ['x... y.mkv', 'x... y.srt'],
+    ], concat: [
+      ['a.mkv', 'x___ y.out.mp4'],
+    ], final: [
+      'a.mkv',
+    ]
+  end
+
   private def test_cat_out(*args, &block)
     Dir.mktmpdir do |dir|
       Dir.chdir dir do

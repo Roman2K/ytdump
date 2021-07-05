@@ -45,7 +45,9 @@ class VidCat
       out = vids.min_by { |f| remove_suffix(f).to_s.length }
       out = add_suffix out, ".mkv"
       vids.delete out
-      ffconcat vids, out
+      fix_filenames vids do |fixed_vids|
+        ffconcat fixed_vids, out
+      end
       fu :rm, vids
       vids = [out]
     end
@@ -114,6 +116,32 @@ private
 
   def ffquote(str)
     str.split(%(')).map { |s| %('#{s}') }.join %(\\')
+  end
+
+  # /meta/jersey/00415 - 2021-06-04 - Season 4, Ep 15 - UMMMM... HELLO, 2021. (42m52s) - 51b1a6e8-c4b2-11eb-8774-70df2f866ace.idx01.vidcat_tmp.vidcat_tmp.mkv
+  # [concat @ 0x7f03aab920c0] Impossible to open '/meta/jersey HELLO, 2021. (42m52s) - 51b1a6e8-c4b2-11eb-8774-70df2f866ace.idx01.vidcat_tmp.mp4'
+  def fix_filenames(fs)
+    tmp = []
+    begin
+      fixed = fs.map do |f|
+        dest = rename f do |base, ext|
+          base.gsub(/\.{2,}/) { '_' * $&.length } + ext
+        end
+        next f if dest == f
+        raise "name fix path already exists" if dest.exist?
+        fu :ln_s, f.basename, dest
+        tmp << dest
+        dest
+      end
+      yield fixed
+    ensure
+      tmp.each do |f|
+        begin
+          fu :rm, f
+        rescue Errno::ENOENT
+        end
+      end
+    end
   end
 end
 
