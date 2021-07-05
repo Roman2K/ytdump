@@ -29,10 +29,7 @@ class MTV < Parser
       Item.new \
         id: i.fetch("id"),
         idx: snum * 100 + epnum,
-        url: uri.dup.tap { |u|
-          u.path = i.fetch("url").
-            tap { _1.start_with? "/" or raise "invalid URL path" }
-        }.to_s,
+        url: PageData.add_path(uri, i.fetch("url")).to_s,
         duration: i.fetch("media").fetch("duration").split(":").reverse.
           then { |ss,mm,hh,*rest|
             rest.empty? or raise "invalid duration format"
@@ -54,9 +51,10 @@ class MTV < Parser
     end
 
     def each_item
-      each_own_item { yield _1 }
       pd = self
-      while sz = pd.next_season
+      loop do
+        pd.each_own_item { yield _1 }
+        sz = pd.next_season or break
         slog = @log[season: sz.fetch("label")]
         uri = make_uri sz.fetch "url"
         slog[url: uri.path].info "fetching next season"
@@ -64,7 +62,6 @@ class MTV < Parser
           EpsParse::Parser.doc(EpsParse.request_get!(uri).body),
           uri,
           log: slog
-        pd.each_own_item { yield _1 }
       end
     end
 
@@ -72,28 +69,31 @@ class MTV < Parser
     protected :next_season
 
     protected def each_own_item
-      @log[count: @items.size].info "yielding preloaded items"
-      @items.each { yield _1 }
-
-      more_url = @more_url
-      while more_url
-        more_url.include?("/episode/") or raise "invalid episodes URL path"
-        data = JSON.parse EpsParse.request_get!(make_uri more_url).body
-        items = data.fetch "items"
-        @log[count: items.size].info "loaded more items"
+      items, more_url = @items, @more_url
+      @log[count: items.size].info "preloaded items"
+      loop do
         has_episodes = false
         items.each do |it|
           it.fetch("itemType") == "episode" or next
           has_episodes = true
           yield it
         end
-        more_url = (data["loadMore"]&.fetch("url") if has_episodes)
+        has_episodes && more_url or break
+        more_url.include?("/episode/") or raise "invalid episodes URL path"
+        data = JSON.parse EpsParse.request_get!(make_uri more_url).body
+        items = data.fetch "items"
+        more_url = data["loadMore"]&.fetch("url")
+        @log[count: items.size].info "loaded more items"
       end
     end
 
     private def make_uri(path)
-      path.start_with?("/") or raise "invalid URL path"
-      u = @uri.dup
+      self.class.add_path @uri, path
+    end
+
+    def self.add_path(uri, path)
+      path.start_with? "/" or raise "invalid URL path"
+      u = uri.dup
       u.path, u.query = path.split '?', 2
       u
     end
@@ -106,7 +106,7 @@ class MTV < Parser
       } or raise "missing page data"
 
       d = d.fetch("children").find { _1.fetch("type") == "MainContainer" } \
-        or return "missing MainContainer"
+        or raise "missing MainContainer"
 
       next_season = d.fetch("children").inject(nil) { |_,h|
         h.fetch("type") == "SeasonSelector" or next
