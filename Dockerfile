@@ -27,7 +27,8 @@ WORKDIR /app
 COPY --from=builder /rclone /opt/rclone
 COPY --from=builder /usr/local/bundle /usr/local/bundle
 RUN apk --update upgrade \
-  && apk add --no-cache ca-certificates bash python3 py-pip ffmpeg jq \
+  && apk add --no-cache \
+    ca-certificates bash python3 py-pip ffmpeg jq shared-mime-info \
   && apk add --no-cache --virtual tmp git 
 RUN python3 -m pip install git+https://github.com/ytdl-org/youtube-dl
 RUN apk del tmp
