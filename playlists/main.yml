@@ -2,11 +2,13 @@
 proxies:
   es: http://hetax.srv:3128
   fr: http://hetax.srv:3129
+  us: http://hetax.srv:3130
 proxy_rules:
   TF1: fr
   FranceTV: fr
   Mitele: es
   Telecinco: es
+  MTV: us
 playlists:
   10couples:
     url: https://www.tf1.fr/tfx/10-couples-parfaits/videos/replay

@@ -91,7 +91,7 @@ class Downloader
       val = 
         case
         when Utils::Log === val then next
-        when Pathname === val then fn(val)
+        when Pathname === val then val.to_s
         when Exe === val then val.cmd
         when /_df$/ === ivar && val then fmt_df(val)
         when %i[@done @cache].include?(ivar) then val.size
@@ -477,8 +477,6 @@ class Downloader
     "Unable to extract video data",
     # FranceTV
     "Unable to extract video ID",
-    # MTV
-    "Unable to download XML: HTTP Error 500",
     # SoundCloud
     "unable to download video data: HTTP Error 401: Unauthorized",
   ].yield_self { |msgs|
