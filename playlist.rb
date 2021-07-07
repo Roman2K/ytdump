@@ -70,16 +70,19 @@ class Playlist
     },
   }.freeze
 
+  PROXY_ENV_KEYS = %w[http_proxy https_proxy]
+
   def setup_env
     url = @proxy_conf.url or return yield
     @log[proxy: url].info "setting HTTP proxy"
-    keys = %w[http_proxy https_proxy]
-    before = keys.map { |k| ENV[k] }
-    keys.each { |k| ENV[k] = url }
+    before = {}
+    PROXY_ENV_KEYS.each do |k|
+      before[k], ENV[k] = ENV[k], url
+    end
     begin
       yield
     ensure
-      keys.zip(before) { |k,old| ENV[k] = old }
+      before.each { |k,old| ENV[k] = old }
     end
   end
 

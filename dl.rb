@@ -370,6 +370,12 @@ class Downloader
       ).to_s,
     ]
     args << "--proxy" << proxy if proxy
+    if [proxy, *Playlist::PROXY_ENV_KEYS.map { ENV[_1] }].
+      any? { _1.to_s =~ /^socks/i } \
+    then
+      log.info "detected SOCKS proxy"
+      args << "--hls-prefer-native"
+    end
 
     log.info "downloading %s" % name
     if @dry_run

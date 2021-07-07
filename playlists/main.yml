@@ -1,8 +1,8 @@
 ---
 proxies:
-  es: socks5://hetax.srv:1080
-  fr: socks5://hetax.srv:1081
-  us: socks5://hetax.srv:1082
+  es: http://hetax.srv:3128
+  fr: http://hetax.srv:3129
+  us: http://hetax.srv:3130
 proxy_rules:
   TF1: fr
   FranceTV: fr
