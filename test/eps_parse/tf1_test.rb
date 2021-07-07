@@ -1,10 +1,8 @@
-$:.unshift __dir__ + "/../.."
-require 'minitest/autorun'
-require 'eps_parse'
+require_relative 'parser_test'
 
 module EpsParse
 
-class TF1Test < Minitest::Test
+class TF1Test < ParserTest
   def test_Page
     p = TF1::Extractor::Page.new URI \
       "https://www.tf1.fr/tf1-series-films/sous-le-soleil/videos/replay/11"
@@ -16,13 +14,13 @@ class TF1Test < Minitest::Test
     assert_equal [11, 12, 13], (p .. p+2).map(&:num)
   end
 
-  def do_test_playlist_items_empty
+  define_cached_test def do_test_playlist_items_empty
     items = TF1.new.playlist_items \
       "https://www.tf1.fr/tfx/super-nanny/videos/replay"
     assert_equal 0, items.size
   end
 
-  def do_test_playlist_items_multipage
+  define_cached_test def do_test_playlist_items_multipage
     items = TF1.new.playlist_items \
       "https://www.tf1.fr/tf1-series-films/sous-le-soleil/videos/replay"
     assert_equal 480, items.size
@@ -53,17 +51,6 @@ class TF1Test < Minitest::Test
     items = TF1.new.playlist_items \
       "https://www.tf1.fr/tfx/la-villa-des-coeurs-brises/videos/replay"
     assert_equal (25 * 4 * 4) + (10 * 4 + 1), items.size
-  end
-
-  instance_methods.each do |m|
-    m =~ /^do_(test_playlist_items.+)/ or next
-    define_method $1 do
-      with_cache { __send__ m }
-    end
-  end
-
-  private def with_cache(&block)
-    EpsParse.with_cache Pathname(__dir__).join('..', 'pages_cache'), &block
   end
 end
 

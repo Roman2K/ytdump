@@ -1,10 +1,8 @@
-$:.unshift __dir__ + "/../.."
-require 'minitest/autorun'
-require 'eps_parse'
+require_relative 'parser_test'
 
 module EpsParse
 
-class MiteleTest < Minitest::Test
+class MiteleTest < ParserTest
   def test_episodes_from_html
     parser = Mitele.new
 
@@ -57,20 +55,6 @@ class MiteleTest < Minitest::Test
     eps = parse_eps parser, "venacenar_empty",
       "https://www.mitele.es/programas-tv/ven-a-cenar-conmigo/"
     assert_equal 0, eps.size
-
-    eps = parse_eps parser, "solosola",
-      "https://www.mitele.es/programas-tv/solo-sola/"
-    assert_equal 591, eps.size
-    assert_equal 591, eps.map(&:title).uniq.size
-
-    ep = eps.fetch 0
-    assert_equal "MDSEPS20210629_0004", ep.id
-    assert_equal 172, ep.idx
-    assert_equal "29-jun-2021 (mar) - Danna y Albert - Danna y Albert... dicen la verdad - ¡Toca mojarse!",
-      ep.title
-
-    ep = eps.fetch -1
-    assert_equal "MDSEPS20210608_0021", ep.id
   end
 
   private def parse_eps(parser, name, url)
@@ -79,6 +63,25 @@ class MiteleTest < Minitest::Test
 
   private def page(name)
     File.read __dir__ + "/../pages/#{name}.html"
+  end
+
+  define_cached_test def do_test_episodes_from_html_with_seasons
+    eps = Mitele.new.playlist_items \
+      "https://www.mitele.es/programas-tv/solo-sola/"
+
+    assert_equal 575, eps.size
+    assert_equal 575, eps.map(&:title).uniq.size
+
+    ep = eps.fetch 0
+    assert_equal "MDSEPS20210705_0028", ep.id
+    assert_equal 187, ep.idx
+    assert_equal "05-jul-2021 (lun) - Julen e Inma - La verdad sobre Sandra Pica - Diario 02-04/07/2021",
+      ep.title
+
+    ep = eps.fetch -1
+    assert_equal "MDSEPS20210617_0009", ep.id
+    assert_equal "17-jun-2021 (jue) - Danna y Albert - Albert tiene nueva compañera - Danna Ponce llega al pisito",
+      ep.title
   end
 end
 

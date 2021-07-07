@@ -1,8 +1,8 @@
 ---
 proxies:
-  es: http://hetax.srv:3128
-  fr: http://hetax.srv:3129
-  us: http://hetax.srv:3130
+  es: socks5://hetax.srv:1080
+  fr: socks5://hetax.srv:1081
+  us: socks5://hetax.srv:1082
 proxy_rules:
   TF1: fr
   FranceTV: fr
@@ -176,13 +176,13 @@ playlists:
     url: https://www.6play.fr/zone-interdite-p_845
     rclone_dest: drive:media/replay/
   sc_likes:
-    urls:
-      exe: ["tools/sc-likes", "short"]
+    urls: {exe: ["tools/sc-likes", "short"]}
+    proxy: us
     rclone_dest: drive:media/music/soundcloud/likes
     audio: true
   sc_likes_long:
-    urls:
-      exe: ["tools/sc-likes", "long"]
+    urls: {exe: ["tools/sc-likes", "long"]}
+    proxy: us
     rclone_dest: drive:media/music/soundcloud/likes_long
     audio: true
   scenesmenage:

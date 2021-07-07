@@ -3,7 +3,7 @@ module EpsParse
 class Telecinco < Parser
   CHECK = [
     "https://www.telecinco.es/la-isla-de-las-tentaciones/a-la-carta/",
-    -> n { n >= 8 },
+    -> n { n >= 2 },
   ]
 
   def uri_ok?(uri)
