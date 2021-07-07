@@ -1,25 +1,17 @@
-$:.unshift __dir__ + "/../.."
-require 'minitest/autorun'
-require 'eps_parse'
+require_relative 'parser_test'
 
 module EpsParse
 
-class MTVTest < Minitest::Test
-  def test_playlist_items
-    EpsParse.with_cache Pathname(__dir__).join('..', 'pages_cache') do
-      do_test_playlist_items
-    end
-  end
-
-  def do_test_playlist_items
+class MTVTest < ParserTest
+  define_cached_test def do_test_playlist_items
     parser = MTV.new
 
-    refute parser.uri_ok?(
+    refute parser.uri_ok?(URI(
       URI "https://www.mtv.com/shows/jersey-shore-family-vacation/episode-guide"
-    )
-    refute parser.uri_ok?(
+    ))
+    refute parser.uri_ok?((
       URI "http://www.mtv.com/shows/jersey-shore-family-vacation"
-    )
+    ))
 
     items = parser.playlist_items \
       "https://www.mtv.com/shows/jersey-shore-family-vacation"

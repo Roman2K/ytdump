@@ -167,7 +167,7 @@ class Downloader
   def finish
     @q.close
     @threads.each &:join
-    @log.info "downloaded %s" % [@summary]
+    @log.info "downloaded #{@summary}"
   end
 
   class Summary

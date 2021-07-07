@@ -1,15 +1,9 @@
-$:.unshift __dir__ + "/../.."
-require 'minitest/autorun'
-require 'eps_parse'
+require_relative 'parser_test'
 
 module EpsParse
 
-class TelecincoTest < Minitest::Test
-  def test_playlist_items_single_page
-    with_cache { do_test_playlist_items }
-  end
-
-  def do_test_playlist_items
+class TelecincoTest < ParserTest
+  define_cached_test def do_test_playlist_items
     items = Telecinco.new.playlist_items \
       "https://www.telecinco.es/la-isla-de-las-tentaciones/a-la-carta/"
     assert_equal 24, items.size
@@ -33,10 +27,6 @@ class TelecincoTest < Minitest::Test
 
     ep = items.fetch -1
     assert_equal "3115620008", ep.id
-  end
-
-  private def with_cache(&block)
-    EpsParse.with_cache Pathname(__dir__).join('..', 'pages_cache'), &block
   end
 end
 

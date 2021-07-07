@@ -1,22 +1,14 @@
-$:.unshift __dir__ + "/../.."
-require 'minitest/autorun'
-require 'eps_parse'
+require_relative 'parser_test'
 
 module EpsParse
 
-class ReplayTiviTest < Minitest::Test
-  def test_playlist_items
-    EpsParse.with_cache Pathname(__dir__).join('..', 'pages_cache') do
-      do_test_playlist_items
-    end
-  end
-
-  def do_test_playlist_items
+class ReplayTiviTest < ParserTest
+  define_cached_test def do_test_playlist_items
     parser = ReplayTivi.new
 
-    items = parser.playlist_items \
+    refute parser.uri_ok?(URI(
       "http://www.replaytivi.fr/replay/moundir-et-les-apprentis-aventuriers-293310"
-    assert_nil items
+    ))
 
     items = parser.playlist_items \
       "http://www.replaytivi.fr/programme/moundir-et-les-apprentis-aventuriers"

@@ -32,11 +32,10 @@ class Mitele < Parser
           seasons_done = Set.new
           add_children = -> els, titles=[] do
             els.each do |el|
-              add_grand_children = -> els do
-                add_children.(els, [*titles, el.fetch("title")])
-              end
               if el.key? "children"
-                add_grand_children.(el.fetch("children"))
+                add_children.call \
+                  el.fetch("children"),
+                  [*titles, el.fetch("title")]
               else
                 case el.fetch("info").fetch("type") 
                 when 'episode'

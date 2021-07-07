@@ -1,10 +1,8 @@
-$:.unshift __dir__ + "/../.."
-require 'minitest/autorun'
-require 'eps_parse'
+require_relative 'parser_test'
 
 module EpsParse
 
-class FranceTVTest < Minitest::Test
+class FranceTVTest < ParserTest
   def test_episodes_from_html
     parser = FranceTV.new
 
@@ -28,14 +26,6 @@ class FranceTVTest < Minitest::Test
     eps = parse_eps parser, "julie",
       "https://www.france.tv/france-3/carnets-de-julie/"
     assert_equal 2, eps.size
-  end
-
-  private def parse_eps(parser, name, url)
-    parser.episodes_from_html page(name), URI(url)
-  end
-
-  private def page(name)
-    File.read __dir__ + "/../pages/#{name}.html"
   end
 end
 

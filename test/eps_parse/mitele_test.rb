@@ -57,14 +57,6 @@ class MiteleTest < ParserTest
     assert_equal 0, eps.size
   end
 
-  private def parse_eps(parser, name, url)
-    parser.episodes_from_html page(name), URI(url)
-  end
-
-  private def page(name)
-    File.read __dir__ + "/../pages/#{name}.html"
-  end
-
   define_cached_test def do_test_episodes_from_html_with_seasons
     eps = Mitele.new.playlist_items \
       "https://www.mitele.es/programas-tv/solo-sola/"

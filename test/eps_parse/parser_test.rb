@@ -14,6 +14,11 @@ class ParserTest < Minitest::Test
   private def with_cache(&block)
     EpsParse.with_cache Pathname(__dir__).join('..', 'pages_cache'), &block
   end
+
+  protected def parse_eps(parser, name, url)
+    page = File.read __dir__ + "/../pages/#{name}.html"
+    parser.episodes_from_html page, URI(url)
+  end
 end
 
 end # EpsParse

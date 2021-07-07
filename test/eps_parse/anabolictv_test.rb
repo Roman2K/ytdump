@@ -1,10 +1,8 @@
-$:.unshift __dir__ + "/../.."
-require 'minitest/autorun'
-require 'eps_parse'
+require_relative 'parser_test'
 
 module EpsParse
 
-class AnabolicTVTest < Minitest::Test
+class AnabolicTVTest < ParserTest
   def test_episodes_from_html
     parser = AnabolicTV.new
 
@@ -27,14 +25,6 @@ class AnabolicTVTest < Minitest::Test
 
     ep = eps.fetch 2
     assert_equal 20190614202412, ep.idx
-  end
-
-  private def parse_eps(parser, name, url)
-    parser.episodes_from_html page(name), URI(url)
-  end
-
-  private def page(name)
-    File.read __dir__ + "/../pages/#{name}.html"
   end
 end
 
