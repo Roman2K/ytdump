@@ -212,7 +212,6 @@ playlists:
       - https://www.youtube.com/channel/UCpM7UcYLgJHNovsT699XFUg/videos
       - https://www.youtube.com/playlist?list=PLT3nGl2f1MT7sV9Eucl-mdzm0lCiAXh32
     rclone_dest: drive:media/yt/
-    check_empty: false
   docusociete:
     url: https://www.youtube.com/channel/UCYFI5PGuw_34XaA3SGDkQOQ/videos
     rclone_dest: drive:media/yt/

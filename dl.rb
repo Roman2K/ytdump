@@ -20,7 +20,7 @@ class Downloader
     rclone_dest: nil,
     nthreads: NTHREADS,
     sorted: false,
-    check_empty: true,
+    check_empty: false,
     notfound_ok: false,
     retry_skipped: false,
     min_df: nil
