@@ -69,8 +69,8 @@ class MiteleTest < ParserTest
     eps = Mitele.new.playlist_items \
       "https://www.mitele.es/programas-tv/solo-sola/"
 
-    assert_equal 575, eps.size
-    assert_equal 575, eps.map(&:title).uniq.size
+    assert_equal 564, eps.size
+    assert_equal 564, eps.map(&:title).uniq.size
 
     ep = eps.fetch 0
     assert_equal "MDSEPS20210705_0028", ep.id

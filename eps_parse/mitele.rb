@@ -28,7 +28,7 @@ class Mitele < Parser
         %w[automatic-list navigation].include?(tab.fetch("type")) \
           && tab["contents"]
       }.flat_map { |tab|
-        eps = [].tap do |arr|
+        eps = {}.tap do |all|
           seasons_done = Set.new
           add_children = -> els, titles=[] do
             els.each do |el|
@@ -40,12 +40,12 @@ class Mitele < Parser
               else
                 case el.fetch("info").fetch("type") 
                 when 'episode'
-                  arr << el.merge("_parent_titles" => titles)
+                  all[el.fetch("id")] ||= el.merge("_parent_titles" => titles)
                 when 'season'
                   id = el.fetch("id")
                   next if seasons_done.include? id
                   seasons_done << id
-                  add_grand_children.(get_season_eps(el))
+                  add_children.(get_season_eps(el))
                 else
                   raise "unhandled episode type"
                 end
@@ -54,7 +54,7 @@ class Mitele < Parser
           end
           add_children.(tab.fetch("contents"))
         end
-        eps.map do |ep|
+        eps.values.map do |ep|
           Item.new \
             id: ep.fetch("id"),
             idx: ep.fetch("info").fetch("episode_number"),
