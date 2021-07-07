@@ -2,7 +2,7 @@ module EpsParse
 
 class Telecinco < Parser
   CHECK = [
-    "https://www.telecinco.es/la-isla-de-las-tentaciones/a-la-carta/",
+    "https://www.telecinco.es/supervivientes/a-la-carta/",
     -> n { n >= 2 },
   ]
 

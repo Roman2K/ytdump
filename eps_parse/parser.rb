@@ -44,10 +44,6 @@ class Parser
       log[err: err].error "exception in playlist_items()"
       return false
     end
-    unless items
-      log.error "unsupported URL"
-      return false
-    end
     found = items.size
     log[found: found].info "finished"
     count === found
